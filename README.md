@@ -1,7 +1,7 @@
 # AeroMV
 A program to study the aerodynamic performance of manoeuvring multirotor vehicles.  The project is currently in a development phase and not fully functioning. 
 
-As the project progresses, additional information will be to explain how to run and contribute to the project.
+As the project progresses, additional information will be added to explain how to run and contribute to the program.
 
 ## Authors
 
