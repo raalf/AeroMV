@@ -1,0 +1,10 @@
+Download Pelican Dataset:  http://wavelab.uwaterloo.ca/wp-content/uploads/2017/09/AscTec_Pelican_Flight_Dataset.mat
+
+Documentation and details of dataset see:
+https://github.com/wavelab/pelican_dataset
+
+ [1] Deep Learning a Quadrotor Dynamic Model for Multi-Step Prediction, N Mohajerin, M Mozifian, SL Waslander
+IEEE International Conference on Robotics and Automation (ICRA), 2018.
+
+ [2] Multistep Prediction of Dynamic Systems With Recurrent Neural Networks, N Mohajerin, SL Waslander
+IEEE transactions on neural networks and learning systems, 2019.

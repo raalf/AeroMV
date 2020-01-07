@@ -1,0 +1,17 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+#LaTeX 
+*.aux
+*.log
+*.nlo
+*.out
+*.gz
+*.toc
+
+#MATLAB
+*.asv
+
+#Pelican Dataset
+DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat
