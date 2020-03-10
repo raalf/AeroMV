@@ -1,8 +1,9 @@
-function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE)
+function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAERO)
 %% This is the main function
 % The general procedure of the main is:
 %	Read geometric and state inputs
-%	Calculate the vehicle aerodynamics
+%   Convert states to angle of attack for each component/rotor
+%	Calculate the vehicle component aerodynamics
 %	Calculate the rotor aerodynamics
 %	Calculate total forces and moments acting on vehicle
 %	Apply flight dynamics model to calculate the new vehicles states
@@ -16,12 +17,14 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE)
 %         STATE.BODY_RATES: (p,q,r) Rotational accelerations in inertial
 %         frame (rad/s)
 %         STATE.RPM: Individual rotor speeds (Rev/Min)
+%   idxAERO - an identifier of which rotor aerodynamics model to use.
+%               = 1: Lookup tables
+%               = 2: Run BEMT
 
-idxAERO = 1;
-%% Retrieve input vehicle geometry
+%% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
 
-%% Convert Input States
+%% Convert Input States to Angle of Attack
 [STATE] = fcnSTATES2AOA(STATE, GEOM);
 
 %% Vehicle Body Force Buildup

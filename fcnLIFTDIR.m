@@ -1,5 +1,5 @@
 function [e_L] = fcnLIFTDIR(INFO,vecVEL)
-% This function determine the lift direction of a cylinder
+% This function determines the lift direction of a cylinder
 %   If the component is not a cylinder set lift direciton to 0
 %
 % INPUTS:
@@ -13,6 +13,7 @@ function [e_L] = fcnLIFTDIR(INFO,vecVEL)
 % Example: e_L = fcnLIFTDIR(GEOM.VEH.BODY,STATE.VEL_B)];
 
 
+%%
 % Check if the component is a cylindger
 if strcmpi(INFO.strTYPE,'Cylinder')
     numCOMP = size(INFO.matEND,1); % Number of components

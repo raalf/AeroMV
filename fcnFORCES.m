@@ -10,10 +10,9 @@ function [OUTP] = fcnFORCES(PERF, GEOM, STATE)
 %   OUTP.M_comp             - Moment due to component forces
 %   OUTP.M_r                - Rotor moments (not including r x F_r)
 %   OUTP.M_B                - Total vehicle moments in body frame
-%
+
 
 %% Sum Force in Body Frame
-
 % Initialize temp variables
 COMP_DRAG_TOTAL = []; 
 COMP_LIFT_TOTAL = [];

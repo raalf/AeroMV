@@ -1,7 +1,21 @@
 function [STATE] = fcnSTATES2AOA(STATE, GEOM)
-% This function converts the states to the angle needed for the rotor
-% aerodynamic models
+% This function converts the states to the angles needed for the
+% aerodynamic models.
+%
+% OUTPUTS:
+% Updated STATE structure with the following additions:
+%   STATE.VEL_MAG           - Magnitude of total vehicle velocity
+%   STATE.VEL_B             - Ttoal vehicle velocity in body frame
+%   STATE.BETA              - Yaw angle (used to assign Fx and Fy dir)
+%   STATE.VEL_ROTOR         - Velocity experienced by rotor
+%   STATE.VEL_ROTOR_MAG     - Magnitude of velocity experienced by rotor
+%   STATE.AOA_R             - TPP angle of a rotor using local velocity
+%   STATE.AOA               - TPP angle of rotor based on vehicle
+%                             orientation and freestream velocity only
 
+
+%% Calculate/check general variables
+% Calculate vehicle velocity magnitude
 STATE.VEL_MAG = sqrt(STATE.VEL(1).^2+STATE.VEL(2).^2+STATE.VEL(3).^2);
 
 % If rotor angle of attack was input, ignore this function

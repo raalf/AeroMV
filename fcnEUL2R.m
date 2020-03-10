@@ -15,8 +15,11 @@ function [R] = fcnEUL2R(Euler, varargin)
 %
 %   idxDEG == 0 when angles are given in rad (default)
 %   idxDEG == 1 when angles are given in deg 
+%
+% OUTPUT:
+%   R   - Rotation matrix for convert from body to global ref frame
 
-
+%%
 % Check for Order or idxDEG
 if isempty(varargin)
     Order = 1;

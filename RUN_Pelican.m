@@ -45,12 +45,12 @@ for i = begin:int:fin
     end
     
     tic
-    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE);
+    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 1);
     toc
     fprintf(strcat(num2str(i),' Complete\n'))
 end
 
-%%
+%% Plotting
 tempPOS = [OUTP.POS_NEW];
 figure(1)
 clf(1)

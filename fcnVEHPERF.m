@@ -1,6 +1,14 @@
 function [PERF, TABLE, GEOM] = fcnVEHPERF(AIR, TABLE, GEOM, STATE)
 % This function computes the aerodynamic loads acting on the individual
-% vehicle components
+% vehicle components. This includes created T/F idx if component exists.
+%
+% The components available right now include: BODY, ARM, LEG, PAYLOAD and
+% MOTOR. They can be either an cylinder, sphere or elipsoid.
+
+% For each component, the general structure is:
+%   - identify if the component exists
+%   - Assign angle of attack
+%   - run the fcnVEHFORCE to compute the lift and drag 
 
 %% Compute fuse body forces
 GEOM.VEH.idxBODY = fcnCOMPCHECK(GEOM.VEH,'BODY');

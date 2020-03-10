@@ -6,6 +6,7 @@ function [TABLE, GEOM, AIR] = fcnINPUT(filename) %#ok<STOUT>
 %   filename        - A string with filename. 
 %                       Ex. filename = 'AscTec_Pelican';
 
+%%
 % Run the input file in the GEOM folder
 temp = strcat('GEOM\',filename);
 run(temp)
