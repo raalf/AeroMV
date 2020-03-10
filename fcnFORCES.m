@@ -51,6 +51,7 @@ Fx = Fx_R.*cos(STATE.BETA)-Fy_R.*sin(STATE.BETA);
 Fy = Fx_R.*sin(STATE.BETA)+Fy_R.*cos(STATE.BETA);
 
 OUTP.F_r = [Fx, Fy, thrust];
+%OUTP.F_r = [0*Fx, 0*Fy, thrust];
 
 
 % Calculate rotation matrix
@@ -74,6 +75,7 @@ Mx = Mx_R.*cos(STATE.BETA)-My_R.*sin(STATE.BETA);
 My = Mx_R.*sin(STATE.BETA)+My_R.*cos(STATE.BETA);
 
 OUTP.M_r = [Mx, My, Q];
+%OUTP.M_r = [0*Mx, 0*My, Q];
 
 M_rotor = OUTP.M_r + cross(GEOM.ROTOR.matLOCATION,OUTP.F_r);
 

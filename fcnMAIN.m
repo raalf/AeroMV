@@ -16,7 +16,7 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE)
 %         STATE.BODY_RATES: (p,q,r) Rotational accelerations in inertial
 %         frame (rad/s)
 %         STATE.RPM: Individual rotor speeds (Rev/Min)
-
+idxAERO = 1;
 %% Retrieve input vehicle geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
 
@@ -27,8 +27,13 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE)
 [PERF, TABLE, GEOM] = fcnVEHPERF(AIR, TABLE, GEOM, STATE);
 
 %% Rotor Aerodynamics
-% BEMT Module
-PERF = fcnRUNBEMT(GEOM, AIR, PERF, STATE);
+if (idxAERO == 1)
+    % Lookup Table
+    PERF = fcnLOOKUP(GEOM, AIR, PERF, STATE);
+elseif (idxAERO==2)
+    % BEMT Module
+    PERF = fcnRUNBEMT(GEOM, AIR, PERF, STATE);
+end
 
 %% Force and Moment Transformations
 [OUTP] = fcnFORCES(PERF, GEOM, STATE);

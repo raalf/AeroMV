@@ -4,6 +4,7 @@ filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
 flight_num = 1;
 
+
 Euler = flights{1,flight_num}.Euler;
 % VEL = sqrt(flights{1,flight_num}.Vel(:,1).^2+flights{1,flight_num}.Vel(:,2).^2+flights{1,flight_num}.Vel(:,3).^2);
 VEL = flights{1,flight_num}.Vel;
@@ -17,15 +18,15 @@ BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
 k = 1;
-begin = 5000;
-fin = 5020;
+begin = 1000;
+fin = 1010;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
 
 for i = begin:int:fin
     j = j+1;
-    STATE.RPM = [RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+    STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 
     STATE.EULER = Euler(i,:);
     if k == 10 || i == begin
@@ -44,7 +45,7 @@ for i = begin:int:fin
     end
     
     tic
-    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT] = fcnMAIN(filename, STATE);
+    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE);
     toc
     fprintf(strcat(num2str(i),' Complete\n'))
 end
@@ -130,7 +131,7 @@ plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,tempRATES(2,:),'r--s','linewidth',2)
 
 plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,BODY_RATES(begin+int:int:fin+int,3),'bd-','linewidth',2,'markerfacecolor','b')
 plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,tempRATES(3,:),'b--d','linewidth',2)
-legend('Experiment $\dot{\phi}$','Predicted $\dot{\phi}$','Experiment $\dot{\theta}$','Predicted $\dot{\theta}$','Experiment $\dot{\psi}$','Predicted $\dot{\psi}$',  'Interpreter','latex')
+legend('Experiment \dot{\phi}','Predicted \dot{\phi}','Experiment \dot{\theta}','Predicted \dot{\theta}','Experiment \dot{\psi}','Predicted $\dot{\psi}',  'Interpreter','latex')
 ylabel('Rate (rad/s)')
 xlabel('Time')
 title('Body Rates')
