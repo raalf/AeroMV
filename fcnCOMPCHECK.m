@@ -9,12 +9,12 @@ function idx = fcnCOMPCHECK(structCOMP, strCOMP)
 % OUTPUT: 
 %   idx - A true/false flag, true: if the field exists and is not empty 
 %
-
-% Example: 
-
+ 
+% Check is field exists
 if any(ismember(fields(structCOMP),strCOMP)) == 1
+    % If exists, check it is empty
     if isempty(structCOMP.(strCOMP)) == 0
-        idx = true;
+        idx = true; %idx true if there is data in the structure
     else    
         idx = false;
     end 

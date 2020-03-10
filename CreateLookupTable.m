@@ -1,25 +1,26 @@
-%Create lookup table
+%Creates rotor lookup table
+% This program created the lookup tables in the correct format for
+% fcnLOOKUP. Currently setup up to run BEMT.
+%
+% D.F.B. in Braunschweig Germany, Feb. 2020
 clear,clc
+
+%% Input variables
 GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
 AIR.density = 1.225; % Density
 AIR.kinvisc = 1.4207E-5; % Kinematic Viscosity
 
-aoa = -90:15:90;
-seqJ = 0:0.05:1;
-rpm = 1000:1000:7000;
+aoa = -90:15:90; % Angle of attack range
+seqJ = 0:0.05:1; % Advance ratio range (J = V/nD not mu)
+rpm = 1000:1000:7000; % RPM range
+D = 0.254; % Rotor diameter
 
-aoa = [0 5 10 15 30 90];
-seqJ = 0:0.05:1.1;
-rpm = 5000;
-% aoa = 5; 
-% seqJ = 0.6;
-% rpm = 5000;
 
-D = 0.254;
-%D = 0.2794;
-
+%% Create lookup table
+% Create meshgrid with angle of attack, advance ratio and rpm
 [Angle,J,RPM] = meshgrid(aoa,seqJ,rpm);
 
+% Pre-allocated the rotor coefficients
 CT = zeros(length(seqJ),length(aoa),length(rpm));
 CP = zeros(length(seqJ),length(aoa),length(rpm));
 CQ = zeros(length(seqJ),length(aoa),length(rpm));
@@ -27,23 +28,27 @@ CNx = zeros(length(seqJ),length(aoa),length(rpm));
 CNy = zeros(length(seqJ),length(aoa),length(rpm));
 CMx = zeros(length(seqJ),length(aoa),length(rpm));
 CMy = zeros(length(seqJ),length(aoa),length(rpm));
-% RPM = zeros(length(aoa),length(seqJ),length(rpm));
-% Angle = zeros(length(aoa),length(seqJ),length(rpm));
-% J = zeros(length(aoa),length(seqJ),length(rpm));
 
+
+% Iterate through angle of attack, advance ratio and rpm
 for i = 1:length(aoa)
     for k = 1:length(seqJ)
-        for m = 1:length(rpm)
+        parfor m = 1:length(rpm) % Run in parallel. Switch delete 'par' to not run parallel
+            
+            % Create STATE structure
             STATE = [];
             STATE.AOA_R = Angle(k,i,m);
             STATE.VEL_ROTOR_MAG = J(k,i,m)*(RPM(k,i,m)/60)*D;
             STATE.RPM = RPM(k,i,m);
             
-            
+            % Create PERF structure
             PERF.TEMP = [];
-            try PERF = rmfield(PERF,'ROTOR'); end
+            try PERF = rmfield(PERF,'ROTOR'); end % Delete PERF.ROTOR if exists
+            
+            % *********RUN BEMT*********
             PERF = fcnRUNBEMT(GEOM, AIR, PERF, STATE);
             
+            % Save rotor performance results
             CT(k,i,m) = PERF.ROTOR.CT;
             CP(k,i,m) = PERF.ROTOR.CP;
             CQ(k,i,m) = PERF.ROTOR.CQ;
@@ -52,10 +57,12 @@ for i = 1:length(aoa)
             CMx(k,i,m) = PERF.ROTOR.CMx;
             CMy(k,i,m) = PERF.ROTOR.CMy;
 
+            % Print status
             fprintf("Complete: rpm: %f \t J: %f \t aoa: %f\n",STATE.RPM,J(k,i,m),STATE.AOA_R);
             
         end
     end
 end
 
-%save(strcat("TABLES/",GEOM.ROTOR.strNAME,"_BEMTDATA"),'CT','CP','CQ','CNx','CNy','CMx','CMy','RPM','J','Angle');
+% Save to data to TABLES based on rotor name
+save(strcat("TABLES/",GEOM.ROTOR.strNAME,"_BEMTDATA"),'CT','CP','CQ','CNx','CNy','CMx','CMy','RPM','J','Angle');

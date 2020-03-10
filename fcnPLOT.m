@@ -1,8 +1,20 @@
 function [] = fcnPLOT(filename,fignum)
-%fcnPLOT This function plots the geometry given by filename
+% fcnPLOT This function plots the geometry given by filename
+%
+% INPUTS:
+%   filename        - A string with filename. File should be located in
+%                   TABLES folder
+%   fignum          - The figure number wanted
+%
+%
+% Example: fcnPLOT('AscTec_Pelican',1)
 
+
+%% Setup plotting
+% Read in geometry from input file
 [~, GEOM, ~] = fcnINPUT(filename);
 
+% Create and setup figure
 figure(fignum)
 clf(fignum)
 axis equal
@@ -12,7 +24,7 @@ xlabel('X-Dir')
 ylabel('Y-Dir')
 zlabel('Z-Dir')
 
-%% Rotors
+%% Plot rotors
 for i = 1:size(GEOM.ROTOR.matLOCATION,1)
     C = GEOM.ROTOR.matLOCATION(i,:) ;   % center of circle
     R = GEOM.ROTOR.vecDIAM(i)/2;    % Radius of circle
@@ -58,5 +70,4 @@ if GEOM.VEH.idxPAYLOAD
     fcnPLTCOMP(GEOM.VEH.PAYLOAD,fignum)
 end
 
-end
 

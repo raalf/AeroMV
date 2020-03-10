@@ -16,6 +16,7 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE)
 %         STATE.BODY_RATES: (p,q,r) Rotational accelerations in inertial
 %         frame (rad/s)
 %         STATE.RPM: Individual rotor speeds (Rev/Min)
+
 idxAERO = 1;
 %% Retrieve input vehicle geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);

@@ -8,6 +8,10 @@ function [R] = fcnEUL2R(Euler, varargin)
 %
 %   Order == 1 when euler angles given as psi, theta, phi (default)
 %   Order == 2 when euler angles given as phi, theta, psi
+%   Order == 3 when using transformation given by Nima's thesis
+%   Order == 4 ANGULAR RATES transformation
+%   Order == 5 ANGULAR RATES from Nima's thesis
+%   Order == 6 from eul2rotm matlab function (same result as 3)
 %
 %   idxDEG == 0 when angles are given in rad (default)
 %   idxDEG == 1 when angles are given in deg 

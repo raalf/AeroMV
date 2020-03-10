@@ -2,10 +2,17 @@ function [vecCD,vecDRAG,vecCL,vecLIFT, TABLE] = fcnVEHFORCE(STATE, INFO, AIR, TA
 % This function calculates the forces acting on a vehicle component
 % depending on the experienced velocity and the component shape
 %
-% INPUTS:
 %
 % OUTPUTS:
-%
+%   vecCD       - Component drag coefficient
+%   vecDRAG     - Componet drag force value
+%   vecCL       - Componet lift coefficients
+%   vecLIFT     - Component lift force value
+%   TABLE       - Updated table structure with data that wasnt read before
+% 
+% NOTE: these outputs are vectors with because some components have
+% multiple of the same component. Ex. there may be 4 geometrically
+% identical arm and thus there would be 4 entries in the output vectors.
 
 %% Calculate drag for a sphere
 % Required information in the INFO structure:

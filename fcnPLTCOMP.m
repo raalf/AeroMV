@@ -1,5 +1,12 @@
 function  fcnPLTCOMP(INFO,fignum)
 % This function plots the components as spheres or cylinders
+%
+% INPUTS:
+%   INFO        - Strucutre with component info. Usually GEOM.VEH.***
+%   fignum      - The figure number wanted
+
+
+%% Plot components
 
 % Plot sphere
 figure(fignum)
@@ -20,6 +27,3 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
     end
 end
 hold off
-
-end
-
