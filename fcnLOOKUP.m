@@ -46,15 +46,25 @@ end
 % Calculate advance ratio for the given case
 J_case = STATE.VEL_ROTOR_MAG./((STATE.RPM').*(GEOM.ROTOR.vecDIAM));
 
-% Interpolate coefficient values
-CT_Interp = interp3(Angle,J,RPM,CT,STATE.AOA_R,J_case,STATE.RPM');
-CP_Interp = interp3(Angle,J,RPM,CP,STATE.AOA_R,J_case,STATE.RPM');
-CQ_Interp = interp3(Angle,J,RPM,CQ,STATE.AOA_R,J_case,STATE.RPM');
-CNx_Interp = interp3(Angle,J,RPM,CNx,STATE.AOA_R,J_case,STATE.RPM');
-CNy_Interp = interp3(Angle,J,RPM,CNy,STATE.AOA_R,J_case,STATE.RPM');
-CMx_Interp = interp3(Angle,J,RPM,CMx,STATE.AOA_R,J_case,STATE.RPM');
-CMy_Interp = interp3(Angle,J,RPM,CMy,STATE.AOA_R,J_case,STATE.RPM');
 
+% Interpolate coefficient values
+if length(unique(RPM)) == 1 % Made a special case when the data is all at 1 rpm (often happens with experimental data)
+    CT_Interp = griddata(Angle,J,CT,STATE.AOA_R,J_case);
+    CP_Interp = griddata(Angle,J,CP,STATE.AOA_R,J_case);
+    CQ_Interp = griddata(Angle,J,CQ,STATE.AOA_R,J_case);
+    CNx_Interp = griddata(Angle,J,CNx,STATE.AOA_R,J_case);
+    CNy_Interp = griddata(Angle,J,CNy,STATE.AOA_R,J_case);
+    CMx_Interp = griddata(Angle,J,CMx,STATE.AOA_R,J_case);
+    CMy_Interp = griddata(Angle,J,CMy,STATE.AOA_R,J_case);
+else % Complete 3D interpolation (Using interp3 because it is much faster than griddata)
+    CT_Interp = interp3(Angle,J,RPM,CT,STATE.AOA_R,J_case,STATE.RPM');
+    CP_Interp = interp3(Angle,J,RPM,CP,STATE.AOA_R,J_case,STATE.RPM');
+    CQ_Interp = interp3(Angle,J,RPM,CQ,STATE.AOA_R,J_case,STATE.RPM');
+    CNx_Interp = interp3(Angle,J,RPM,CNx,STATE.AOA_R,J_case,STATE.RPM');
+    CNy_Interp = interp3(Angle,J,RPM,CNy,STATE.AOA_R,J_case,STATE.RPM');
+    CMx_Interp = interp3(Angle,J,RPM,CMx,STATE.AOA_R,J_case,STATE.RPM');
+    CMy_Interp = interp3(Angle,J,RPM,CMy,STATE.AOA_R,J_case,STATE.RPM');
+end
 %% Dimensionalize variables
 % Calculate radius and rotation speed omega
 R = GEOM.ROTOR.vecDIAM/2;
