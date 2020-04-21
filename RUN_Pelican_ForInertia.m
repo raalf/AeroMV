@@ -114,5 +114,5 @@ end
 % The cutoff criteria is set to 1 but this could be modified with
 % justification
 cutoff = 1; 
-I_mean = [mean(Ixx(Ixx<cutoff)) mean(Iyy(Iyy<cutoff)) mean(Izz(Izz<cutoff))];
+I_mean = [mean(Ixx(Ixx<cutoff & Ixx>-1*cutoff)) mean(Iyy(Iyy<cutoff & Iyy>-1*cutoff)) mean(Izz(Izz<cutoff & Izz>-1*cutoff))];
 save('InertiaData_Flight40')
