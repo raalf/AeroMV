@@ -74,7 +74,7 @@ OUTP.F_r = [Fx, Fy, thrust];
 %OUTP.F_r = [0*Fx, 0*Fy, thrust];
 
 % Calculate rotation matrix
-R = fcnEUL2R(STATE.EULER,3,0);
+R = fcnEUL2R(STATE.EULER(end,:),3,0);
 
 % Calculate down direction and velocity direction (unit vectors)
 e_D = (R'*[0 0 -1]')';

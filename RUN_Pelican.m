@@ -18,8 +18,8 @@ BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
 k = 1;
-begin = 1000;
-fin = 1010;
+begin = 20000;
+fin = 20010;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -29,17 +29,46 @@ for i = begin:int:fin
     STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 
     STATE.EULER = Euler(i,:);
+    
+%     if k == 10 || i == begin
+%         STATE.VEL = VEL(i,:); % m/s
+%         STATE.POS = POS(i,:);
+%         STATE.EULER = Euler(i,:);
+%         STATE.BODY_RATES = BODY_RATES(i,:);
+%         k = 1;
+%     else
+%         STATE.VEL = OUTP(j-1).VEL_NEW';
+%         STATE.POS = OUTP(j-1).POS_NEW';
+%         STATE.EULER = OUTP(j-1).EULER_NEW';
+%         STATE.BODY_RATES = OUTP(j-1).OMEGA_NEW_B';
+% %         STATE.BODY_RATES = BODY_RATES(i,:);
+%         k = k+1;
+%     end
+%     
+    
     if k == 10 || i == begin
-        STATE.VEL = VEL(i,:); % m/s
-        STATE.POS = POS(i,:);
-        STATE.EULER = Euler(i,:);
-        STATE.BODY_RATES = BODY_RATES(i,:);
+        STATE.VEL = VEL(i-2:i,:); % m/s
+        STATE.POS = POS(i-2:i,:);
+        STATE.EULER = Euler(i-2:i,:);
+        STATE.BODY_RATES = BODY_RATES(i-2:i,:);
         k = 1;
+    elseif k == 1
+        STATE.VEL = [VEL(i-2:i-1,:);OUTP(j-1).VEL_NEW']; % m/s
+        STATE.POS = [POS(i-2:i-1,:);OUTP(j-1).POS_NEW'];
+        STATE.EULER = [Euler(i-2:i-1,:);OUTP(j-1).EULER_NEW'];
+        STATE.BODY_RATES = [BODY_RATES(i-2:i-1,:);OUTP(j-1).OMEGA_NEW_B'];
+        k = 2;
+    elseif k == 2
+        STATE.VEL = [VEL(i-2,:);[OUTP(j-2:j-1).VEL_NEW]']; % m/s
+        STATE.POS = [POS(i-2,:);[OUTP(j-2:j-1).POS_NEW]'];
+        STATE.EULER = [Euler(i-2,:);[OUTP(j-2:j-1).EULER_NEW]'];
+        STATE.BODY_RATES = [BODY_RATES(i-2,:);[OUTP(j-2:j-1).OMEGA_NEW_B]'];
+        k = 3;
     else
-        STATE.VEL = OUTP(j-1).VEL_NEW';
-        STATE.POS = OUTP(j-1).POS_NEW';
-        STATE.EULER = OUTP(j-1).EULER_NEW';
-        STATE.BODY_RATES = OUTP(j-1).OMEGA_NEW_B';
+        STATE.VEL = [OUTP(j-3:j-1).VEL_NEW]';
+        STATE.POS = [OUTP(j-3:j-1).POS_NEW]';
+        STATE.EULER = [OUTP(j-3:j-1).EULER_NEW]';
+        STATE.BODY_RATES = [OUTP(j-3:j-1).OMEGA_NEW_B]';
 %         STATE.BODY_RATES = BODY_RATES(i,:);
         k = k+1;
     end

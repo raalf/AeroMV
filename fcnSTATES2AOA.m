@@ -16,7 +16,7 @@ function [STATE] = fcnSTATES2AOA(STATE, GEOM)
 
 %% Calculate/check general variables
 % Calculate vehicle velocity magnitude
-STATE.VEL_MAG = sqrt(STATE.VEL(1).^2+STATE.VEL(2).^2+STATE.VEL(3).^2);
+STATE.VEL_MAG = sqrt(STATE.VEL(end,1).^2+STATE.VEL(end,2).^2+STATE.VEL(end,3).^2);
 
 % If rotor angle of attack was input, ignore this function
 if fcnCOMPCHECK(STATE, 'AOA')
@@ -24,18 +24,18 @@ if fcnCOMPCHECK(STATE, 'AOA')
 end
 
 % Get rotation matrix from Euler angles
-R = fcnEUL2R(STATE.EULER,3,0);
+R = fcnEUL2R(STATE.EULER(end,:),3,0);
 
 %% Calculate Shaft angle
 % Dot the velocity with the z-direction of the vehicle body
 % Method 1 - Convert the z-dir of the body frame into intertial
 z_I = R*[0 0 1]';
-alpha_shaft1 = acos(dot(STATE.VEL,z_I)./(STATE.VEL_MAG));
+alpha_shaft1 = acos(dot(STATE.VEL(end,:),z_I)./(STATE.VEL_MAG));
 
 % Method 2 - Convert the velocity from intertial frame to the body frame
-STATE.VEL_B  = (R'*STATE.VEL')';
+STATE.VEL_B  = (R'*STATE.VEL(end,:)')';
 VEL_B_MAG = sqrt(STATE.VEL_B(1).^2+STATE.VEL_B(2).^2+STATE.VEL_B(3).^2);
-alpha_shaft2 = acos(dot(STATE.VEL_B,[0 0 1])./(VEL_B_MAG));
+alpha_shaft2 = acos(dot(STATE.VEL_B(end,:),[0 0 1])./(VEL_B_MAG));
 STATE.BETA = acos(dot(STATE.VEL_B,[1 0 0])./(VEL_B_MAG));
 
 if abs(alpha_shaft1-alpha_shaft2) > 1e-10
@@ -43,7 +43,7 @@ if abs(alpha_shaft1-alpha_shaft2) > 1e-10
 end
 
 % Calculate velocity experienced by rotor hub due to vehicle dynamics
-STATE.VEL_ROTOR = STATE.BODY_RATES.*GEOM.ROTOR.matLOCATION + STATE.VEL_B;
+STATE.VEL_ROTOR = STATE.BODY_RATES(end,:).*GEOM.ROTOR.matLOCATION + STATE.VEL_B;
 STATE.VEL_ROTOR_MAG = sqrt(STATE.VEL_ROTOR(:,1).^2 + STATE.VEL_ROTOR(:,2).^2 + STATE.VEL_ROTOR(:,3).^2);
 STATE.AOA_R = acos(dot(STATE.VEL_ROTOR',repmat([0 0 1]',1,size(STATE.VEL_ROTOR,1)))'./(STATE.VEL_ROTOR_MAG));
 

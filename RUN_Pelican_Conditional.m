@@ -2,7 +2,7 @@
 clear,clc
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
-flight_num = 20;
+flight_num = 1;
 
  
 Euler = flights{1,flight_num}.Euler;
@@ -23,9 +23,14 @@ datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
 
+% Calculate body rates by using the Euler angles
+BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
+
 
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
+% Body_Rates_criteria = 0.19;
+% Body_Rates_criteria = 0.38;
 cond = false;
 cond_missed = []; % Condition that causes reset
 count_iter_num = 0;
@@ -39,27 +44,54 @@ idxBODY_COND = NaN(len,3);
 for i = begin:int:fin
     j = j+1;
     STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-
+    
     STATE.EULER = Euler(i,:);
+    
+%     if ~cond
+%         STATE.VEL = VEL(i,:); % m/s
+%         STATE.POS = POS(i,:);
+%         STATE.EULER = Euler(i,:);
+% %         STATE.BODY_RATES = BODY_RATES(i,:);
+%         STATE.BODY_RATES = BODY_RATE_From_Euler(i,:);
+%     else
+%         STATE.VEL = OUTP(j-1).VEL_NEW';
+%         STATE.POS = OUTP(j-1).POS_NEW';
+%         STATE.EULER = OUTP(j-1).EULER_NEW';
+%         STATE.BODY_RATES = OUTP(j-1).OMEGA_NEW_B';
+%     end
+ 
     if ~cond
-        STATE.VEL = VEL(i,:); % m/s
-        STATE.POS = POS(i,:);
-        STATE.EULER = Euler(i,:);
-        STATE.BODY_RATES = BODY_RATES(i,:);
+        STATE.VEL = VEL(i-2:i,:); % m/s
+        STATE.POS = POS(i-2:i,:);
+        STATE.EULER = Euler(i-2:i,:);
+        STATE.BODY_RATES = BODY_RATES(i-2:i,:);
+        k = 1;
+    elseif k == 1 && cond
+        STATE.VEL = [VEL(i-2:i-1,:);OUTP(j-1).VEL_NEW']; % m/s
+        STATE.POS = [POS(i-2:i-1,:);OUTP(j-1).POS_NEW'];
+        STATE.EULER = [Euler(i-2:i-1,:);OUTP(j-1).EULER_NEW'];
+        STATE.BODY_RATES = [BODY_RATES(i-2:i-1,:);OUTP(j-1).OMEGA_NEW_B'];
+        k = 2;
+    elseif k == 2 && cond
+        STATE.VEL = [VEL(i-2,:);[OUTP(j-2:j-1).VEL_NEW]']; % m/s
+        STATE.POS = [POS(i-2,:);[OUTP(j-2:j-1).POS_NEW]'];
+        STATE.EULER = [Euler(i-2,:);[OUTP(j-2:j-1).EULER_NEW]'];
+        STATE.BODY_RATES = [BODY_RATES(i-2,:);[OUTP(j-2:j-1).OMEGA_NEW_B]'];
+        k = 3;
     else
-        STATE.VEL = OUTP(j-1).VEL_NEW';
-        STATE.POS = OUTP(j-1).POS_NEW';
-        STATE.EULER = OUTP(j-1).EULER_NEW';
-        STATE.BODY_RATES = OUTP(j-1).OMEGA_NEW_B';
-%         STATE.BODY_RATES = BODY_RATES(i,:);
+        STATE.VEL = [OUTP(j-3:j-1).VEL_NEW]';
+        STATE.POS = [OUTP(j-3:j-1).POS_NEW]';
+        STATE.EULER = [OUTP(j-3:j-1).EULER_NEW]';
+        STATE.BODY_RATES = [OUTP(j-3:j-1).OMEGA_NEW_B]';
     end
+    
     
     tic
     [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 1);
     toc
     
     idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).VEL_NEW))>Vel_criteria;
-    idxBODY_COND(j,:) = (abs(BODY_RATES(i+1,:)'-OUTP(j).OMEGA_NEW_B))>Body_Rates_criteria;
+    idxBODY_COND(j,:) = (abs(BODY_RATE_From_Euler(i+1,:)'-OUTP(j).OMEGA_NEW_B))>Body_Rates_criteria;
     if any(idxVEL_COND(j,:)) || any(idxBODY_COND(j,:))
         cond = false;
         iter_num(j) = count_iter_num;
