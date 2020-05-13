@@ -1,7 +1,10 @@
-function [STATE] = fcnSTATES2AOA(STATE, GEOM)
+function [STATE] = fcnSTATES2AOA(STATE, GEOM, vecINDUCEDVEL)
 % This function converts the states to the angles needed for the
 % aerodynamic models.
 %
+% INPUTS:
+%   vecINDUCEDVEL           - Optional input 
+
 % OUTPUTS:
 % Updated STATE structure with the following additions:
 %   STATE.VEL_MAG           - Magnitude of total vehicle velocity
@@ -14,6 +17,10 @@ function [STATE] = fcnSTATES2AOA(STATE, GEOM)
 %                             orientation and freestream velocity only
 
 
+%% Check for vecINDUCEDVEL, if it doesnt exist set it to 0
+if ~exist('vecINDUCEDVEL','var')
+   vecINDUCEDVEL = 0; 
+end
 %% Calculate/check general variables
 % Calculate vehicle velocity magnitude
 STATE.VEL_MAG = sqrt(STATE.VEL(end,1).^2+STATE.VEL(end,2).^2+STATE.VEL(end,3).^2);
@@ -44,7 +51,7 @@ if abs(alpha_shaft1-alpha_shaft2) > 1e-10
 end
 
 % Calculate velocity experienced by rotor hub due to vehicle dynamics
-STATE.VEL_ROTOR = STATE.BODY_RATES(end,:).*GEOM.ROTOR.matLOCATION + STATE.VEL_B;
+STATE.VEL_ROTOR = STATE.BODY_RATES(end,:).*GEOM.ROTOR.matLOCATION + STATE.VEL_B + vecINDUCEDVEL;
 STATE.VEL_ROTOR_MAG = sqrt(STATE.VEL_ROTOR(:,1).^2 + STATE.VEL_ROTOR(:,2).^2 + STATE.VEL_ROTOR(:,3).^2);
 STATE.AOA_R = acos(dot(STATE.VEL_ROTOR',repmat([0 0 1]',1,size(STATE.VEL_ROTOR,1)))'./(STATE.VEL_ROTOR_MAG));
 
