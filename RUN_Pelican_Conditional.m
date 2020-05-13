@@ -2,7 +2,7 @@
 clear,clc
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
-flight_num = 1;
+flight_num = 31;
 
  
 Euler = flights{1,flight_num}.Euler;
@@ -17,8 +17,8 @@ POS = flights{1,flight_num}.Pos;
 BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
-begin = 1000;
-fin = 20000;
+begin = 11300;
+fin = 11600;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -44,6 +44,7 @@ idxBODY_COND = NaN(len,3);
 for i = begin:int:fin
     j = j+1;
     STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+% 	STATE.RPM = 1.15*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
     
     STATE.EULER = Euler(i,:);
     

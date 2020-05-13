@@ -14,7 +14,8 @@ GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
 theta = 45;
 xy = [cosd(theta) -sind(theta);sind(theta) cosd(theta)]*([12.9 -17.9]');
 GEOM.VEH.vecCG = [xy(1) xy(2) 152.0153-118.7]*0.001;
-GEOM.VEH.vecCG = [0 0 118.7-152.0153]*0.001;
+% GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
+GEOM.VEH.vecCG = [-1.5 6.5 152.0153-118.7]*0.001;
 % Location of rotor hubs relative to CG
 GEOM.ROTOR.matLOCATION = [89.3868 192.014 -89.3868;
                           89.3868 192.014 203.6868;
@@ -45,7 +46,10 @@ GEOM.VEH.I =  [0.025322564860661, 0, 0;
                 0, 0, 0.029055618259337]; % From Ben's experiements
 % GEOM.VEH.I =  [0.25322564860661, 0, 0; 
 %                 0, 0.28041568149193, 0;
-%                 0, 0, 0.29055618259337];
+%                 0, 0, 0.03417382];
+% GEOM.VEH.I = [0.02065734 -0.00085105 -0.00039387;
+%                 -0.00085105 0.02069273 0.00039355;
+%                 -0.00039387 0.00039355 0.03417382]; % From Ben's updated CAD
 phi = 45; % Angle of rotation between reference frames
 I = GEOM.VEH.I;
 GEOM.VEH.I(1,1) = 0.5*(I(1,1)+I(2,2))+0.5*(I(1,1)-I(2,2))*cosd(2*phi)-I(1,2)*sind(2*phi);
