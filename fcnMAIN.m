@@ -20,6 +20,7 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAER
 %   idxAERO - an identifier of which rotor aerodynamics model to use.
 %               = 1: Lookup tables
 %               = 2: Run BEMT
+%               = 3: Lookup tables with vortex ring model
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
@@ -37,6 +38,8 @@ if (idxAERO == 1)
 elseif (idxAERO==2)
     % BEMT Module
     PERF = fcnRUNBEMT(GEOM, AIR, PERF, STATE);
+elseif (idxAERO==3)
+    PERF = fcnRUNVORTRING(GEOM,AIR,PERF,STATE);
 end
 
 %% Force and Moment Transformations

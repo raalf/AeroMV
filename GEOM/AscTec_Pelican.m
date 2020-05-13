@@ -8,6 +8,7 @@
 % GEOM.ROTOR.strNAME = 'APC_10x4_7';
 % GEOM.ROTOR.strNAME = 'APC_10x4_7_NewFoil';
 GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
+
 % GEOM.ROTOR.strNAME = 'APC_10x_4_7_Experiment';
 
 % Vehicle CG Location
@@ -33,6 +34,8 @@ GEOM.ROTOR.matLOCATION = GEOM.ROTOR.matLOCATION(idx2,:)-GEOM.VEH.vecCG;
 GEOM.ROTOR.vecDIAM = [0.254 0.254 0.254 0.254]';
 %GEOM.ROTOR.vecDIAM = [0.2794 0.2794 0.2794 0.2794]';
 
+% Number of blades on a rotor
+GEOM.ROTOR.valNUMB = 2;
 
 %% Vehicle information
 GEOM.VEH.valMASS = 1.867; % Kg

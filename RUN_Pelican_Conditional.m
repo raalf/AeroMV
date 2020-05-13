@@ -2,9 +2,8 @@
 clear,clc
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
-flight_num = 31;
+flight_num = 1;
 
- 
 Euler = flights{1,flight_num}.Euler;
 % VEL = sqrt(flights{1,flight_num}.Vel(:,1).^2+flights{1,flight_num}.Vel(:,2).^2+flights{1,flight_num}.Vel(:,3).^2);
 VEL = flights{1,flight_num}.Vel;
@@ -17,8 +16,8 @@ POS = flights{1,flight_num}.Pos;
 BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
-begin = 11300;
-fin = 11600;
+begin = 1000;
+fin = 20000;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -41,6 +40,8 @@ iter_num  = NaN(len,1);  % Iteration number before it had to reset
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 
+FOLDER_ADDRESS = pwd;
+addpath(genpath(FOLDER_ADDRESS))
 for i = begin:int:fin
     j = j+1;
     STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
