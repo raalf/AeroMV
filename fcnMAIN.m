@@ -42,6 +42,9 @@ elseif (idxAERO==3)
     PERF = fcnRUNVORTRING(GEOM,AIR,PERF,STATE);
 end
 
+% Apply ground effect
+PERF = fcnGRDEFF(GEOM,PERF,STATE);
+
 %% Force and Moment Transformations
 [OUTP] = fcnFORCES(PERF, GEOM, STATE);
 
