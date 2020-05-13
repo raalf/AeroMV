@@ -18,10 +18,11 @@ function [STATE] = fcnSTATES2AOA(STATE, GEOM)
 % Calculate vehicle velocity magnitude
 STATE.VEL_MAG = sqrt(STATE.VEL(end,1).^2+STATE.VEL(end,2).^2+STATE.VEL(end,3).^2);
 
-% If rotor angle of attack was input, ignore this function
-if fcnCOMPCHECK(STATE, 'AOA')
-    return
-end
+% Removed this because it is largely for debugging
+% % If rotor angle of attack was input, ignore this function
+% if fcnCOMPCHECK(STATE, 'AOA')
+%     return
+% end
 
 % Get rotation matrix from Euler angles
 R = fcnEUL2R(STATE.EULER(end,:),3,0);
