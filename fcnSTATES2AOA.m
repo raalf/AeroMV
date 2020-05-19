@@ -3,8 +3,11 @@ function [STATE] = fcnSTATES2AOA(STATE, GEOM, vecINDUCEDVEL)
 % aerodynamic models.
 %
 % INPUTS:
-%   vecINDUCEDVEL           - Optional input 
-
+%   vecINDUCEDVEL           - Optional input. Induced velocities
+%								experience by a rotor (such as those)
+%								due to a wake model. If not included
+%								an input, value is assumed to be 0.
+%
 % OUTPUTS:
 % Updated STATE structure with the following additions:
 %   STATE.VEL_MAG           - Magnitude of total vehicle velocity
