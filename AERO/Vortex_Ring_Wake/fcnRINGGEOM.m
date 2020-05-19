@@ -1,7 +1,21 @@
 function VORTPARAM = fcnRINGGEOM(VORTPARAM, num_seg, num_ring, R, rotor_centers,rotor_vel)
-
-% Calcualte the segments for the first circle than propogate it in V_inf
-% direction
+%fcnRINGGEOM calculates the vortex segments edges location for all wakes
+%
+% INPUTS:
+%	VORTPARAM 	- Structure with vortex parameters from fcnVORTPARAM
+%	num_seg		- Number of vortex segements per ring
+%	num_ring	- Number of ring wakes per rotor
+%	R 			- Rotor radius (m)
+%	rotor_centers- Location of each rotor center, x,y,z, (m)
+%	rotor_vel	- Each rotors local velocity, x,y,z, (m/s)
+%
+% OUTPUTS
+%	Updated VORTPARAM structure with the following values:
+%	.seg_start	- Segement start edge location, x,y,z, (m)
+%	.seg_end 	- Segement end edge location, x,y,z, (m)
+%	.rotor_num 	- An identifier to show which rows of seg_start 
+%				and seg_end belong to which rotor number
+%	.matCIRC	- Circulation for each vortex segments
 
 
 % Calculate number of rotors based on the number of rotor centers

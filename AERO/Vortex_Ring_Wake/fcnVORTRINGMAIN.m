@@ -1,7 +1,7 @@
 function [matQ,VORTPARAM] = fcnVORTRINGMAIN(num_seg,num_ring,GEOM,COND)
 % fcnVORTRINGMAIN this the main function for the Vortex Ring Wake model
 %
-% INPUT:
+% INPUTS:
 %   GEOM.N_b        - Number of blades, size(1,1)
 %   GEOM.R          - Rotor radius, size = (1,1)
 %   GEOM.ROTCENTER  - Rotor centers, size (num rotors,3)
@@ -19,15 +19,17 @@ function [matQ,VORTPARAM] = fcnVORTRINGMAIN(num_seg,num_ring,GEOM,COND)
 %   VORTPARAM       - Structure with general parameters of the rings
 
 %% Procedure for this function:
-%       - Calculate the circuation strength of each vortex segment
+%       - Calculate the circuation strength, skew angle and z-offset of the vortex rings
 %       - Calculate edge locations of the vortex segments
 %       - Calculate the induced velocity at the center of the rotor plane
 
-%% Calculate the vort
+%% Calculate the vortex paremeters (circulation, skew, z-offset)
 VORTPARAM = fcnVORTPARAM(GEOM.N_b,COND.RPM,COND.V_inf,COND.T,COND.rho,GEOM.R);
 
+% Calculate the wake geometry
 VORTPARAM = fcnRINGGEOM(VORTPARAM, num_seg, num_ring, GEOM.R, GEOM.ROTCENTER,COND.V_inf);
 
+% Calculate the induced velocit at each rotor center using Biot-Savart law
 matQ = SegmentVort(VORTPARAM.matCIRC, GEOM.ROTCENTER, VORTPARAM.seg_start, VORTPARAM.seg_end);
 end
 

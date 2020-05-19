@@ -16,7 +16,8 @@ function [ matQ ] = SegmentVort(vecGAMMA, matP, matVOR1, matVOR2)
 % This function was recyled from: https://github.com/devinbarcelos/horseshoe
 % with some modifications
 
-
+% Changing sizes of variables to properly consider all segements impact on
+% all points of interest.
 num_POI = size(matP,1);
 num_seg = size(matVOR1,1);
 matVOR1 = repmat(matVOR1,num_POI,1);
@@ -30,7 +31,6 @@ matR1 = matVOR1 - matP; % Radius from point vortex seg end 1 to POI
 matR2 = matVOR2 - matP; % Radius from point vortex seg end 2 to POI
 matR0 = matR1-matR2; % Difference between radius
 
-
 matR1xR2 = cross(matR1,matR2); % Cross product between raduis
 
 % Calculate vector magnitudes
@@ -43,6 +43,7 @@ matR1xR2MAG = sqrt(matR1xR2(:,1).^2+matR1xR2(:,2).^2+matR1xR2(:,3).^2);
 tempQ = (vecGAMMA/(4*pi)).*((matR1xR2)./((matR1xR2MAG).^2)).*(dot(matR0', ...
     ((matR1./matR1MAG)-(matR2./matR2MAG))'))';
 
+% Sum the total induced velocities of all wakes at each point of interest
 for i = 1:num_POI
     matQ(i,:) = sum(tempQ(idxPOI == i,:));
 end

@@ -2,7 +2,7 @@
 clear,clc
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
-flight_num = 1;
+flight_num = 20;
 
 Euler = flights{1,flight_num}.Euler;
 % VEL = sqrt(flights{1,flight_num}.Vel(:,1).^2+flights{1,flight_num}.Vel(:,2).^2+flights{1,flight_num}.Vel(:,3).^2);
