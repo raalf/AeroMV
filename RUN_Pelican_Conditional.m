@@ -36,7 +36,7 @@ count_iter_num = 0;
 
 
 len = (fin-begin)/int + 1;
-iter _num  = NaN(len,1);  % Iteration number before it had to reset
+iter_num  = NaN(len,1);  % Iteration number before it had to reset
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 
