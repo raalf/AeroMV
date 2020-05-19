@@ -20,7 +20,6 @@ COND.V_inf = [0.0926    0.0454    0.1133;
 [matQ,VORTPARAM] = fcnVORTRINGMAIN(num_seg,num_ring,GEOM,COND);
 
 
-
 %% Comparing to J. Tsaltas' Fast Multirotor Performance Prediction wake model
 % folder = pwd;
 % 

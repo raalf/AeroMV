@@ -48,7 +48,7 @@ end
 chi = repmat(VORTPARAM.chi',num_seg,1,num_ring);
 chi = reshape(chi,[num_rotors*num_ring*num_seg,1]);
 %Calculate displancement in x,y plane
-displacement = z_loc./tan(chi);
+displacement = z_loc.*sin(chi);
 
 % Calculate unit velocity vector is x y plane
 unit_vel = rotor_vel(:,1:2)./sqrt(rotor_vel(:,1).^2+rotor_vel(:,1).^2);
