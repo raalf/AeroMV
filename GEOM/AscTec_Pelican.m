@@ -14,7 +14,7 @@ GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
 % Vehicle CG Location
 theta = 45;
 xy = [cosd(theta) -sind(theta);sind(theta) cosd(theta)]*([12.9 -17.9]');
-GEOM.VEH.vecCG = [xy(1) xy(2) 152.0153-118.7]*0.001;
+% GEOM.VEH.vecCG = [xy(1) xy(2) 152.0153-118.7]*0.001;
 % GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
 GEOM.VEH.vecCG = [-1.5 6.5 152.0153-118.7]*0.001;
 % Location of rotor hubs relative to CG

@@ -39,13 +39,24 @@ len = (fin-begin)/int + 1;
 iter_num  = NaN(len,1);  % Iteration number before it had to reset
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
+avg_count = 5; % How many points to average for moving average of input variables
+% 
+% 
+% for i = avg_count+1:int:length(VEL)
+%     tempPOS(i,:) = mean(POS((i-avg_count+1):i,:));
+%     tempVEL(i,:) = mean(VEL((i-avg_count+1):i,:));
+%     tempEuler(i,:) = mean(Euler((i-avg_count+1):i,:));
+%     tempBODY_RATES(i,:) = mean(BODY_RATES((i-avg_count+1):i,:));
+% end
+
+
 
 FOLDER_ADDRESS = pwd;
 addpath(genpath(FOLDER_ADDRESS))
 for i = begin:int:fin
     j = j+1;
-    STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-% 	STATE.RPM = 1.15*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+%     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
+	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
     
     STATE.EULER = Euler(i,:);
     
@@ -105,7 +116,7 @@ for i = begin:int:fin
     fprintf(strcat(num2str(i),' Complete\n'))
 end
 
-
+save('DATA')
 %% Plotting
 tempPOS = [OUTP.POS_NEW];
 figure(1)
