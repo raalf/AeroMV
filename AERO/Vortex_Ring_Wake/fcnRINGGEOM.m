@@ -36,7 +36,7 @@ seg_end = repmat(seg_end,num_rotors*num_ring,1);
 
 %% Calculate the z location of the rings
 z_loc = repmat(-1*VORTPARAM.z',num_seg,1,num_ring);
-temp = permute(repmat((1:num_ring)',1,size(z_loc,2),num_seg),[3 2 1]);
+temp = permute(repmat((0:(num_ring-1))',1,size(z_loc,2),num_seg),[3 2 1]);
 z_loc = z_loc.*temp;
 % *** This reshape is used consistently throughout rest of this function in
 % order to ensure the order of points is consistent 
