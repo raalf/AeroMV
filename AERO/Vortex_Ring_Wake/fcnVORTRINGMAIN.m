@@ -30,6 +30,6 @@ VORTPARAM = fcnVORTPARAM(GEOM.N_b,COND.RPM,COND.V_inf,COND.T,COND.rho,GEOM.R);
 VORTPARAM = fcnRINGGEOM(VORTPARAM, num_seg, num_ring, GEOM.R, GEOM.ROTCENTER,COND.V_inf);
 
 % Calculate the induced velocit at each rotor center using Biot-Savart law
-matQ = SegmentVort(VORTPARAM.matCIRC, GEOM.ROTCENTER, VORTPARAM.seg_start, VORTPARAM.seg_end);
+matQ = SegmentVort(VORTPARAM.matCIRC, GEOM.ROTCENTER, VORTPARAM.seg_start, VORTPARAM.seg_end,VORTPARAM.rotor_num);
 end
 

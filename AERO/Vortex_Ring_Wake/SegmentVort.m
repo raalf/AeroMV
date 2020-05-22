@@ -1,4 +1,4 @@
-function [ matQ ] = SegmentVort(vecGAMMA, matP, matVOR1, matVOR2)
+function [ matQ ] = SegmentVort(vecGAMMA, matP, matVOR1, matVOR2, idxROTOR)
 % This function calculates the induced velocity due to a vortex segment.
 % This is done using Biot-Savart
 %
@@ -8,6 +8,9 @@ function [ matQ ] = SegmentVort(vecGAMMA, matP, matVOR1, matVOR2)
 %   and the columns correspone to the x,y,z components of each points
 %   matVOR1 - Location of left vortex segment end
 %   matVOR2 - Location of right vortex segment end
+%   idxROTOR - Which rotor segement belongs to which rotor. Rows are
+%           associated with segment rows and value is associated to rotor
+%           number
 %
 % OUTPUTS
 %   matQ - Induced velocity due to vortex segment at POI. Each row is
@@ -22,14 +25,20 @@ num_POI = size(matP,1);
 num_seg = size(matVOR1,1);
 matVOR1 = repmat(matVOR1,num_POI,1);
 matVOR2 = repmat(matVOR2,num_POI,1);
+idxROTOR = repmat(idxROTOR,num_POI,1);
 vecGAMMA = repmat(vecGAMMA,num_POI,1);
 idxPOI = reshape(repmat(1:num_POI,num_seg,1),num_seg*num_POI,1);
 matP = reshape(repmat(permute(matP,[2 3 1]),1,num_seg),3,num_seg*num_POI,1)';
 
+% Ignore self induced velocities
+idxSELF = idxROTOR==idxPOI;
+matVOR1(idxSELF,:) = []; matVOR2(idxSELF,:)=[]; idxROTOR(idxSELF) = [];
+vecGAMMA(idxSELF) = []; idxPOI(idxSELF) = []; matP(idxSELF,:) = [];
+
 % Calcualte radius
 matR1 = matVOR1 - matP; % Radius from point vortex seg end 1 to POI
 matR2 = matVOR2 - matP; % Radius from point vortex seg end 2 to POI
-matR0 = matR1-matR2; % Difference between radius
+matR0 = matR1 - matR2; % Difference between radius
 
 matR1xR2 = cross(matR1,matR2); % Cross product between raduis
 
