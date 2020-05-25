@@ -20,6 +20,8 @@ function f_x = fcnBCKWRDDIFF(h,f_prime,f_x_minus,accuracy)
 %       f_x - The new f(x) that is being solved for. If using acceleration
 %           as f_prime, this would be the new velocity given a grid spacing
 %           (or in this case delta t) of h.
+%
+% D.F.B. in Barrie Canada, APRIL 2020 (COVID-19 lockdown)
 
 
 if accuracy == 1
