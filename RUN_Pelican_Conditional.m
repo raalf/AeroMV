@@ -49,7 +49,8 @@ avg_count = 5; % How many points to average for moving average of input variable
 %     tempBODY_RATES(i,:) = mean(BODY_RATES((i-avg_count+1):i,:));
 % end
 
-OVERWRITE.GEOM.VEH.vecCG = [0 0 0];
+% Creating OVERWRITE function
+% OVERWRITE.GEOM.VEH.vecCG = [0 0 0];
 % OVERWRITE.GEOM.VEH.ARM.valLENGTH = 0.3;
 % OVERWRITE.GEOM.ROTOR.valNUMB = 3;
 FOLDER_ADDRESS = pwd;
@@ -102,7 +103,7 @@ for i = begin:int:fin
     
     
     tic
-    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 1,OVERWRITE);
+    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 1);
     toc
     
     idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).VEL_NEW))>Vel_criteria;
