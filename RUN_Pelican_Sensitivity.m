@@ -10,8 +10,9 @@ clear,clc
 % and factored analysis. CG, I and RPM will be looked at serately but
 % within each of those params, a fully factored analysis will be used.
 
+% Time per run is 184second. Can do 8 cores. 100 cases: approx 40min
+
 %% Center of gravity
-% Time per run is 184second. Can do 8 cores. 100 cases: 40min
 % Only cg location in the x and y directions are considered
 % The original "Baseline" cg is [-0.0015, 0.0065, 0.0333]
 cg_x = [-20 -15 -10 -8 -3 -1.5 0 1.5 4 10]*0.001;
@@ -33,6 +34,7 @@ idxRPMFACT =  fullfact([length(RPM1),length(RPM2),length(RPM3),length(RPM4)]);
 
 
 %% RUN CG
+% One time initialization 
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
 flight_num = 20;
@@ -42,24 +44,21 @@ VEL = flights{1,flight_num}.Vel;
 RPM = 34.676*flights{1,flight_num}.Motors+1333.1;
 POS = flights{1,flight_num}.Pos;
 BODY_RATES = flights{1,flight_num}.pqr;
-
-
 begin = 1000;
 fin = 1200;
 datafeq = 100;
 int = 1;
-
-% Calculate body rates by using the Euler angles
 BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
-
-
 len = (fin-begin)/int + 1;
 
 FOLDER_ADDRESS = pwd;
 addpath(genpath(FOLDER_ADDRESS))
+
+% Initialize the variables used for sensitivity analysis
 AVERAGE_ITERATION_CG = NaN(size(idxCGFACT,1),1);
+ITERATION_CG = NaN(size(idxCGFACT,1),len);
 
 parfor q = 1:size(idxCGFACT,1)
     tic
@@ -82,7 +81,6 @@ parfor q = 1:size(idxCGFACT,1)
         STATE = [];
         STATE.FREQ = datafeq/int;
         STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-%         OUTP = struct('initialize',[])
         STATE.EULER = Euler(i,:);
         
         if ~cond
@@ -129,11 +127,13 @@ parfor q = 1:size(idxCGFACT,1)
     toc
 end
 
+% saving in case of error or issues
 save('CG_DATA')
 
 
 %% RUN Moment of inertia
 AVERAGE_ITERATION_I = NaN(size(idxIFACT,1),1);
+ITERATION_I = NaN(size(idxIFACT,1),len);
 
 parfor q = 1:size(idxIFACT,1)
     tic
@@ -166,7 +166,6 @@ parfor q = 1:size(idxIFACT,1)
         STATE = [];
         STATE.FREQ = datafeq/int;
         STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-%         OUTP = struct('initialize',[])
         STATE.EULER = Euler(i,:);
         
         if ~cond
@@ -218,6 +217,7 @@ save('Inertia_DATA')
 
 %% RUN RPM
 AVERAGE_ITERATION_RPM = NaN(size(idxRPMFACT,1),1);
+ITERATION_RPM = NaN(size(idxRPMFACT,1),len);
 
 parfor q = 1:size(idxRPMFACT,1)
     tic
@@ -240,7 +240,6 @@ parfor q = 1:size(idxRPMFACT,1)
         STATE = [];
         STATE.FREQ = datafeq/int;
         STATE.RPM = rpm_mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-%         OUTP = struct('initialize',[])
         STATE.EULER = Euler(i,:);
         
         if ~cond
