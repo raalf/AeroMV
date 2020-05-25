@@ -15,3 +15,6 @@
 
 #Pelican Dataset
 DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat
+
+#Default save file
+DATA.mat

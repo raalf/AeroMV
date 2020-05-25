@@ -25,7 +25,7 @@ STATE.FREQ = datafeq/int;
 % Calculate body rates by using the Euler angles
 BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
 
-
+%RPM_Mulitplier = 4767./[4456 4326 4196 4104]; %from flight 23
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
 % Body_Rates_criteria = 0.19;
@@ -57,12 +57,13 @@ for i = begin:int:fin
     j = j+1;
 %     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+%     STATE.RPM = 1.035.*RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
     
     STATE.EULER = Euler(i,:);
     
 %     if ~cond
 %         STATE.VEL = VEL(i,:); % m/s
-%         STATE.POS = POS(i,:);
+%         STATE.POS = POS(i,:);!g
 %         STATE.EULER = Euler(i,:);
 % %         STATE.BODY_RATES = BODY_RATES(i,:);
 %         STATE.BODY_RATES = BODY_RATE_From_Euler(i,:);
@@ -219,6 +220,7 @@ figure(5)
 clf(5)
 hold on
 histogram(iter_num)
+text(0.8,0.95,strcat('Avg: ',num2str(nanmean(iter_num))),'Units','normalized')
 xlabel('Number of Successful Iterations')
 ylabel('Number of Occurrence')
 title('Successful iterations before conditions were passed')
