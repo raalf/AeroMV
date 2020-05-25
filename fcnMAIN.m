@@ -33,7 +33,7 @@ if exist('OVERWRITE','var')
 end
 
 %% Re-calculate the geometry to be relative to CG
-[GEOM] = fcnRELITIVE2CG(GEOM);
+[GEOM] = fcnRELATIVE2CG(GEOM);
 
 %% Convert Input States to Angle of Attack
 [STATE] = fcnSTATES2AOA(STATE, GEOM);

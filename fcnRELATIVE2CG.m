@@ -1,6 +1,6 @@
-function [GEOM] = fcnRELITIVE2CG(GEOM)
-%fcnRELCG moves all the vehicle geometry to be relative to the center of
-%   gravity. This function only runs when the CG location is not [0 0 0].
+function [GEOM] = fcnRELATIVE2CG(GEOM)
+%fcnRELATIVE2CG moves all the vehicle geometry to be relative to the center
+%   of gravity. This function only runs when the CG location is not [0 0 0]
 %
 % INPUTS:
 %   GEOM structure which include CG location and all component relative to
