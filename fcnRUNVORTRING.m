@@ -4,6 +4,8 @@ function PERF = fcnRUNVORTRING(GEOM,AIR,PERF,STATE)
 %   the interference of the vortex ring wake model.
 %   This function sets up and calls fcnVORTRINGMAIN (which is located in
 %   \AERO\Vortex_Ring_Wake)
+%
+% D.F.B. in Barrie Canada, APRIL 2020 (COVID-19 lockdown)
 
 
 % *** VALUES ARE HARD CODED IN ***

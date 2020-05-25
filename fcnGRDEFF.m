@@ -17,8 +17,8 @@ function PERF = fcnGRDEFF(GEOM,PERF,STATE)
 %   OUTPUTS:
 %       PERF.ROTOR.T            - The updated thrust after multiplying by
 %                                   the ground effect thrust ratio
-
-
+%
+% D.F.B. in Toronto Canada, MAY 2020 (COVID-19 lockdown)
 
 % If all rotors are more than 3*D above the ground than skip this function
 if ~any(3*GEOM.ROTOR.vecDIAM > STATE.POS(end,3))
