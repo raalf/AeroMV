@@ -1,4 +1,4 @@
-function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAERO)
+function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAERO, OVERWRITE)
 %% This is the main function
 % The general procedure of the main is:
 %	Read geometric and state inputs
@@ -24,6 +24,14 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAER
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
+
+%% Overwrite variables if neccessary
+if exist('OVERWRITE','var')
+    if ~isempty(OVERWRITE)
+        [AIR,GEOM,TABLE,STATE] = fcnOVERWRITE(OVERWRITE,AIR,GEOM,TABLE,STATE);
+    end
+end
+
 
 %% Convert Input States to Angle of Attack
 [STATE] = fcnSTATES2AOA(STATE, GEOM);
