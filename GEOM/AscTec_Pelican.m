@@ -59,7 +59,9 @@ GEOM.VEH.I(1,1) = 0.5*(I(1,1)+I(2,2))+0.5*(I(1,1)-I(2,2))*cosd(2*phi)-I(1,2)*sin
 GEOM.VEH.I(2,2) = 0.5*(I(1,1)+I(2,2))-0.5*(I(1,1)-I(2,2))*cosd(2*phi)+I(1,2)*sind(2*phi);
 GEOM.VEH.I(1,2) = 0.5*(I(1,1)-I(2,2))*sind(2*phi)+I(1,2)*cosd(2*phi);
 GEOM.VEH.I(2,1) = GEOM.VEH.I(1,2);
-            
+% GEOM.VEH.I(1,1) = 3.*GEOM.VEH.I(1,1);   
+% GEOM.VEH.I(2,2) = 3.*GEOM.VEH.I(2,2);   
+
  % Arm info
 GEOM.VEH.ARM.strTYPE = 'Cylinder';
 GEOM.VEH.ARM.valLENGTH = 0.17931; % meters

@@ -2,7 +2,7 @@
 clear,clc
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
-flight_num = 1;
+flight_num = 23;
 
 Euler = flights{1,flight_num}.Euler;
 % VEL = sqrt(flights{1,flight_num}.Vel(:,1).^2+flights{1,flight_num}.Vel(:,2).^2+flights{1,flight_num}.Vel(:,3).^2);
@@ -25,7 +25,7 @@ STATE.FREQ = datafeq/int;
 % Calculate body rates by using the Euler angles
 BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
 
-%RPM_Mulitplier = 4767./[4456 4326 4196 4104]; %from flight 23
+RPM_Mulitplier = 4767./[4456 4326 4196 4104]; %from flight 23
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
 % Body_Rates_criteria = 0.19;
@@ -50,16 +50,15 @@ avg_count = 5; % How many points to average for moving average of input variable
 % end
 
 % Creating OVERWRITE function
-% OVERWRITE.GEOM.VEH.vecCG = [0 0 0];
-% OVERWRITE.GEOM.VEH.ARM.valLENGTH = 0.3;
-% OVERWRITE.GEOM.ROTOR.valNUMB = 3;
+OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
+% OVERWRITE = [];
 FOLDER_ADDRESS = pwd;
 addpath(genpath(FOLDER_ADDRESS))
 for i = begin:int:fin
     j = j+1;
 %     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
-	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-%     STATE.RPM = 1.035.*RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+% 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+    STATE.RPM = 1.015*RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
     
     STATE.EULER = Euler(i,:);
     
@@ -103,7 +102,7 @@ for i = begin:int:fin
     
     
     tic
-    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 1);
+    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 3, OVERWRITE);
     toc
     
     idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).VEL_NEW))>Vel_criteria;
@@ -244,4 +243,18 @@ grid on
 box on
 hold off
 
+
+figure(7)
+clf(7)
+hold on
+scatter3(POS(begin+int:int:fin+int,1),POS(begin+int:int:fin+int,2),POS(begin+int:int:fin+int,3),'k')
+scatter3(tempPOS(1,:),tempPOS(2,:),tempPOS(3,:),'r')
+axis equal
+xlabel('X-Position')
+ylabel('Y-Position')
+zlabel('Z-Position')
+grid on
+grid minor
+box on
+hold off
 

@@ -34,7 +34,7 @@ OUTP.VEL_NEW = fcnBCKWRDDIFF(h,OUTP.xi_ddot',STATE.VEL,accuracy)';
 OUTP.POS_NEW = fcnBCKWRDDIFF(h,OUTP.VEL_NEW',STATE.POS,accuracy)';
 
 % Calculate vehicle rotational accelerations
-OUTP.OMEGA_DOT_B = GEOM.VEH.I\(OUTP.M_B - cross(-1*STATE.BODY_RATES(end,:)',STATE.BODY_RATES(end,:)*GEOM.VEH.I))';
+OUTP.OMEGA_DOT_B = GEOM.VEH.I\(OUTP.M_B + cross(-1*STATE.BODY_RATES(end,:)',STATE.BODY_RATES(end,:)*GEOM.VEH.I))';
 % OUTP.OMEGA_B = GEOM.VEH.I\(cross(-1*STATE.BODY_RATES',STATE.BODY_RATES*GEOM.VEH.I))';
 
 % Calculate the new angular velocities and euler angles
