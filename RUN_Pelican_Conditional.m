@@ -54,11 +54,15 @@ OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
 % OVERWRITE = [];
 FOLDER_ADDRESS = pwd;
 addpath(genpath(FOLDER_ADDRESS))
+
+%% Retrieve Input Vehicle Geometry
+[TABLE, GEOM, AIR] = fcnINPUT(filename);
+
 for i = begin:int:fin
     j = j+1;
 %     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
 % 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-    STATE.RPM = 1.015*RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+    STATE.RPM = RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
     
     STATE.EULER = Euler(i,:);
     
@@ -102,7 +106,7 @@ for i = begin:int:fin
     
     
     tic
-    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 3, OVERWRITE);
+    [OUTP(j), PERF, ~, ~, ~, STATE_OUT(j)] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
     toc
     
     idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).VEL_NEW))>Vel_criteria;

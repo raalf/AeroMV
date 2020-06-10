@@ -23,6 +23,9 @@ fin = 20010;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
+%% Retrieve Input Vehicle Geometry
+[TABLE, GEOM, AIR] = fcnINPUT(filename);
+
 
 for i = begin:int:fin
     j = j+1;
@@ -74,7 +77,7 @@ for i = begin:int:fin
     end
     
     tic
-    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(filename, STATE, 1);
+    [OUTP(j), PERF, TABLE, GEOM, AIR, STATE_OUT(j)] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1);
     toc
     fprintf(strcat(num2str(i),' Complete\n'))
 end

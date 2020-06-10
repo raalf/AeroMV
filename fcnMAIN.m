@@ -1,4 +1,4 @@
-function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAERO, OVERWRITE)
+function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(TABLE, GEOM, AIR, STATE, idxAERO, OVERWRITE)
 %% This is the main function
 % The general procedure of the main is:
 %	Read geometric and state inputs
@@ -22,8 +22,8 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(filename, STATE, idxAER
 %               = 2: Run BEMT
 %               = 3: Lookup tables with vortex ring model
 
-%% Retrieve Input Vehicle Geometry
-[TABLE, GEOM, AIR] = fcnINPUT(filename);
+%% Retrieve Input Vehicle Geometry (moved to outside of fcnMAIN for computational speed)
+% [TABLE, GEOM, AIR] = fcnINPUT(filename);
 
 %% Overwrite variables if neccessary
 if exist('OVERWRITE','var')
