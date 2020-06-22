@@ -81,9 +81,10 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
     cyl_dir = cyl_dir./sqrt(cyl_dir(:,1).^2+cyl_dir(:,2).^2+cyl_dir(:,3).^2);
     numCOMP = size(INFO.matEND,1); % Number of components
     matVEL = repmat(STATE.VEL_B,numCOMP,1);
-    valAOA = acos(dot(matVEL,cyl_dir,2)./(STATE.VEL_MAG)); % XXXX MYst be revisited
+    valAOA = acos(dot(matVEL,cyl_dir,2)./(STATE.VEL_MAG)); % XXXX Must be revisited
     idx = valAOA > pi/2;
     valAOA(idx) = pi - valAOA(idx);
+
     if ~fcnCOMPCHECK(TABLE.VEH, 'matCYLINDER')
         temp = load(strcat('TABLES\Cylinder'));
         temp = struct2cell(temp);
@@ -99,10 +100,14 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
 	vecCD = vecCD.*(sin(valAOA).^3)+0.02;
 	vecCL = vecCD.*(sin(valAOA).^2)*cos(INFO.valAOA);
 
+    if any(STATE.VEL_MAG==0)
+        vecCD(isnan(valAOA)) = 0;
+        vecCL(isnan(valAOA)) = 0;
+    end
     vecDRAG = vecCD.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*INFO.valLENGTH));
     vecDRAG(vecRE==0) = 0; % If Reynolds number is 0, drag is 0
     vecLIFT  = vecCL.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*INFO.valLENGTH));
-    
+ 
     
 end
     

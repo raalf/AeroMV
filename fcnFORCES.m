@@ -80,6 +80,11 @@ R = fcnEUL2R(STATE.EULER(end,:),3,0);
 e_D = (R'*[0 0 -1]')';
 e_V = (R'*(STATE.VEL_B/STATE.VEL_MAG)')';
 
+% Adjusting for any 0 drag or lift values
+if isnan(e_V)
+    e_V = [0 0 0];
+end
+
 % Calcuate total forces in body reference frame (as a vector)
 % rotor forces + component drag + component lift + mg
 OUTP.F_B = sum(OUTP.F_r,1) + sum(OUTP.COMP_DRAG_TOTAL*e_V) + ...

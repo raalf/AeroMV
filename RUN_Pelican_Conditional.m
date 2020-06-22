@@ -2,6 +2,8 @@
 clear,clc
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
+% load('DATA/Pelican_Raw_Data/AscTec_Pelican_Flight_Dataset_Original_Motors.mat','flights')
+
 flight_num = 23;
 
 Euler = flights{1,flight_num}.Euler;

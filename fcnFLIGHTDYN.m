@@ -20,7 +20,7 @@ function [OUTP] = fcnFLIGHTDYN(GEOM, STATE, OUTP)
 
 
 
-accuracy = 3; % Order of accuracy for backwards differencing
+accuracy = 1; % Order of accuracy for backwards differencing
 h = 1/(STATE.FREQ); % Grid spacing size, ie delta time
 
 % Calculate rotation matrix

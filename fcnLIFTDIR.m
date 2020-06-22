@@ -26,6 +26,13 @@ if strcmpi(INFO.strTYPE,'Cylinder')
     span_dir = cross(matVEL,cyl_dir);
     % Calculate lift direction
     e_L = cross(matVEL,span_dir);
+    
+    % Check for hover perfect conditions
+    idx = sum(matVEL == 0,2) == 3;
+    if any(idx)
+        e_L(idx,2) = 1;
+    end
+    
     % Turn lift direction into a unit vector
     e_L = e_L./sqrt(e_L(:,1).^2+e_L(:,2).^2+e_L(:,3).^2);
     

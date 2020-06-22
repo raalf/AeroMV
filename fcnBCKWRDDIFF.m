@@ -29,7 +29,7 @@ if accuracy == 1
     % Equation given as:
     %f'(x) = [f(x)-f(x-1)]/h
     
-    f_x = f_prime*(h)+f_x_minus;
+    f_x = f_prime*(h)+f_x_minus(end,:);
     
 elseif accuracy == 2
     % Second order accurate

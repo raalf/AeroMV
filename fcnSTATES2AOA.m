@@ -60,9 +60,20 @@ STATE.AOA_R = acos(dot(STATE.VEL_ROTOR',repmat([0 0 1]',1,size(STATE.VEL_ROTOR,1
 
 STATE.BETA = acos(dot(STATE.VEL_ROTOR',repmat([1 0 0]',1,size(STATE.VEL_ROTOR,1)))'./(STATE.VEL_ROTOR_MAG));
 
+%% Correct for hover conditions
+% If the vehicles is perfectly in hover, the angles must be corrects. 
+% Note: that this only realistically happens with simulation data and not
+% with experimental data
+if STATE.VEL_MAG == 0
+    alpha_shaft1 = 0;
+end
+if any(STATE.VEL_ROTOR_MAG == 0)
+    idx = STATE.VEL_ROTOR_MAG == 0;
+    STATE.AOA_R(idx) = 0;
+    STATE.BETA(idx) = 0;
+end
 %% Convert Shaft angle to TPP angle
 STATE.AOA = 90 - (180/pi)*alpha_shaft1;
 STATE.AOA_R = 90 - (180/pi)*STATE.AOA_R;
-
 
 end

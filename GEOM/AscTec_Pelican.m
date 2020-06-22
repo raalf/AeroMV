@@ -15,8 +15,8 @@ GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
 theta = 45;
 xy = [cosd(theta) -sind(theta);sind(theta) cosd(theta)]*([12.9 -17.9]');
 % GEOM.VEH.vecCG = [xy(1) xy(2) 152.0153-118.7]*0.001;
-% GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
-GEOM.VEH.vecCG = [-1.5 6.5 152.0153-118.7]*0.001;
+GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
+% GEOM.VEH.vecCG = [-1.5 6.5 152.0153-118.7]*0.001;
 % Location of rotor hubs relative to CG
 GEOM.ROTOR.matLOCATION = [89.3868 192.014 -89.3868;
                           89.3868 192.014 203.6868;
@@ -30,6 +30,11 @@ idx = [4,2,1,3]';
 GEOM.ROTOR.matLOCATION = GEOM.ROTOR.matLOCATION(idx,:);
 idx2 = [2,1,4,3]';
 GEOM.ROTOR.matLOCATION = GEOM.ROTOR.matLOCATION(idx2,:);
+
+% % ******Using Asctec datasheet rotor locations*******
+% idx_temp = (GEOM.ROTOR.matLOCATION./abs(GEOM.ROTOR.matLOCATION));
+% GEOM.ROTOR.matLOCATION(:,1:2) = 0.1492.*idx_temp(:,1:2);
+
 % Rotor Diameter *FOR EACH ROTOR
 GEOM.ROTOR.vecDIAM = [0.254 0.254 0.254 0.254]';
 %GEOM.ROTOR.vecDIAM = [0.2794 0.2794 0.2794 0.2794]';
