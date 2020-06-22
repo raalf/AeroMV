@@ -65,7 +65,7 @@ for i = begin:int:fin
     j = j+1;
 %     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
 % 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-    
+    STATE.accuracy = 3;
     k = 0;
     d = 0;
     cond = true;

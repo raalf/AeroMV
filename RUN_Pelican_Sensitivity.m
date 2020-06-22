@@ -64,7 +64,6 @@ clear,clc
 %     tic
 %     OVERWRITE = [];
 %     OVERWRITE.GEOM.VEH.vecCG = [cg_x(idxCGFACT(q,1)) cg_y(idxCGFACT(q,2))  (152.0153-118.7)*0.001];
-%     
 %     j = 0;
 %     k = 0;
 %     cond = false;
@@ -79,6 +78,7 @@ clear,clc
 %     for i = begin:int:fin
 %         j = j+1;
 %         STATE = [];
+%         STATE.accuracy = 3;
 %         STATE.FREQ = datafeq/int;
 %         STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 %         STATE.EULER = Euler(i,:);
@@ -164,6 +164,7 @@ clear,clc
 %     for i = begin:int:fin
 %         j = j+1;
 %         STATE = [];
+%         STATE.accuracy = 3;
 %         STATE.FREQ = datafeq/int;
 %         STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 %         STATE.EULER = Euler(i,:);
@@ -238,6 +239,7 @@ clear,clc
 %     for i = begin:int:fin
 %         j = j+1;
 %         STATE = [];
+%         STATE.accuracy = 3;
 %         STATE.FREQ = datafeq/int;
 %         STATE.RPM = rpm_mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 %         STATE.EULER = Euler(i,:);
@@ -374,6 +376,7 @@ parfor q = 1:size(idxCGFACT,1)
     for i = begin:int:fin
         j = j+1;
         STATE = [];
+        STATE.accuracy = 3;
         STATE.FREQ = datafeq/int;
         STATE.RPM = RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
         STATE.EULER = Euler(i,:);
@@ -459,6 +462,7 @@ save('CG23_DATA_Symmetric')
 %     for i = begin:int:fin
 %         j = j+1;
 %         STATE = [];
+%         STATE.accuracy = 3;
 %         STATE.FREQ = datafeq/int;
 %         STATE.RPM = RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 %         STATE.EULER = Euler(i,:);
@@ -533,6 +537,7 @@ save('CG23_DATA_Symmetric')
 %     for i = begin:int:fin
 %         j = j+1;
 %         STATE = [];
+%         STATE.accuracy = 3;
 %         STATE.FREQ = datafeq/int;
 %         STATE.RPM = rpm_mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
 %         STATE.EULER = Euler(i,:);
