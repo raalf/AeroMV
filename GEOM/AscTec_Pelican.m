@@ -134,17 +134,6 @@ GEOM.VEH.MOTOR.matEND = GEOM.VEH.MOTOR.matEND(:,[1 3 2]);
 GEOM.VEH.MOTOR.matEND = GEOM.VEH.MOTOR.matEND(idx,:);
 GEOM.VEH.MOTOR.matEND = GEOM.VEH.MOTOR.matEND(idx2,:);
 
-% Leg info
-% GEOM.VEH.LEG.strTYPE = 'Cylinder';
-% GEOM.VEH.LEG.valDIAM = 0.026;
-% GEOM.VEH.LEG.valLENGTH = 0.078;
-
-% Payload info
-% GEOM.VEH.PAYLOAD.strTYPE = 'Cylinder';
-% TABLE.VEH.strPAYLOADNAME = 'Cylinder';
-% GEOM.VEH.PAYLOAD.valDIAM = 0.09;
-% GEOM.VEH.PAYLOAD.valLENGTH = 0.165;
-
 %% Air Properties
 AIR.density = 1.112; % Density
 AIR.kinvisc = 1.4207E-5; % Kinematic Viscosity

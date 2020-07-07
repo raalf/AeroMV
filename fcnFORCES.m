@@ -55,6 +55,13 @@ if GEOM.VEH.idxMOTOR == 1
     e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.MOTOR,STATE.VEL_B)];
     r = [r; fcnMOMARM(GEOM.VEH.MOTOR)];
 end
+% Check and add other component information
+if GEOM.VEH.idxOTHER == 1
+    COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.OTHER.vecDRAG];
+    COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.OTHER.vecLIFT];  
+    e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.OTHER,STATE.VEL_B)];
+    r = [r; fcnMOMARM(GEOM.VEH.OTHER)];
+end
 
 % Save component force data to OUTP
 OUTP.COMP_DRAG_TOTAL = COMP_DRAG_TOTAL;
