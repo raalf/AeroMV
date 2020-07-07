@@ -105,9 +105,9 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
         vecCD(isnan(valAOA)) = 0;
         vecCL(isnan(valAOA)) = 0;
     end
-    vecDRAG = vecCD.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*valLENGTH));
+    vecDRAG = vecCD.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM.*valLENGTH));
     vecDRAG(vecRE==0) = 0; % If Reynolds number is 0, drag is 0
-    vecLIFT  = vecCL.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*valLENGTH));
+    vecLIFT  = vecCL.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM.*valLENGTH));
  
     
 end

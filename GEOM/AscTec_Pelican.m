@@ -113,7 +113,7 @@ GEOM.VEH.BODY.matEND = GEOM.VEH.BODY.matEND(:,[1 3 2]);
 % Motor info
 GEOM.VEH.MOTOR.strTYPE = 'Cylinder';
 % GEOM.VEH.MOTOR.valLENGTH = 0.05; % meters
-GEOM.VEH.MOTOR.valDIAM = 0.0254; % meters
+GEOM.VEH.MOTOR.valDIAM = [0.0254 0.0254 0.0254 0.0254]'; % meters
 GEOM.VEH.MOTOR.matBEGIN = [89.3868  154.9400  -89.3868;
                         89.3868  154.9400  203.6868;
                         -203.6868 154.94 203.6868;

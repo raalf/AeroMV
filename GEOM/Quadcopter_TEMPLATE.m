@@ -16,7 +16,7 @@ GEOM.ROTOR.matLOCATION = [89.3868 192.014 -89.3868; % Rotor 1
 % Rotation direction for each rotor                  
 GEOM.ROTOR.matROT = [1 1 -1 -1]; % 1 = CW, -1 = CCW
 
-% Rotor Diameter for each rotor
+% Rotor Diameter for each rotor (row number is associated to rotor number)
 GEOM.ROTOR.vecDIAM = [0.254 0.254 0.254 0.254]';
 
 % Number of blades per rotor (one value is used for all rotors)
@@ -42,7 +42,8 @@ GEOM.VEH.I =  [0.025322564860661, 0, 0;
 % Example of cylindrical arms
 % Cylinders need .strTYPE, .valLENGTH, .valDIAM, .matBEGIN, .matEND
 GEOM.VEH.ARM.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.ARM.valDIAM = 0.0253; % Cylinder diameter (meters)
+% Cylinder diameter (meters). Either 1 diam for all or a vertical vector of diam for each 
+GEOM.VEH.ARM.valDIAM = 0.0253; 
 
 % Each arm location, begin and end [x,y,z], (meters)
 GEOM.VEH.ARM.matBEGIN = [-24.821 154.94 24.821; % Arm 1
