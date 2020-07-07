@@ -70,4 +70,9 @@ if GEOM.VEH.idxPAYLOAD
     fcnPLTCOMP(GEOM.VEH.PAYLOAD,fignum)
 end
 
+GEOM.VEH.idxOTHER = fcnCOMPCHECK(GEOM.VEH,'OTHER');
+if GEOM.VEH.idxOTHER
+    fcnPLTCOMP(GEOM.VEH.OTHER,fignum)
+end
+
 

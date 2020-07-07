@@ -13,9 +13,9 @@ figure(fignum)
 hold on
 if strcmpi(INFO.strTYPE,'Sphere')
     [x,y,z] = sphere;
-    x = x*INFO.valDIAM;
-    y = y*INFO.valDIAM;
-    z = z*INFO.valDIAM;
+    x = x*INFO.valDIAM/2;
+    y = y*INFO.valDIAM/2;
+    z = z*INFO.valDIAM/2;
     surf(x+INFO.vecLOCATION(1),y+INFO.vecLOCATION(2),z+INFO.vecLOCATION(3))
 
 % Plot cylinders

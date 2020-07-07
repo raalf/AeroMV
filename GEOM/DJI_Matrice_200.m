@@ -97,6 +97,22 @@ GEOM.VEH.BODY.matBEGIN = [122.46 7.7 mean([46.5 90]);
 GEOM.VEH.BODY.matEND = [-122.54 7.7 mean([90 46.5]);
                         mean([-110.57 25.46])  7.6987 36.5]*0.001; 
 
+% [LEFT GPS, RIGHT GPS, LEFT LEG SENSOR, RIGHT LEG SENSOR, LEFT FOOT SENSOR]
+GEOM.VEH.OTHER.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
+GEOM.VEH.OTHER.valDIAM = [0.065 0.065 0.02975 0.111 0.0295]; % Cylinder diameter (meters)
+
+% Each LEG location, begin and end [x,y,z], (meters)
+GEOM.VEH.OTHER.matBEGIN = [4.96 197.0104 197.9865
+                           4.96 -182.3785 197.9865
+                           4.96 mean([176.5874 156.6152]) mean([-88.4228 -94.9122])
+                           4.96 mean([-148.9655 -184.5025]) mean([-24.0483 -133.4198])
+                           -156.7393 mean([-203.4216 -188.2047]) mean([-247.141 -252.0852])]*0.001; 
+GEOM.VEH.OTHER.matEND = [4.96 197.0104 217.9865;
+                        4.96 -182.3785 217.9868
+                        4.96 mean([136.4152 116.4153]) mean([35.2145 28.7162])
+                        4.96 mean([-153.9736  -118.4366]) mean([-143.3393 -33.9677])
+                        -20.7393 mean([-203.4216 -188.2047]) mean([-247.141 -252.0852])]*0.001; 
+
 %% Air Properties
 AIR.density = 1.112; % Density (kg/m^3)
 AIR.kinvisc = 1.4207E-5; % Kinematic Viscosity (m^2/s)
