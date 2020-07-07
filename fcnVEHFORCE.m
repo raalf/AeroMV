@@ -79,6 +79,7 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
     
     cyl_dir = INFO.matBEGIN-INFO.matEND;
     cyl_dir = cyl_dir./sqrt(cyl_dir(:,1).^2+cyl_dir(:,2).^2+cyl_dir(:,3).^2);
+    valLENGTH = sqrt(cyl_dir(:,1).^2+cyl_dir(:,2).^2+cyl_dir(:,3).^2);
     numCOMP = size(INFO.matEND,1); % Number of components
     matVEL = repmat(STATE.VEL_B,numCOMP,1);
     valAOA = acos(dot(matVEL,cyl_dir,2)./(STATE.VEL_MAG)); % XXXX Must be revisited
@@ -104,9 +105,9 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
         vecCD(isnan(valAOA)) = 0;
         vecCL(isnan(valAOA)) = 0;
     end
-    vecDRAG = vecCD.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*INFO.valLENGTH));
+    vecDRAG = vecCD.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*valLENGTH));
     vecDRAG(vecRE==0) = 0; % If Reynolds number is 0, drag is 0
-    vecLIFT  = vecCL.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*INFO.valLENGTH));
+    vecLIFT  = vecCL.*(0.5.*AIR.density.*(STATE.VEL_MAG.^2).*(INFO.valDIAM*valLENGTH));
  
     
 end

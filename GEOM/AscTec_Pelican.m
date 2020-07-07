@@ -69,7 +69,7 @@ GEOM.VEH.I(2,1) = GEOM.VEH.I(1,2);
 
  % Arm info
 GEOM.VEH.ARM.strTYPE = 'Cylinder';
-GEOM.VEH.ARM.valLENGTH = 0.17931; % meters
+% GEOM.VEH.ARM.valLENGTH = 0.17931; % meters
 GEOM.VEH.ARM.valDIAM = 0.0253; % meters
 GEOM.VEH.ARM.matBEGIN = [-24.821 154.94 24.821;
                         -24.8214 154.94 89.4789;
@@ -97,7 +97,7 @@ GEOM.VEH.ARM.matEND = GEOM.VEH.ARM.matEND(idx2,:);
 % GEOM.VEH.BODY.vecLOCATION = [0 0 0];
 
 GEOM.VEH.BODY.strTYPE = 'Cylinder';
-GEOM.VEH.BODY.valLENGTH = 0.17931; % meters
+% GEOM.VEH.BODY.valLENGTH = 0.17931; % meters
 GEOM.VEH.BODY.valDIAM = 142.2406*0.001; % meters
 GEOM.VEH.BODY.matBEGIN = [-57.1500 0 57.1500]*0.001;
                     
@@ -112,7 +112,7 @@ GEOM.VEH.BODY.matEND = GEOM.VEH.BODY.matEND(:,[1 3 2]);
 
 % Motor info
 GEOM.VEH.MOTOR.strTYPE = 'Cylinder';
-GEOM.VEH.MOTOR.valLENGTH = 0.05; % meters
+% GEOM.VEH.MOTOR.valLENGTH = 0.05; % meters
 GEOM.VEH.MOTOR.valDIAM = 0.0254; % meters
 GEOM.VEH.MOTOR.matBEGIN = [89.3868  154.9400  -89.3868;
                         89.3868  154.9400  203.6868;

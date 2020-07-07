@@ -42,7 +42,6 @@ GEOM.VEH.I =  [0.025322564860661, 0, 0;
 % Example of cylindrical arms
 % Cylinders need .strTYPE, .valLENGTH, .valDIAM, .matBEGIN, .matEND
 GEOM.VEH.ARM.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.ARM.valLENGTH = 0.17931; % Length of cylinder (meters)
 GEOM.VEH.ARM.valDIAM = 0.0253; % Cylinder diameter (meters)
 
 % Each arm location, begin and end [x,y,z], (meters)

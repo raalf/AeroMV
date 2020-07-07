@@ -42,7 +42,6 @@ GEOM.VEH.I =  [0, 0, 0;
 % ARM
 % Cylinders need .strTYPE, .valLENGTH, .valDIAM, .matBEGIN, .matEND
 GEOM.VEH.ARM.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.ARM.valLENGTH = 0.17931; % Length of cylinder (meters)
 GEOM.VEH.ARM.valDIAM = 0.025; % Cylinder diameter (meters)
 
 % Each arm location, begin and end [x,y,z], (meters)
@@ -57,7 +56,6 @@ GEOM.VEH.ARM.matEND = [95.5585 76.1104 72.1484; % Arm 1
                    
 % Legs
 GEOM.VEH.LEG.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.LEG.valLENGTH = 0.17931; % Length of cylinder (meters)
 GEOM.VEH.LEG.valDIAM = 0.018; % Cylinder diameter (meters)
 
 % Each LEG location, begin and end [x,y,z], (meters)
@@ -71,7 +69,6 @@ GEOM.VEH.LEG.matEND = [-196.79 199.6733 -263.3515;
                         4.96 -69.4326 77.8609]*0.001;                 
 % Motor
 GEOM.VEH.MOTOR.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.MOTOR.valLENGTH = 0.17931; % Length of cylinder (meters)
 GEOM.VEH.MOTOR.valDIAM = 0.044; % Cylinder diameter (meters)
 
 % Each LEG location, begin and end [x,y,z], (meters)
