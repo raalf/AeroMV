@@ -46,7 +46,7 @@ end
 % Calculate advance ratio for the given case
 J_case = STATE.VEL_ROTOR_MAG./((STATE.RPM').*(GEOM.ROTOR.vecDIAM));
 
-
+datatype = 0;
 % Interpolate coefficient values
 if length(unique(RPM)) == 1 % Made a special case when the data is all at 1 rpm (often happens with experimental data)
     CT_Interp = griddata(Angle,J,CT,STATE.AOA_R,J_case);
@@ -56,6 +56,24 @@ if length(unique(RPM)) == 1 % Made a special case when the data is all at 1 rpm 
     CNy_Interp = griddata(Angle,J,CNy,STATE.AOA_R,J_case);
     CMx_Interp = griddata(Angle,J,CMx,STATE.AOA_R,J_case);
     CMy_Interp = griddata(Angle,J,CMy,STATE.AOA_R,J_case);
+elseif datatype == 2 % Assuming 90 deg for all data
+    index = find(Angle(1,:,1) == 90);
+    CT = permute(CT(:,index,:),[1,3,2]);
+    CP = permute(CP(:,index,:),[1,3,2]);
+    CQ = permute(CQ(:,index,:),[1,3,2]);
+    CNx = permute(CNx(:,index,:),[1,3,2]);
+    CNy = permute(CNy(:,index,:),[1,3,2]);
+    CMx = permute(CMx(:,index,:),[1,3,2]);
+    CMy = permute(CMy(:,index,:),[1,3,2]);
+    RPM = permute(RPM(:,index,:),[1,3,2]);
+    J = permute(J(:,index,:),[1,3,2]);
+    CT_Interp = griddata(RPM,J,CT,STATE.RPM',J_case);
+    CP_Interp = griddata(RPM,J,CP,STATE.RPM',J_case);
+    CQ_Interp = griddata(RPM,J,CQ,STATE.RPM',J_case);
+    CNx_Interp = griddata(RPM,J,CNx,STATE.RPM',J_case);
+    CNy_Interp = griddata(RPM,J,CNy,STATE.RPM',J_case);
+    CMx_Interp = griddata(RPM,J,CMx,STATE.RPM',J_case);
+    CMy_Interp = griddata(RPM,J,CMy,STATE.RPM',J_case);
 else % Complete 3D interpolation (Using interp3 because it is much faster than griddata)
     CT_Interp = interp3(Angle,J,RPM,CT,STATE.AOA_R,J_case,STATE.RPM');
     CP_Interp = interp3(Angle,J,RPM,CP,STATE.AOA_R,J_case,STATE.RPM');

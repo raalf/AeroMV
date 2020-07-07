@@ -8,7 +8,7 @@
 % GEOM.ROTOR.strNAME = 'APC_10x4_7';
 % GEOM.ROTOR.strNAME = 'APC_10x4_7_NewFoil';
 GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
-
+% GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated_90deg_BEMTDATA';
 % GEOM.ROTOR.strNAME = 'APC_10x_4_7_Experiment';
 
 % Vehicle CG Location

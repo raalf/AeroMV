@@ -19,7 +19,7 @@ BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
 begin = 1000;
-fin = 20000;
+fin = 1050;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -39,6 +39,7 @@ count_iter_num = 0;
 
 len = (fin-begin)/int + 1;
 iter_num  = NaN(len,1);  % Iteration number before it had to reset
+idxBROKENCOND = NaN(len,6);
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
@@ -52,8 +53,8 @@ avg_count = 5; % How many points to average for moving average of input variable
 % end
 
 % Creating OVERWRITE function
-% OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
-OVERWRITE.GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
+OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
+% OVERWRITE.GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
 % OVERWRITE = [];
 FOLDER_ADDRESS = pwd;
 addpath(genpath(FOLDER_ADDRESS))
@@ -109,6 +110,8 @@ for i = begin:int:fin
     if any(idxVEL_COND(k,:)) || any(idxBODY_COND(k,:))
         cond = false;
         iter_num(j) = count_iter_num;
+        idxBROKENCOND(j,:) = [idxVEL_COND(k,:) idxBODY_COND(k,:)];
+        
     else
         cond = true;
         count_iter_num = count_iter_num+1;
@@ -132,18 +135,18 @@ box on
 axis tight
 hold off
 
-% figure(2)
-% clf(2)
-% hold on
-% X = categorical({'Vel X-Dir','Vel Y-Dir','Vel Z-Dir','Roll Rate','Pitch Rate','Yaw Rate'});
+figure(2)
+clf(2)
+hold on
+X = categorical({'Vel X-Dir','Vel Y-Dir','Vel Z-Dir','Roll Rate','Pitch Rate','Yaw Rate'});
 % sum_cond_missed = cat(2,sum(idxVEL_COND),sum(idxBODY_COND));
-% bar(X,sum_cond_missed)
-% xlabel('Condition Missed')
-% ylabel('Number of Occurrence')
-% title('Number of times each condition was missed')
-% grid on
-% box on
-% hold off
+bar(X,sum(idxBROKENCOND))
+xlabel('Condition Missed')
+ylabel('Number of Occurrence')
+title('Number of times each condition was missed')
+grid on
+box on
+hold off
 
 figure(3)
 clf(3)
@@ -158,3 +161,120 @@ grid minor
 box on
 hold off
 
+
+figure(4)
+clf(4)
+hold on
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,POS(begin+int:int:fin+int,1),'k-','linewidth',2) 
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,POS(begin+int:int:fin+int,2),'r-','linewidth',2,'markerfacecolor','r')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,POS(begin+int:int:fin+int,3),'b-','linewidth',2,'markerfacecolor','b')
+ylabel('Inertial Position (m)')
+xlabel('Time')
+yyaxis right
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,iter_num,':','linewidth',2) 
+ylabel('Successful Iterations')
+legend('Experiment x-dir','Experiment y-dir','Experiment z-dir','Successful Iterations')
+title('Position')
+xlim([begin/datafeq fin/datafeq])
+box on
+grid on
+grid minor
+hold off
+
+figure(5)
+clf(5)
+hold on
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Euler(begin+int:int:fin+int,1),'k-','linewidth',2)
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Euler(begin+int:int:fin+int,2),'r-','linewidth',2,'markerfacecolor','r')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Euler(begin+int:int:fin+int,3),'b-','linewidth',2,'markerfacecolor','b')
+ylabel('Angle (rad)')
+xlabel('Time')
+title('Euler Angles')
+yyaxis right
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,iter_num,':','linewidth',2) 
+ylabel('Successful Iterations')
+legend('Experiment \phi','Experiment \theta','Experiment \psi','Successful Iterations')
+xlim([begin/datafeq fin/datafeq])
+box on
+grid on
+grid minor
+hold off
+
+
+figure(6)
+clf(6)
+hold on
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,VEL(begin+int:int:fin+int,1),'k-','linewidth',2)
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,VEL(begin+int:int:fin+int,2),'r-','linewidth',2,'markerfacecolor','r')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,VEL(begin+int:int:fin+int,3),'b-','linewidth',2,'markerfacecolor','b')
+ylabel('Velocity (m/s)')
+xlabel('Time')
+title('Velocity')
+yyaxis right
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,iter_num,':','linewidth',2) 
+ylabel('Successful Iterations')
+legend('Experiment x-dir','Experiment y-dir','Experiment z-dir','Successful Iterations')
+xlim([begin/datafeq fin/datafeq])
+box on
+grid on
+grid minor
+hold off
+
+figure(7)
+clf(7)
+hold on
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,BODY_RATES(begin+int:int:fin+int,1),'k-','linewidth',2)
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,BODY_RATES(begin+int:int:fin+int,2),'r-','linewidth',2,'markerfacecolor','r')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,BODY_RATES(begin+int:int:fin+int,3),'b-','linewidth',2,'markerfacecolor','b')
+ylabel('Rate (rad/s)')
+xlabel('Time')
+title('Body Rates')
+yyaxis right
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,iter_num,':','linewidth',2) 
+ylabel('Successful Iterations')
+legend('Experiment $\dot{\phi}$','Experiment $\dot{\theta}$','Experiment $\dot{\psi}$','Successful Iterations','Interpreter','latex')
+xlim([begin/datafeq fin/datafeq])
+box on
+grid on
+grid minor
+hold off
+
+
+% Height of bar graph would be average number of iterations
+% X-axis are bins with max or average body rate
+
+k = 0;
+for d = begin:int:fin
+    k = k+1;
+    max_bodyrate_10(k,:) = max(abs(BODY_RATES(d:(d+10),1:2)));
+    max_bodyrate_iter(k,:) = max(abs(BODY_RATES(d:(d+iter_num(k)),1:2)));
+    max_bodyaccel_10(k,:) = max(abs((BODY_RATES((d+1):(d+11),1:2)-BODY_RATES(d:(d+10),1:2))/(1/STATE.FREQ)));
+    max_bodyaccel_iter(k,:) = max(abs((BODY_RATES((d+1):(d+iter_num(k)+1),1:2)-BODY_RATES(d:d+iter_num(k),1:2))/(1/STATE.FREQ)));
+    mean_bodyrate_10(k,:) = mean(abs(BODY_RATES(d:(d+10),1:2)));
+    mean_bodyrate_iter(k,:) = mean(abs(BODY_RATES(d:(d+iter_num(k)),1:2)));
+    mean_bodyaccel_10(k,:) = mean(abs((BODY_RATES((d+1):(d+11),1:2)-BODY_RATES(d:(d+10),1:2))/(1/STATE.FREQ)));
+    mean_bodyaccel_iter(k,:) = mean(abs((BODY_RATES((d+1):(d+iter_num(k)+1),1:2)-BODY_RATES(d:d+iter_num(k),1:2))/(1/STATE.FREQ)));
+end
+
+varoi = mean_bodyaccel_iter;
+num_bin = 20;
+varoi = varoi(:,1).*idxBROKENCOND(:,4) + varoi(:,2).*idxBROKENCOND(:,5);
+[a,b] = discretize(nonzeros(varoi),num_bin);
+
+for q = 1:num_bin+1
+    avg_iter(q) = mean(iter_num(a == q));
+end
+
+figure(8)
+clf(8)
+hold on
+bar(b,avg_iter,'FaceColor',[0.8500 0.3250 0.0980])
+ylabel('Average Successful Iterations')
+% xlabel('Mean Body Rate (Over Successful Data Points)')
+xlabel('Mean Acceleration Rate (Over Successful Data Points)')
+title('Flight 23')
+grid on 
+grid minor
+box on
+axis tight
+hold off
