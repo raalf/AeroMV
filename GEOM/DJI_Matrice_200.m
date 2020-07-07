@@ -87,7 +87,15 @@ GEOM.VEH.PAYLOAD.strTYPE = 'Sphere'; % Component type
 GEOM.VEH.PAYLOAD.valDIAM = 0.06; % Sphere diameter (meters)
 GEOM.VEH.PAYLOAD.vecLOCATION = [mean([220.0738 207.3815]) mean([96.8405 36.4871]) mean([-67.4016 -127.3381])]*0.001; % Location [x,y,z], (meters)
 
+% Body and battery
+GEOM.VEH.BODY.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
+GEOM.VEH.BODY.valDIAM = [0.1 0.135]; % Cylinder diameter (meters)
 
+% Each LEG location, begin and end [x,y,z], (meters)
+GEOM.VEH.BODY.matBEGIN = [122.46 7.7 mean([46.5 90]);
+                         mean([-110.54 25.46]) 7.6987 -71.5]*0.001; 
+GEOM.VEH.BODY.matEND = [-122.54 7.7 mean([90 46.5]);
+                        mean([-110.57 25.46])  7.6987 36.5]*0.001; 
 
 %% Air Properties
 AIR.density = 1.112; % Density (kg/m^3)
