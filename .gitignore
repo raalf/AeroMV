@@ -16,3 +16,9 @@
 #Pelican Dataset
 DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat
 DATA/Pelican_Raw_Data/AscTec_Pelican_Flight_Dataset_Original_Motors.mat
+DATA/Pelican_Raw_Data/flights.mat
+DATA/Pelican_Raw_Data/smoothed_flight.mat
+DATA/Pelican_Raw_Data/trimmed_flights.mat
+
+#Matrice Dataset
+DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat
