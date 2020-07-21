@@ -6,14 +6,14 @@
 clear,clc
 
 %% Input variables
-GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
+GEOM.ROTOR.strNAME = 'Matrice_210_RTK';
 AIR.density = 1.225; % Density
 AIR.kinvisc = 1.4207E-5; % Kinematic Viscosity
 
 aoa = -90:15:90; % Angle of attack range
 seqJ = 0:0.05:1; % Advance ratio range (J = V/nD not mu)
 rpm = 1000:1000:7000; % RPM range
-D = 0.254; % Rotor diameter
+D = 0.4318; % Rotor diameter
 
 
 %% Create lookup table
