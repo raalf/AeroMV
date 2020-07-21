@@ -1,11 +1,11 @@
-%% Quadcopter (DJI Matrice 200)
-% This file is the input info for the DJI Matrice 200
+%% Quadcopter (DJI Matrice 210 RTK)
+% This file is the input info for the DJI Matrice 210
 % All units are in metric
 
 
 %% Rotor Information
 % Rotor name found in 
-GEOM.ROTOR.strNAME = 'DJI_Matrice_200_BEMTDATA';
+GEOM.ROTOR.strNAME = 'Matrice_210_RTK_BEMTDATA';
 
 % Location center locations [x,y,z], (meters)
 GEOM.ROTOR.matLOCATION = [mean([209.9119 210.8997]) mean([244.2242 245.6493])  mean([170.4645 158.0862]); % Rotor 1
