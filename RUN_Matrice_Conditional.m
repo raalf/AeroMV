@@ -14,7 +14,7 @@ BODY_RATES = Flight_Data(1,flight_num).Body_Rates;
 
 j = 0;
 begin = 3000;
-fin = 3020;
+fin = 4500;
 datafeq = 50;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -235,7 +235,7 @@ box on
 hold off
 
 
-figure(7)
+figure(7)gi
 clf(7)
 hold on
 scatter3(POS(begin+int:int:fin+int,1),POS(begin+int:int:fin+int,2),POS(begin+int:int:fin+int,3),'k')
