@@ -56,7 +56,6 @@ alpha_shaft1 = acos(dot(repmat(STATE.VEL(end,:),size(GEOM.ROTOR.matLOCATION,1),1
 STATE.VEL_B  = (R'*STATE.VEL(end,:)')';
 VEL_B_MAG = sqrt(STATE.VEL_B(1).^2+STATE.VEL_B(2).^2+STATE.VEL_B(3).^2);
 alpha_shaft2 = acos(dot(repmat(STATE.VEL_B(end,:),size(GEOM.ROTOR.matLOCATION,1),1),matROTNORMALS,2)./(VEL_B_MAG));
-STATE.BETA = acos(dot(STATE.VEL_B,[1 0 0])./(VEL_B_MAG));
 
 if abs(alpha_shaft1-alpha_shaft2) > 1e-10
     warning('fcnSTATES2AOA - Two Alpha Calculation Technique Not Equal')
@@ -67,7 +66,10 @@ STATE.VEL_ROTOR = STATE.BODY_RATES(end,:).*GEOM.ROTOR.matLOCATION + STATE.VEL_B 
 STATE.VEL_ROTOR_MAG = sqrt(STATE.VEL_ROTOR(:,1).^2 + STATE.VEL_ROTOR(:,2).^2 + STATE.VEL_ROTOR(:,3).^2);
 STATE.AOA_R = acos(dot(STATE.VEL_ROTOR,matROTNORMALS,2)./(STATE.VEL_ROTOR_MAG));
 
-STATE.BETA = acos(dot(STATE.VEL_ROTOR,repmat([1 0 0],size(STATE.VEL_ROTOR,1),1),2)./(STATE.VEL_ROTOR_MAG));
+% Calculate x-dir based on rotor normals
+xdir = cross(repmat([0 1 0],size(STATE.VEL_ROTOR,1),1),matROTNORMALS);
+% Calculate beta angles
+STATE.BETA = acos(dot(STATE.VEL_ROTOR,xdir,2)./(STATE.VEL_ROTOR_MAG));
 
 %% Correct for hover conditions
 % If the vehicles is perfectly in hover, the angles must be corrects. 
