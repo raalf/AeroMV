@@ -235,7 +235,7 @@ box on
 hold off
 
 
-figure(7)gi
+figure(7)
 clf(7)
 hold on
 scatter3(POS(begin+int:int:fin+int,1),POS(begin+int:int:fin+int,2),POS(begin+int:int:fin+int,3),'k')
