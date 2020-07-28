@@ -99,7 +99,7 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
     vecCD = exp(tempCD);
 
 	vecCD = vecCD.*(sin(valAOA).^3)+0.02;
-	vecCL = vecCD.*(sin(valAOA).^2)*cos(INFO.valAOA);
+	vecCL = vecCD.*(sin(valAOA).^2).*cos(valAOA);
 
     if any(STATE.VEL_MAG==0)
         vecCD(isnan(valAOA)) = 0;

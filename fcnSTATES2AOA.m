@@ -24,6 +24,15 @@ function [STATE] = fcnSTATES2AOA(STATE, GEOM, vecINDUCEDVEL)
 if ~exist('vecINDUCEDVEL','var')
    vecINDUCEDVEL = 0; 
 end
+
+%% Check if there were rotor normals input 
+% If the rotor normals were not input, assume [0 0 1] 
+if fcnCOMPCHECK(GEOM.ROTOR, 'matNORMALS')
+    matROTNORMALS = GEOM.ROTOR.matNORMALS;
+else
+    matROTNORMALS = repmat([0 0 1], 1, size(GEOM.ROTOR.matLOCATION,1));
+end
+
 %% Calculate/check general variables
 % Calculate vehicle velocity magnitude
 STATE.VEL_MAG = sqrt(STATE.VEL(end,1).^2+STATE.VEL(end,2).^2+STATE.VEL(end,3).^2);
@@ -38,15 +47,15 @@ STATE.VEL_MAG = sqrt(STATE.VEL(end,1).^2+STATE.VEL(end,2).^2+STATE.VEL(end,3).^2
 R = fcnEUL2R(STATE.EULER(end,:),3,0);
 
 %% Calculate Shaft angle
-% Dot the velocity with the z-direction of the vehicle body
-% Method 1 - Convert the z-dir of the body frame into intertial
-z_I = R*[0 0 1]';
-alpha_shaft1 = acos(dot(STATE.VEL(end,:),z_I)./(STATE.VEL_MAG));
+% Dot the velocity with the rotor normals
+% Method 1 - Convert the rotor normals into intertial
+z_I = (R*matROTNORMALS')';
+alpha_shaft1 = acos(dot(repmat(STATE.VEL(end,:),size(GEOM.ROTOR.matLOCATION,1),1),z_I,2)./(STATE.VEL_MAG));
 
 % Method 2 - Convert the velocity from intertial frame to the body frame
 STATE.VEL_B  = (R'*STATE.VEL(end,:)')';
 VEL_B_MAG = sqrt(STATE.VEL_B(1).^2+STATE.VEL_B(2).^2+STATE.VEL_B(3).^2);
-alpha_shaft2 = acos(dot(STATE.VEL_B(end,:),[0 0 1])./(VEL_B_MAG));
+alpha_shaft2 = acos(dot(repmat(STATE.VEL_B(end,:),size(GEOM.ROTOR.matLOCATION,1),1),matROTNORMALS,2)./(VEL_B_MAG));
 STATE.BETA = acos(dot(STATE.VEL_B,[1 0 0])./(VEL_B_MAG));
 
 if abs(alpha_shaft1-alpha_shaft2) > 1e-10
@@ -56,9 +65,9 @@ end
 % Calculate velocity experienced by rotor hub due to vehicle dynamics
 STATE.VEL_ROTOR = STATE.BODY_RATES(end,:).*GEOM.ROTOR.matLOCATION + STATE.VEL_B + vecINDUCEDVEL;
 STATE.VEL_ROTOR_MAG = sqrt(STATE.VEL_ROTOR(:,1).^2 + STATE.VEL_ROTOR(:,2).^2 + STATE.VEL_ROTOR(:,3).^2);
-STATE.AOA_R = acos(dot(STATE.VEL_ROTOR',repmat([0 0 1]',1,size(STATE.VEL_ROTOR,1)))'./(STATE.VEL_ROTOR_MAG));
+STATE.AOA_R = acos(dot(STATE.VEL_ROTOR,matROTNORMALS,2)./(STATE.VEL_ROTOR_MAG));
 
-STATE.BETA = acos(dot(STATE.VEL_ROTOR',repmat([1 0 0]',1,size(STATE.VEL_ROTOR,1)))'./(STATE.VEL_ROTOR_MAG));
+STATE.BETA = acos(dot(STATE.VEL_ROTOR,repmat([1 0 0],size(STATE.VEL_ROTOR,1),1),2)./(STATE.VEL_ROTOR_MAG));
 
 %% Correct for hover conditions
 % If the vehicles is perfectly in hover, the angles must be corrects. 
