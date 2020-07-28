@@ -31,7 +31,7 @@ GEOM.VEH.idxLEG = fcnCOMPCHECK(GEOM.VEH,'LEG');
 if GEOM.VEH.idxLEG
     GEOM.VEH.LEG.valAOA = STATE.AOA; 
     [PERF.LEG.vecCD, PERF.LEG.vecDRAG, PERF.LEG.vecCL, PERF.LEG.vecLIFT, TABLE] ...
-        = fcnVEHFORCE(STATE.VEL_MAG, GEOM.VEH.LEG, AIR, TABLE);
+        = fcnVEHFORCE(STATE, GEOM.VEH.LEG, AIR, TABLE);
 end
 
 %% Compute payload forces

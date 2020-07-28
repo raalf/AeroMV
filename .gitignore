@@ -22,3 +22,6 @@ DATA/Pelican_Raw_Data/trimmed_flights.mat
 
 #Matrice Dataset
 DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat
+
+#Default save file
+DATA.mat

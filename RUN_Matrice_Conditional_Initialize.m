@@ -3,7 +3,7 @@ clear,clc
 filename = 'DJI_Matrice_210_RTK';
 load('DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat','Flight_Data','density','flight_segments')
 
-flight_num = 1;
+flight_num = 5;
 
 Euler = Flight_Data(1,flight_num).Euler_Angles;
 VEL = Flight_Data(1,flight_num).Velocity;
@@ -37,8 +37,7 @@ idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
 
 % Creating OVERWRITE function
-OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
-OVERWRITE.density
+OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
 FOLDER_ADDRESS = pwd;
 addpath(genpath(FOLDER_ADDRESS))
@@ -55,7 +54,7 @@ for i = begin:int:fin
     while cond
     d = i+k;
     
-    STATE.RPM = RPM_Mulitplier.*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
+    STATE.RPM = [RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
     
     STATE.EULER = Euler(d,:);
     if k == 0
@@ -87,7 +86,7 @@ for i = begin:int:fin
     [OUTP(k), PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
     
     idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
-    idxBODY_COND(k,:) = (abs(BODY_RATE_From_Euler(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;
+    idxBODY_COND(k,:) = (abs(BODY_RATES(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;
     if any(idxVEL_COND(k,:)) || any(idxBODY_COND(k,:))
         cond = false;
         iter_num(j) = count_iter_num;

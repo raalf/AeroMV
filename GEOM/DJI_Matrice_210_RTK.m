@@ -8,16 +8,26 @@
 GEOM.ROTOR.strNAME = 'Matrice_210_RTK_BEMTDATA';
 
 % Location center locations [x,y,z], (meters)
-GEOM.ROTOR.matLOCATION = [mean([209.9119 210.8997]) mean([244.2242 245.6493])  mean([170.4645 158.0862]); % Rotor 1
-                          mean([-250.1931 -251.4234]) mean([220.8841 222.1141])  mean([171.3553 158.9771]); % Rotor 2
-                          mean([-243.7041 -244.9343]) mean([-213.8545 -215.0847])  mean([169.6223 157.244]); % Rotor 3
-                          mean([222.3009 223.2988]) mean([-213.8545 -215.0847])  mean([169.6223 157.244])]*0.001; % Rotor 4
-
+% GEOM.ROTOR.matLOCATION = [mean([209.9119 210.8997]) mean([244.2242 245.6493])  mean([170.4645 158.0862]); % Rotor 1
+%                           mean([-250.1931 -251.4234]) mean([220.8841 222.1141])  mean([171.3553 158.9771]); % Rotor 2
+%                           mean([-243.7041 -244.9343]) mean([-213.8545 -215.0847])  mean([169.6223 157.244]); % Rotor 3
+%                           mean([222.3009 223.2988]) mean([-213.8545 -215.0847])  mean([169.6223 157.244])]*0.001; % Rotor 4
+   
+GEOM.ROTOR.matLOCATION = [mean([222.3009 223.2988]) mean([-213.8545 -215.0847])  mean([169.6223 157.244]);
+                          mean([209.9119 210.8997]) mean([244.2242 245.6493])  mean([170.4645 158.0862]);
+                          mean([-250.1931 -251.4234]) mean([220.8841 222.1141])  mean([171.3553 158.9771]);
+                          mean([-243.7041 -244.9343]) mean([-213.8545 -215.0847])  mean([169.6223 157.244])]*0.001;
+theta = 8;
+GEOM.ROTOR.matNORMALS = [-0.5*sind(theta) 0.5*sind(theta) cosd(theta);
+                        -0.5*sind(theta) -0.5*sind(theta) cosd(theta);
+                        0.5*sind(theta) -0.5*sind(theta) cosd(theta);
+                        0.5*sind(theta) 0.5*sind(theta) cosd(theta)];
+                      
 % Rotation direction for each rotor                  
 GEOM.ROTOR.matROT = [-1 1 -1 1]; % 1 = CW, -1 = CCW
 
 % Rotor Diameter for each rotor
-GEOM.ROTOR.vecDIAM = [0.4 0.4 0.4 0.4]';
+GEOM.ROTOR.vecDIAM = [0.4318 0.4318 0.4318 0.4318]';
 
 % Number of blades per rotor (one value is used for all rotors)
 GEOM.ROTOR.valNUMB = 2;
@@ -25,15 +35,15 @@ GEOM.ROTOR.valNUMB = 2;
 
 %% Vehicle information
 % Total vehicle mass
-GEOM.VEH.valMASS = 3.8; % (Kg)
+GEOM.VEH.valMASS = 6.7315; % (Kg)
 
 % Vehicle CG Location [x,y,z], (meters)
-GEOM.VEH.vecCG = [0 0 0.1];
+GEOM.VEH.vecCG = [7.119 -10.172 47.397]*0.001;
 
 % Moment of inertia [Ixx -Ixy -Ixz; -Ixy Iyy, -Iyz, -Ixz, -Iyz, Izz]
-GEOM.VEH.I =  [0, 0, 0;
-                0, 0, 0;
-                0, 0, 0];
+GEOM.VEH.I =  [0.17525014, 0.00411034, -0.00173288;
+                0.00411034, 0.16151033, 0.01333274;
+                -0.00173288, 0.01333274, 0.20452748];
 
 %% Component information
 % Component options categories are: ARM, BODY, LEG, MOTOR
@@ -89,7 +99,7 @@ GEOM.VEH.PAYLOAD.vecLOCATION = [mean([220.0738 207.3815]) mean([96.8405 36.4871]
 
 % Body and battery
 GEOM.VEH.BODY.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.BODY.valDIAM = [0.1 0.135]; % Cylinder diameter (meters)
+GEOM.VEH.BODY.valDIAM = [0.1 0.135]'; % Cylinder diameter (meters)
 
 % Each LEG location, begin and end [x,y,z], (meters)
 GEOM.VEH.BODY.matBEGIN = [122.46 7.7 mean([46.5 90]);
@@ -99,7 +109,7 @@ GEOM.VEH.BODY.matEND = [-122.54 7.7 mean([90 46.5]);
 
 % [LEFT GPS, RIGHT GPS, LEFT LEG SENSOR, RIGHT LEG SENSOR, LEFT FOOT SENSOR]
 GEOM.VEH.OTHER.strTYPE = 'Cylinder'; % Component type ('Cylinder' or 'Sphere')
-GEOM.VEH.OTHER.valDIAM = [0.065 0.065 0.02975 0.111 0.0295]; % Cylinder diameter (meters)
+GEOM.VEH.OTHER.valDIAM = [0.065 0.065 0.02975 0.111 0.0295]'; % Cylinder diameter (meters)
 
 % Each LEG location, begin and end [x,y,z], (meters)
 GEOM.VEH.OTHER.matBEGIN = [4.96 197.0104 197.9865
