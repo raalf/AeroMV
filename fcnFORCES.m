@@ -80,6 +80,9 @@ Fy = Fx_R.*sin(STATE.BETA)+Fy_R.*cos(STATE.BETA);
 OUTP.F_r = [Fx, Fy, thrust];
 %OUTP.F_r = [0*Fx, 0*Fy, thrust];
 
+% Convert the rotor forces from rotor reference frame to body frame
+[OUTP.F_r] = fcnROTREF2BODY(GEOM, OUTP.F_r);
+
 % Calculate rotation matrix
 R = fcnEUL2R(STATE.EULER(end,:),3,0);
 
@@ -113,6 +116,9 @@ My = Mx_R.*sin(STATE.BETA)+My_R.*cos(STATE.BETA);
 % Save rotor moments to OUTP as a vector in rotor reference frame
 OUTP.M_r = [Mx, My, Q];
 %OUTP.M_r = [0*Mx, 0*My, Q];
+
+% Convert the rotor moments from rotor reference frame to body frame
+[OUTP.M_r] = fcnROTREF2BODY(GEOM, OUTP.M_r);
 
 % Calculate total vehcile moments due to rotors. M_r + r x F_r
 M_rotor = OUTP.M_r + cross(GEOM.ROTOR.matLOCATION,OUTP.F_r);

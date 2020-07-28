@@ -30,7 +30,7 @@ end
 if fcnCOMPCHECK(GEOM.ROTOR, 'matNORMALS')
     matROTNORMALS = GEOM.ROTOR.matNORMALS;
 else
-    matROTNORMALS = repmat([0 0 1], 1, size(GEOM.ROTOR.matLOCATION,1));
+    matROTNORMALS = repmat([0 0 1], size(GEOM.ROTOR.matLOCATION,1),1);
 end
 
 %% Calculate/check general variables
