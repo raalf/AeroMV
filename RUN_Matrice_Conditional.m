@@ -3,7 +3,7 @@ clear,clc
 filename = 'DJI_Matrice_210_RTK';
 load('DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat','Flight_Data','density','flight_segments')
 
-flight_num = 1;
+flight_num = 5;
 
 Euler = Flight_Data(1,flight_num).Euler_Angles;
 VEL = Flight_Data(1,flight_num).Velocity;
@@ -12,9 +12,10 @@ Height = Flight_Data(1,flight_num).Height_Above_Takeoff;
 POS = [zeros(length(Height),2), Height];
 BODY_RATES = Flight_Data(1,flight_num).Body_Rates;
 
+BODY_RATES = diff(Euler)*50;
 j = 0;
-begin = 3000;
-fin = 4500;
+begin = 4000;
+fin = 4030;
 datafeq = 50;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -48,8 +49,8 @@ addpath(genpath(FOLDER_ADDRESS))
 
 for i = begin:int:fin
     j = j+1;
-    STATE.accuracy = 3;
-    STATE.RPM = [RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+    STATE.accuracy = 1;
+    STATE.RPM = 0.9*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
     
     STATE.EULER = Euler(i,:);
 

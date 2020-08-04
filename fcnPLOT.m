@@ -75,4 +75,8 @@ if GEOM.VEH.idxOTHER
     fcnPLTCOMP(GEOM.VEH.OTHER,fignum)
 end
 
-
+%% Add point for CG
+figure(fignum)
+hold on
+scatter3(GEOM.VEH.vecCG(:,1),GEOM.VEH.vecCG(:,2),GEOM.VEH.vecCG(:,3),'kp','linewidth',3)
+hold off
