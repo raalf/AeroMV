@@ -1,29 +1,28 @@
 % Run Pelican Datase
 clear,clc
+% fcnRUN_DIR to be able to either run from the RUN folder or the main
+% folder if only this file is added to the search path
+fcnRUN_DIR()
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
-% load('DATA/Pelican_Raw_Data/smoothed_flight.mat','pelican_flights')
+% load('DATA/Pelican_Raw_Data/AscTec_Pelican_Flight_Dataset_Original_Motors.mat','flights')
 
 flight_num = 23;
 
 Euler = flights{1,flight_num}.Euler;
-% % % Euler = pelican_flights{1,flight_num}.Euler;
 % VEL = sqrt(flights{1,flight_num}.Vel(:,1).^2+flights{1,flight_num}.Vel(:,2).^2+flights{1,flight_num}.Vel(:,3).^2);
 VEL = flights{1,flight_num}.Vel;
-% % % VEL = diff(pelican_flights{1,flight_num}.Pos)./(1/100);
 % This equation is from the masters thesis of Nguyen Khoi Tran at McGill
 % titled: Modeling and Control of a Quadrotor in a Wind Field
-% RPM = (25+flights{1,flight_num}.Motors*175/200)*43;
+RPM = (25+flights{1,flight_num}.Motors*175/200)*43;
 % RPM calculated from experiements by Ben
 RPM = 34.676*flights{1,flight_num}.Motors+1333.1;
-% % % RPM = 34.676*pelican_flights{1,flight_num}.Motors+1333.1;
 POS = flights{1,flight_num}.Pos;
-% % % POS = pelican_flights{1,flight_num}.Pos;
 BODY_RATES = flights{1,flight_num}.pqr;
-% % % BODY_RATES = diff(pelican_flights{1,flight_num}.Euler)./(1/100);
+
 j = 0;
 begin = 1000;
-fin = 20000;
+fin = 1050;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -90,26 +89,20 @@ for i = begin:int:fin
     elseif k == 1
         STATE.VEL = [VEL(d-2:d-1,:);OUTP(k).VEL_NEW']; % m/s
         STATE.POS = [POS(d-2:d-1,:);OUTP(k).POS_NEW'];
-%         STATE.EULER = [Euler(d-2:d-1,:);OUTP(k).EULER_NEW'];
-        STATE.EULER = Euler(d-2:d,:);  %%%%
-%         STATE.BODY_RATES = [BODY_RATES(d-2:d-1,:);OUTP(k).OMEGA_NEW_B'];
-        STATE.BODY_RATES = BODY_RATES(d-2:d,:); %%%%
+        STATE.EULER = [Euler(d-2:d-1,:);OUTP(k).EULER_NEW'];
+        STATE.BODY_RATES = [BODY_RATES(d-2:d-1,:);OUTP(k).OMEGA_NEW_B'];
         k = 2;
     elseif k == 2
         STATE.VEL = [VEL(d-2,:);[OUTP(k-1:k).VEL_NEW]']; % m/s
         STATE.POS = [POS(d-2,:);[OUTP(k-1:k).POS_NEW]'];
-%         STATE.EULER = [Euler(d-2,:);[OUTP(k-1:k).EULER_NEW]'];
-        STATE.EULER = Euler(d-2:d,:);  %%%%
-%         STATE.BODY_RATES = [BODY_RATES(d-2,:);[OUTP(k-1:k).OMEGA_NEW_B]'];
-        STATE.BODY_RATES = BODY_RATES(d-2:d,:); %%%%
+        STATE.EULER = [Euler(d-2,:);[OUTP(k-1:k).EULER_NEW]'];
+        STATE.BODY_RATES = [BODY_RATES(d-2,:);[OUTP(k-1:k).OMEGA_NEW_B]'];
         k = 3;
     else
         STATE.VEL = [OUTP(k-2:k).VEL_NEW]';
         STATE.POS = [OUTP(k-2:k).POS_NEW]';
-%         STATE.EULER = [OUTP(k-2:k).EULER_NEW]';
-%         STATE.BODY_RATES = [OUTP(k-2:k).OMEGA_NEW_B]';
-        STATE.EULER = Euler(d-2:d,:);  %%%%
-        STATE.BODY_RATES = BODY_RATES(d-2:d,:); %%%%
+        STATE.EULER = [OUTP(k-2:k).EULER_NEW]';
+        STATE.BODY_RATES = [OUTP(k-2:k).OMEGA_NEW_B]';
         k = k + 1;
     end
     

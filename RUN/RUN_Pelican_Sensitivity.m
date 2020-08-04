@@ -332,6 +332,10 @@ idxRPMFACT =  fullfact([length(RPM1),length(RPM2),length(RPM3),length(RPM4)]);
 
 %% RUN CG
 % One time initialization 
+% fcnRUN_DIR to be able to either run from the RUN folder or the main
+% folder if only this file is added to the search path
+fcnRUN_DIR()
+
 filename = 'AscTec_Pelican';
 load('DATA/Pelican_Dataset/AscTec_Pelican_Flight_Dataset.mat','flights')
 flight_num = 23;

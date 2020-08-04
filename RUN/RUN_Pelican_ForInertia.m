@@ -16,7 +16,9 @@
 % D.F.B. in Barrie ON, Canada, Apr. 2020
 
 clear,clc
-
+% fcnRUN_DIR to be able to either run from the RUN folder or the main
+% folder if only this file is added to the search path
+fcnRUN_DIR()
 %% Solve for moment of inertia equations
 
 syms w_x w_y w_z % Body rates
