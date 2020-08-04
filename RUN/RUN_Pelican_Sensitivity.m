@@ -354,9 +354,6 @@ Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
 len = (fin-begin)/int + 1;
 
-FOLDER_ADDRESS = pwd;
-addpath(genpath(FOLDER_ADDRESS))
-
 % Initialize the variables used for sensitivity analysis
 AVERAGE_ITERATION_CG = NaN(size(idxCGFACT,1),1);
 ITERATION_CG = NaN(size(idxCGFACT,1),len);

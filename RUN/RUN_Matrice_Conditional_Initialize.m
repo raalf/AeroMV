@@ -45,8 +45,7 @@ avg_count = 5; % How many points to average for moving average of input variable
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
-FOLDER_ADDRESS = pwd;
-addpath(genpath(FOLDER_ADDRESS))
+
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);

@@ -10,7 +10,6 @@ filename = 'DJI_Matrice_210_RTK';
 load('DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat','Flight_Data','density','flight_segments')
 
 
-
 flight_num = 5;
 
 Euler = Flight_Data(1,flight_num).Euler_Angles;
@@ -47,8 +46,6 @@ avg_count = 5; % How many points to average for moving average of input variable
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
-FOLDER_ADDRESS = pwd;
-addpath(genpath(FOLDER_ADDRESS))
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);

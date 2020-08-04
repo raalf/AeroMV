@@ -64,8 +64,6 @@ avg_count = 5; % How many points to average for moving average of input variable
 OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
 % OVERWRITE.GEOM.VEH.vecCG = [0 0 152.0153-118.7]*0.001;
 % OVERWRITE = [];
-FOLDER_ADDRESS = pwd;
-addpath(genpath(FOLDER_ADDRESS))
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);

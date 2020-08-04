@@ -10,5 +10,9 @@ if strcmp(dir(end-3:end),'\RUN')
     cd(dir(1:end-4))
 end
 
+% Add all folders to path
+FOLDER_ADDRESS = pwd;
+addpath(genpath(FOLDER_ADDRESS))
+
 end
 
