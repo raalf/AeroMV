@@ -46,13 +46,11 @@ GEOM.VEH.valMASS = 6.7315; % (Kg)
 GEOM.VEH.vecCG = [7.119 -10.172 47.397]*0.001;
 
 % Moment of inertia [Ixx -Ixy -Ixz; -Ixy Iyy, -Iyz, -Ixz, -Iyz, Izz]
-GEOM.VEH.I =  [0.17525014, 0.00411034, -0.00173288;
-                0.00411034, 0.16151033, 0.01333274;
+I_multi = 1;
+GEOM.VEH.I =  [I_multi*0.17525014, 0.00411034, -0.00173288;
+                0.00411034, I_multi*0.16151033, 0.01333274;
                 -0.00173288, 0.01333274, 0.20452748];
-            
-% GEOM.VEH.I =  [0.4, 0.00411034, -0.00173288;
-%                 0.00411034, 0.4, 0.01333274;
-%                 -0.00173288, 0.01333274, 0.5];            
+
 
 %% Component information
 % Component options categories are: ARM, BODY, LEG, MOTOR
