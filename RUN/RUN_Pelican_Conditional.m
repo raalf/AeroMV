@@ -22,7 +22,7 @@ BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
 begin = 1000;
-fin = 20000;
+fin = 1050;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
