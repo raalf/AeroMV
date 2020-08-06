@@ -22,6 +22,11 @@ GEOM.ROTOR.vecDIAM = [0.254 0.254 0.254 0.254]';
 % Number of blades per rotor (one value is used for all rotors)
 GEOM.ROTOR.valNUMB = 2;
 
+% Rotor mass
+% Row number is associated to rotor number or can use one value for all 
+% rotors
+GEOM.ROTOR.vecRMASS = 0.011; % Kg
+
 
 %% Vehicle information
 % Total vehicle mass

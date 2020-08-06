@@ -28,6 +28,9 @@ if ~fcnCOMPCHECK(STATE, 'accuracy')
     STATE.accuracy = 1;
 end
 
+% Calculate the precession rate
+[OUTP] = fcnPRECESSION(GEOM, STATE, OUTP);
+
 h = 1/(STATE.FREQ); % Grid spacing size, ie delta time
 
 % Calculate rotation matrix
@@ -48,6 +51,10 @@ OUTP.OMEGA_DOT_B = GEOM.VEH.I\(OUTP.M_B + cross(-1*STATE.BODY_RATES(end,:)',STAT
 R = fcnEUL2R(STATE.EULER,4,0);
 
 OUTP.OMEGA_NEW_B = fcnBCKWRDDIFF(h,OUTP.OMEGA_DOT_B',STATE.BODY_RATES,STATE.accuracy)'; % Body frame
+
+% Add Precession rate
+% OUTP.OMEGA_NEW_B = sum(OUTP.PREC_RATE,1)'+OUTP.OMEGA_NEW_B;
+
 OUTP.OMEGA_NEW = R\OUTP.OMEGA_NEW_B; % Inertial frame
 OUTP.EULER_NEW = fcnBCKWRDDIFF(h,OUTP.OMEGA_NEW',STATE.EULER,STATE.accuracy)'; % Inertial frame
 
