@@ -20,11 +20,19 @@ function [OUTP] = fcnPRECESSION(GEOM, STATE, OUTP)
 % have a constant mass along its radius. 
 I_r = 1/12*(GEOM.ROTOR.vecRMASS.*(GEOM.ROTOR.vecDIAM.^2));
 
+% Calculate total moment
+M = sqrt(OUTP.M_B(1)^2+OUTP.M_B(2)^2+OUTP.M_B(3)^2);
+M_unit = repmat(OUTP.M_B/M,size(GEOM.ROTOR.matNORMALS,1),1);
+
+% Find precession direction
+dir = cross(M_unit/M,GEOM.ROTOR.matNORMALS.*GEOM.ROTOR.matROT'*-1);
+
 
 % Calculate the precession rate (ie the anglular velocity due to precession)
-OUTP.PREC_RATE = (OUTP.M_B./(I_r.*(STATE.RPM'.*2.*pi)/60)).*GEOM.ROTOR.matROT';
-%******NOTE: NEED TO WORK ON CORRECT DIRECTIONS!
+OUTP.PREC_RATE = (M./(I_r.*(STATE.RPM'.*2.*pi)/60)).*dir;
 
+
+% OUTP.PREC_RATE = (OUTP.M_B./(I_r.*(STATE.RPM'.*2.*pi)/60)).*GEOM.ROTOR.matROT';
 % For reference, this is incorrect because must use the total torque at
 % each rotor, which is the same as the total torque acting on the vehicle
 % M_rotor = OUTP.M_r + cross(GEOM.ROTOR.matLOCATION,OUTP.F_r); WRONG!!
