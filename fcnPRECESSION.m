@@ -29,8 +29,17 @@ dir = cross(M_unit/M,GEOM.ROTOR.matNORMALS.*GEOM.ROTOR.matROT'*-1);
 
 
 % Calculate the precession rate (ie the anglular velocity due to precession)
-OUTP.PREC_RATE = (M./(I_r.*(STATE.RPM'.*2.*pi)/60)).*dir;
+OUTP.PREC_RATE_ROTOR = (M./(I_r.*(STATE.RPM'.*2.*pi)/60)).*dir;
 
+for i = 1:size(GEOM.ROTOR.matNORMALS,1)
+    OUTP.PREC_VEH_RATE(i,:) = (M.*dir(i,:)/(GEOM.VEH.I*(STATE.RPM(i).*2.*pi)/60));
+end
+
+% Use conservation of angular momentum do convert the precession rate to
+% the overall vehicle rates
+% I_b*omega_b = I_r*Prec_Rate
+% OUTP.PREC_VEH_RATE = I_r.*OUTP.PREC_RATE./(diag(GEOM.VEH.I))'; % Better
+% to use simplified equation in above for loop
 
 % OUTP.PREC_RATE = (OUTP.M_B./(I_r.*(STATE.RPM'.*2.*pi)/60)).*GEOM.ROTOR.matROT';
 % For reference, this is incorrect because must use the total torque at
