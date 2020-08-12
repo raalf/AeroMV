@@ -33,6 +33,12 @@ if strcmpi(INFO.strTYPE,'Cylinder')
         e_L(idx,2) = 1;
     end
     
+    % Check for span direction to be aligned with freestream
+    idx = sum(span_dir == 0,2) == 3;
+    if any(idx)
+        e_L(idx,2) = 1;
+    end
+    
     % Turn lift direction into a unit vector
     e_L = e_L./sqrt(e_L(:,1).^2+e_L(:,2).^2+e_L(:,3).^2);
     

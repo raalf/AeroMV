@@ -24,7 +24,7 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(TABLE, GEOM, AIR, STATE
 
 %% Retrieve Input Vehicle Geometry (moved to outside of fcnMAIN for computational speed)
 % [TABLE, GEOM, AIR] = fcnINPUT(filename);
-idxVEHPERF = 0;
+idxVEHPERF = 1; % Toggle for calculating vehicle component forces
 
 %% Overwrite variables if neccessary
 if exist('OVERWRITE','var')
