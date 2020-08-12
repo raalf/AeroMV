@@ -1,4 +1,4 @@
-function [OUTP] = fcnFORCES(PERF, GEOM, STATE)
+function [OUTP] = fcnFORCES(PERF, GEOM, STATE, idxVEHPERF)
 % This function is used to sum the total vehicle forces and moments in the
 % body frame.
 %
@@ -21,6 +21,7 @@ r = [];
 
 % Create vectors of the total lift and total drag action on each component
 % Check and add body information
+if idxVEHPERF ~= 0
 if GEOM.VEH.idxBODY == 1
     COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.BODY.vecDRAG];
     COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.BODY.vecLIFT];
@@ -66,7 +67,12 @@ end
 % Save component force data to OUTP
 OUTP.COMP_DRAG_TOTAL = COMP_DRAG_TOTAL;
 OUTP.COMP_LIFT_TOTAL = COMP_LIFT_TOTAL;
-
+else
+   OUTP.COMP_DRAG_TOTAL = [0 0 0];
+   OUTP.COMP_LIFT_TOTAL = [0 0 0];
+   e_L = [0 0 0];
+   r = [0 0 1];
+end
 % Rotor forces
 thrust = [PERF.ROTOR.T]';
 Fx_R = [PERF.ROTOR.Nx]';
@@ -97,12 +103,12 @@ end
 
 % Calcuate total forces in body reference frame (as a vector)
 % rotor forces + component drag + component lift + mg
-OUTP.F_B = sum(OUTP.F_r,1) + sum(OUTP.COMP_DRAG_TOTAL*e_V) + ...
-    sum(OUTP.COMP_LIFT_TOTAL.*e_L) + e_D*GEOM.VEH.valMASS*9.81;
+OUTP.F_B = sum(OUTP.F_r,1) + sum(OUTP.COMP_DRAG_TOTAL.*e_V,1) + ...
+    sum(OUTP.COMP_LIFT_TOTAL.*e_L,1) + e_D*GEOM.VEH.valMASS*9.81;
 
 %% Sum the moments in the body frame
 % Calculate moments due to forces on vehicle components
-OUTP.M_comp = cross(r,(OUTP.COMP_LIFT_TOTAL.*e_L + OUTP.COMP_DRAG_TOTAL*e_V));
+OUTP.M_comp = cross(r,(OUTP.COMP_LIFT_TOTAL.*e_L + OUTP.COMP_DRAG_TOTAL.*e_V));
 
 % Rotor Moments
 Q = [PERF.ROTOR.Q]'.*(GEOM.ROTOR.matROT'); % Sign based on rotation direction

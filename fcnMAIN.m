@@ -24,6 +24,7 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(TABLE, GEOM, AIR, STATE
 
 %% Retrieve Input Vehicle Geometry (moved to outside of fcnMAIN for computational speed)
 % [TABLE, GEOM, AIR] = fcnINPUT(filename);
+idxVEHPERF = 0;
 
 %% Overwrite variables if neccessary
 if exist('OVERWRITE','var')
@@ -39,7 +40,11 @@ end
 [STATE] = fcnSTATES2AOA(STATE, GEOM);
 
 %% Vehicle Body Force Buildup
-[PERF, TABLE, GEOM] = fcnVEHPERF(AIR, TABLE, GEOM, STATE);
+if (idxVEHPERF ~= 0)
+    [PERF, TABLE, GEOM] = fcnVEHPERF(AIR, TABLE, GEOM, STATE);
+else
+    PERF.VEHOFF = 1;
+end
 
 %% Rotor Aerodynamics
 if (idxAERO == 1)
@@ -49,14 +54,17 @@ elseif (idxAERO==2)
     % BEMT Module
     PERF = fcnRUNBEMT(GEOM, AIR, PERF, STATE);
 elseif (idxAERO==3)
+    % Vortex ring wake model
     PERF = fcnRUNVORTRING(GEOM,AIR,PERF,STATE);
+elseif (idxAERO==4)
+    PERF = fcnKOMEGA2(GEOM,AIR,PERF,STATE);
 end
 
 % Apply ground effect
 PERF = fcnGRDEFF(GEOM,PERF,STATE);
 
 %% Force and Moment Transformations
-[OUTP] = fcnFORCES(PERF, GEOM, STATE);
+[OUTP] = fcnFORCES(PERF, GEOM, STATE, idxVEHPERF);
 
 %% Flight Dynamics Model
 [OUTP] = fcnFLIGHTDYN(GEOM, STATE, OUTP);

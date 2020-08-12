@@ -31,6 +31,9 @@ GEOM.ROTOR.matLOCATION = GEOM.ROTOR.matLOCATION(idx,:);
 idx2 = [2,1,4,3]';
 GEOM.ROTOR.matLOCATION = GEOM.ROTOR.matLOCATION(idx2,:);
 
+
+GEOM.ROTOR.matNORMALS = [0 0 1; 0 0 1; 0 0 1; 0 0 1];
+      
 % % ******Using Asctec datasheet rotor locations*******
 % idx_temp = (GEOM.ROTOR.matLOCATION./abs(GEOM.ROTOR.matLOCATION));
 % GEOM.ROTOR.matLOCATION(:,1:2) = 0.1492.*idx_temp(:,1:2);
@@ -44,6 +47,10 @@ GEOM.ROTOR.valNUMB = 2;
 
 % Rotor mass
 GEOM.ROTOR.vecRMASS = 0.011; % Kg
+
+% K constants when using K-omega^2 relationship
+GEOM.KT = 0.0169;
+GEOM.KQ = 0.00202;
 
 %% Vehicle information
 GEOM.VEH.valMASS = 1.867; % Kg

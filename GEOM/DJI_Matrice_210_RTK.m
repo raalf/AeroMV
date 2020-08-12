@@ -27,7 +27,7 @@ GEOM.ROTOR.matNORMALS = [-0.5*sind(theta) 0.5*sind(theta) cosd(theta);
                         -0.5*sind(theta) -0.5*sind(theta) cosd(theta);
                         0.5*sind(theta) -0.5*sind(theta) cosd(theta);
                         0.5*sind(theta) 0.5*sind(theta) cosd(theta)];
-                      
+                        
 % Rotation direction for each rotor                  
 GEOM.ROTOR.matROT = [-1 1 -1 1]; % 1 = CW, -1 = CCW
 
@@ -49,7 +49,7 @@ GEOM.VEH.valMASS = 6.7315; % (Kg)
 GEOM.VEH.vecCG = [7.119 -10.172 47.397]*0.001;
 
 % Moment of inertia [Ixx -Ixy -Ixz; -Ixy Iyy, -Iyz, -Ixz, -Iyz, Izz]
-I_multi = 6;
+I_multi = 1;
 GEOM.VEH.I =  [I_multi*0.17525014, 0.00411034, -0.00173288;
                 0.00411034, I_multi*0.16151033, 0.01333274;
                 -0.00173288, 0.01333274, 0.20452748];
