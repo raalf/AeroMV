@@ -9,7 +9,7 @@ filename = 'DJI_Matrice_210_RTK';
 % Dataset
 load('DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat','Flight_Data','density','flight_segments')
 
-flight_num = 5;
+flight_num = 1;
 
 Euler = Flight_Data(1,flight_num).Euler_Angles;
 VEL = Flight_Data(1,flight_num).Velocity;
@@ -19,8 +19,8 @@ POS = [zeros(length(Height),2), Height];
 BODY_RATES = Flight_Data(1,flight_num).Body_Rates;
 
 j = 0;
-begin = 200;
-fin = 4800;
+begin = 1000;
+fin = 4000;
 datafeq = 50;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -45,7 +45,7 @@ avg_count = 5; % How many points to average for moving average of input variable
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
-
+OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);

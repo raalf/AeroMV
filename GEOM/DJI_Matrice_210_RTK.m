@@ -21,7 +21,17 @@ GEOM.ROTOR.matLOCATION = [0.2228   -0.2199    0.1644
                           0.2228    0.2449    0.1644
                          -0.2443    0.2449    0.1644
                          -0.2443   -0.2199    0.1644];
+                     
+% GEOM.ROTOR.matLOCATION = [0.26987  -0.227     0.1644
+%                           0.26987  0.227     0.1644
+%                          -0.1905   0.227     0.1644
+%                          -0.1905  -0.227     0.1644];
 
+GEOM.ROTOR.matLOCATION = [0.2228   -0.2199+0.0052    0.1644
+                          0.2228    0.2449-0.0052    0.1644
+                         -0.2443    0.2449-0.0052    0.1644
+                         -0.2443   -0.2199+0.0052    0.1644];
+                     
 theta = 8;
 GEOM.ROTOR.matNORMALS = [-0.5*sind(theta) 0.5*sind(theta) cosd(theta);
                         -0.5*sind(theta) -0.5*sind(theta) cosd(theta);
@@ -47,6 +57,11 @@ GEOM.VEH.valMASS = 6.7315; % (Kg)
 
 % Vehicle CG Location [x,y,z], (meters)
 GEOM.VEH.vecCG = [7.119 -10.172 47.397]*0.001;
+GEOM.VEH.vecCG = [mean(GEOM.ROTOR.matLOCATION([1 3],1))*1000+15.24 5.12+7.7 47.397]*0.001;
+% CG_X is relative to leg as center, CG_Y is in reference to main body
+% centerline
+GEOM.VEH.vecCG = [4.96+15.24 5.12+7.7 47.397]*0.001;
+
 
 % Moment of inertia [Ixx -Ixy -Ixz; -Ixy Iyy, -Iyz, -Ixz, -Iyz, Izz]
 I_multi = 1;

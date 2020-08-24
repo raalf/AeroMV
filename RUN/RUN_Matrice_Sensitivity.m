@@ -8,6 +8,16 @@ cg_x = (-10:1:30)*0.001;
 cg_y = (-20:1:20)*0.001;
 idxCGFACT = fullfact([length(cg_x),length(cg_y)]);
 
+Ixx = 0.17525014*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
+Iyy = 0.16151033*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
+Izz = 0.20452748*[0.5 0.75 1 1.25 2];
+idxCGFACT = fullfact([length(Ixx),length(Iyy),length(Izz)]);
+
+
+I_multi = 1;
+GEOM.VEH.I =  [I_multi*0.17525014, 0.00411034, -0.00173288;
+                0.00411034, I_multi*0.16151033, 0.01333274;
+                -0.00173288, 0.01333274, 0.20452748];
 
 % Run Matrice 210 RTK dataset
 % fcnRUN_DIR to    be able to either run from the RUN folder or the main
@@ -64,8 +74,10 @@ addpath(genpath(FOLDER_ADDRESS))
 parfor q = 1:size(idxCGFACT,1)
     tic
     OVERWRITE = [];
-    OVERWRITE.GEOM.VEH.vecCG = [cg_x(idxCGFACT(q,1)) cg_y(idxCGFACT(q,2))  (47.397)*0.001];
-    
+    OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
+OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
+                0.00411034, Iyy(idxCGFACT(q,2)), 0.01333274;
+                -0.00173288, 0.01333274, Izz(idxCGFACT(q,3))];
     j = 0;
     k = 0;
     cond = false;
@@ -138,7 +150,7 @@ parfor q = 1:size(idxCGFACT,1)
     fprintf('Done CG case: %d with average iteration: %f\n',q, AVERAGE_ITERATION_CG(q));
     toc
 end
-save('CG23_DATA_Symmetric2')
+save('Inertia_Data')
 
 %% CG Data
 
