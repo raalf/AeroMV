@@ -21,9 +21,9 @@ clear,clc
 
 % INPUTS
 filename = 'DJI_Matrice_210_RTK'; % Filename input
-AoA = 0:30;         % Angle of attack sweep
-Beta = 0:30;        % Beta sweep
-Velocity = 5;       % Velocity
+AoA = -30:30;         % Angle of attack sweep
+Beta = -30:30;        % Beta sweep
+Velocity = 15;       % Velocity
 
 
 %% Initial Setup

@@ -25,7 +25,7 @@ function [OUTP] = fcnFLIGHTDYN(GEOM, STATE, OUTP)
 % Order of accuracy for backwards differencing
 % If not input in STATE structure, assume accuracy = 1
 if ~fcnCOMPCHECK(STATE, 'accuracy')
-    STATE.accuracy = 1;
+    STATE.accuracy = 3;
 end
 
 % Calculate the precession rate

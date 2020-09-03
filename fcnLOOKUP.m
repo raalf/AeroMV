@@ -49,13 +49,31 @@ J_case = STATE.VEL_ROTOR_MAG./((STATE.RPM').*(GEOM.ROTOR.vecDIAM));
 datatype = 0;
 % Interpolate coefficient values
 if length(unique(RPM)) == 1 % Made a special case when the data is all at 1 rpm (often happens with experimental data)
-    CT_Interp = griddata(Angle,J,CT,STATE.AOA_R,J_case);
-    CP_Interp = griddata(Angle,J,CP,STATE.AOA_R,J_case);
-    CQ_Interp = griddata(Angle,J,CQ,STATE.AOA_R,J_case);
-    CNx_Interp = griddata(Angle,J,CNx,STATE.AOA_R,J_case);
-    CNy_Interp = griddata(Angle,J,CNy,STATE.AOA_R,J_case);
-    CMx_Interp = griddata(Angle,J,CMx,STATE.AOA_R,J_case);
-    CMy_Interp = griddata(Angle,J,CMy,STATE.AOA_R,J_case);
+    len = size(CT,1)*size(CT,2);
+
+    F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CT,len,1));
+    CT_Interp = F(STATE.AOA_R,J_case);
+    F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CP,len,1));
+    CP_Interp = F(STATE.AOA_R,J_case);
+	F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CQ,len,1));
+    CQ_Interp = F(STATE.AOA_R,J_case);
+    F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CNx,len,1));
+    CNx_Interp = F(STATE.AOA_R,J_case);
+    F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CNy,len,1));
+    CNy_Interp = F(STATE.AOA_R,J_case);
+	F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CMx,len,1));
+    CMx_Interp = F(STATE.AOA_R,J_case);
+    F = scatteredInterpolant(reshape(Angle,len,1),reshape(J,len,1),reshape(CMy,len,1));
+    CMy_Interp = F(STATE.AOA_R,J_case);    
+    
+% Switch from 'griddata' to 'scatteredInterpolate' to allow for extrapolation    
+% 	CT_Interp = griddata(Angle,J,CT,STATE.AOA_R,J_case);
+%     CP_Interp = griddata(Angle,J,CP,STATE.AOA_R,J_case);
+%     CQ_Interp = griddata(Angle,J,CQ,STATE.AOA_R,J_case);
+%     CNx_Interp = griddata(Angle,J,CNx,STATE.AOA_R,J_case);
+%     CNy_Interp = griddata(Angle,J,CNy,STATE.AOA_R,J_case);
+%     CMx_Interp = griddata(Angle,J,CMx,STATE.AOA_R,J_case);
+%     CMy_Interp = griddata(Angle,J,CMy,STATE.AOA_R,J_case);
 elseif datatype == 2 % Assuming 90 deg for all data
     index = find(Angle(1,:,1) == 90);
     CT = permute(CT(:,index,:),[1,3,2]);

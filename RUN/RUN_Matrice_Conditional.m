@@ -10,7 +10,7 @@ filename = 'DJI_Matrice_210_RTK';
 load('DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat','Flight_Data','density','flight_segments')
 
 
-flight_num = 1;
+flight_num = 6;
 
 Euler = Flight_Data(1,flight_num).Euler_Angles;
 VEL = Flight_Data(1,flight_num).Velocity;
