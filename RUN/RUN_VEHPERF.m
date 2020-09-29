@@ -21,8 +21,8 @@ clear,clc
 
 % INPUTS
 filename = 'DJI_Matrice_210_RTK'; % Filename input
-AoA = -30:30;         % Angle of attack sweep
-Beta = -30:30;        % Beta sweep
+AoA = -60:60;         % Angle of attack sweep
+Beta = -60:60;        % Beta sweep
 Velocity = 15;       % Velocity
 
 
@@ -43,7 +43,9 @@ for j = 1:length(AoA)
         
         % Calculate velocity vector based on aoa and beta        
         % *** DOUBLE CHECK THIS LINE
-        STATE.VEL_B = Velocity*[cosd(AoA(j))*cosd(Beta(i)) sind(Beta(i)) sind(AoA(j))];
+        R = fcnEUL2R([Beta(i) AoA(j) 0],3,1);
+        STATE.VEL_B = (R\[Velocity 0 0]')';
+%         STATE.VEL_B = Velocity*[cosd(AoA(j))*cosd(Beta(i)) sind(Beta(i)) sind(AoA(j))];
         
         % Calculate the velocity magnitude
         STATE.VEL_MAG = Velocity;
