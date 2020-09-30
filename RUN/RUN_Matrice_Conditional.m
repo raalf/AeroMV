@@ -21,13 +21,14 @@ BODY_RATES = Flight_Data(1,flight_num).Body_Rates;
 
 BODY_RATES = diff(Euler)*50;
 j = 0;
-begin = 4000;
-fin = 4030;
+begin = 1000;
+fin = 3000;
 datafeq = 50;
 int = 1;
 STATE.FREQ = datafeq/int;
 
-
+RPM_Multiplier = [0.8462,0.8508,0.9785,0.8942];
+% RPM_Multiplier = 0.7862;
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
 % Body_Rates_criteria = 0.19;
@@ -45,8 +46,9 @@ avg_count = 5; % How many points to average for moving average of input variable
 
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
-OVERWRITE.GEOM.VEH.vecCG = [1.5 0.1 47.397]*0.001;
-OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
+% OVERWRITE.GEOM.VEH.vecCG = [0 0 47.397]*0.001;
+% OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
+OVERWRITE.GEOM.VEH.vecCG = [-0.01 0.012  (47.397)*0.001];
 % OVERWRITE = [];
 
 %% Retrieve Input Vehicle Geometry
@@ -57,8 +59,9 @@ OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
 for i = begin:int:fin
     j = j+1;
     STATE.accuracy = 1;
-    STATE.RPM = 0.9*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-    
+%     STATE.RPM = 0.9*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+	STATE.RPM = RPM_Multiplier.*[RPM(i+1,1) RPM(i+1,2) RPM(i+1,3) RPM(i+1,4)]; % RPM
+
     STATE.EULER = Euler(i,:);
 
 %     if ~cond

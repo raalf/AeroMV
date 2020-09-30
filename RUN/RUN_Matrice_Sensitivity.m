@@ -4,20 +4,20 @@ set(0,'DefaultFigureWindowStyle','docked')
 % The original "Baseline" cg is [7.119 -10.172 47.397]*0.001
 clear,clc
 
-cg_x = (-10:1:30)*0.001;
-cg_y = (-20:1:20)*0.001;
+cg_x = (-20:1:0)*0.001;
+cg_y = (5:1:25)*0.001;
 idxCGFACT = fullfact([length(cg_x),length(cg_y)]);
 
-Ixx = 0.17525014*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
-Iyy = 0.16151033*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
-Izz = 0.20452748*[0.5 0.75 1 1.25 2];
-idxCGFACT = fullfact([length(Ixx),length(Iyy),length(Izz)]);
+% Ixx = 0.17525014*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
+% Iyy = 0.16151033*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
+% Izz = 0.20452748*[0.5 0.75 1 1.25 2];
+% idxCGFACT = fullfact([length(Ixx),length(Iyy),length(Izz)]);
 
 
-I_multi = 1;
-GEOM.VEH.I =  [I_multi*0.17525014, 0.00411034, -0.00173288;
-                0.00411034, I_multi*0.16151033, 0.01333274;
-                -0.00173288, 0.01333274, 0.20452748];
+% I_multi = 1;
+% GEOM.VEH.I =  [I_multi*0.17525014, 0.00411034, -0.00173288;
+%                 0.00411034, I_multi*0.16151033, 0.01333274;
+%                 -0.00173288, 0.01333274, 0.20452748];
 
 % Run Matrice 210 RTK dataset
 % fcnRUN_DIR to    be able to either run from the RUN folder or the main
@@ -62,6 +62,7 @@ idxBROKENCOND = NaN(len,6);
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
+RPM_Multiplier = [0.8462,0.8508,0.9785,0.8942];
 
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
@@ -74,10 +75,11 @@ addpath(genpath(FOLDER_ADDRESS))
 parfor q = 1:size(idxCGFACT,1)
     tic
     OVERWRITE = [];
-    OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
-OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
-                0.00411034, Iyy(idxCGFACT(q,2)), 0.01333274;
-                -0.00173288, 0.01333274, Izz(idxCGFACT(q,3))];
+    OVERWRITE.GEOM.VEH.vecCG = [cg_x(idxCGFACT(q,1)) cg_y(idxCGFACT(q,2))  (47.397)*0.001];
+% OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
+%                 0.00411034, Iyy(idxCGFACT(q,2)), 0.01333274;
+%                 -0.00173288, 0.01333274, Izz(idxCGFACT(q,3))];
+    OVERWRITE.AIR.density = density;
     j = 0;
     k = 0;
     cond = false;
@@ -99,7 +101,7 @@ OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
         while cond
             d = i+k;
             
-            STATE.RPM = 0.9*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
+            STATE.RPM = RPM_Multiplier.*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
             
             STATE.EULER = Euler(d,:);
             if k == 0
@@ -150,7 +152,7 @@ OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
     fprintf('Done CG case: %d with average iteration: %f\n',q, AVERAGE_ITERATION_CG(q));
     toc
 end
-save('Inertia_Data')
+save('CG_Data2')
 
 %% CG Data
 
