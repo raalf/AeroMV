@@ -58,6 +58,9 @@ elseif (idxAERO==3)
     PERF = fcnRUNVORTRING(GEOM,AIR,PERF,STATE);
 elseif (idxAERO==4)
     PERF = fcnKOMEGA2(GEOM,AIR,PERF,STATE);
+elseif (idxAERO==5)
+    % BEMT Module with velocity distributions
+    PERF = fcnRUNBEMT_VELDIST(GEOM, AIR, PERF, STATE);
 end
 
 % Apply ground effect
