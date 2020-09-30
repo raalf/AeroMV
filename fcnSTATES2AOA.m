@@ -62,7 +62,7 @@ if abs(alpha_shaft1-alpha_shaft2) > 1e-10
 end
 
 % Calculate velocity experienced by rotor hub due to vehicle dynamics
-STATE.VEL_ROTOR = STATE.BODY_RATES(end,:).*GEOM.ROTOR.matLOCATION + STATE.VEL_B + vecINDUCEDVEL;
+STATE.VEL_ROTOR = cross(repmat(STATE.BODY_RATES(end,:),size(GEOM.ROTOR.matLOCATION,1),1),GEOM.ROTOR.matLOCATION) + STATE.VEL_B + vecINDUCEDVEL;
 STATE.VEL_ROTOR_MAG = sqrt(STATE.VEL_ROTOR(:,1).^2 + STATE.VEL_ROTOR(:,2).^2 + STATE.VEL_ROTOR(:,3).^2);
 STATE.AOA_R = acos(dot(STATE.VEL_ROTOR,matROTNORMALS,2)./(STATE.VEL_ROTOR_MAG));
 
