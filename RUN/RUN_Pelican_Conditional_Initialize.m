@@ -75,7 +75,7 @@ for i = begin:int:fin
     while cond
     d = i+k;
     
-    STATE.RPM = RPM_Mulitplier.*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
+    STATE.RPM = RPM_Mulitplier.*[RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM
     
     STATE.EULER = Euler(d,:);
     if k == 0
@@ -104,7 +104,7 @@ for i = begin:int:fin
         k = k + 1;
     end
     
-    [OUTP(k), PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
+    [OUTP(k), PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1git , OVERWRITE);
     
     idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
     idxBODY_COND(k,:) = (abs(BODY_RATE_From_Euler(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;

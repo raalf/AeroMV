@@ -59,8 +59,9 @@ for i = begin:int:fin
     while cond
     d = i+k;
     
-    STATE.RPM = [RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
-    
+%     STATE.RPM = [RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
+    STATE.RPM = [RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM
+
     STATE.EULER = Euler(d,:);
     if k == 0
         STATE.VEL = VEL(d-2:d,:); % m/s
