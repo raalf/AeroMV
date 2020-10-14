@@ -31,6 +31,7 @@ STATE.FREQ = datafeq/int;
 BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
 
 RPM_Mulitplier = 4767./[4456 4326 4196 4104]; %from flight 23
+% RPM_Mulitplier = 4870./[4456 4326 4196 4104]; %from flight 23
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
 % Body_Rates_criteria = 0.19;
@@ -43,8 +44,8 @@ count_iter_num = 0;
 len = (fin-begin)/int + 1;
 iter_num  = NaN(len,1);  % Iteration number before it had to reset
 idxBROKENCOND = NaN(len,6);
-idxVEL_COND = NaN(len,3);
-idxBODY_COND = NaN(len,3);
+% idxVEL_COND = NaN(len,3);
+% idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
 % 
 % 
@@ -63,17 +64,21 @@ OVERWRITE.GEOM.VEH.vecCG = [-1.5 1.5 152.0153-118.7]*0.001;
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
 
+% parfor i = 1:(fin-begin+1)
 for i = begin:int:fin
-    j = j+1;
+
 %     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
-% 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
+% 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM.
+    STATE = [];
+    OUTP = [];
+    STATE.FREQ = datafeq/int;
     STATE.accuracy = 3;
     k = 0;
-    d = 0;
+
     cond = true;
     count_iter_num = 0;
     while cond
-    d = i+k;
+    d = i+begin+k-1;
     
     STATE.RPM = RPM_Mulitplier.*[RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM
     
@@ -104,21 +109,26 @@ for i = begin:int:fin
         k = k + 1;
     end
     
-    [OUTP(k), PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1 , OVERWRITE);
-    
-    idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
-    idxBODY_COND(k,:) = (abs(BODY_RATE_From_Euler(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;
-    if any(idxVEL_COND(k,:)) || any(idxBODY_COND(k,:))
+    [OUTP_temp, PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 5 , OVERWRITE);
+    if k == 1
+        OUTP = OUTP_temp;
+    else
+        OUTP(k) = OUTP_temp;
+    end
+    idxVEL_COND = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
+    idxBODY_COND = (abs(BODY_RATE_From_Euler(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;
+    if any(idxVEL_COND) || any(idxBODY_COND)
         cond = false;
-        iter_num(j) = count_iter_num;
-        idxBROKENCOND(j,:) = [idxVEL_COND(k,:) idxBODY_COND(k,:)];
+        
+        iter_num(i) = count_iter_num;
+        idxBROKENCOND(i,:) = [idxVEL_COND' idxBODY_COND'];
         
     else
         cond = true;
         count_iter_num = count_iter_num+1;
     end
     end
-    fprintf(strcat(num2str(i),' Complete. Number of successful iterations:',num2str(iter_num(j)) ,'\n'))
+    fprintf(strcat(num2str(i),' Complete. Number of successful iterations:',num2str(iter_num(i)) ,'\n'))
 end
 
 save('DATA')
