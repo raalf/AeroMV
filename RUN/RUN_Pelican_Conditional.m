@@ -31,10 +31,11 @@ STATE.FREQ = datafeq/int;
 BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
 
 RPM_Mulitplier = 4767./[4456 4326 4196 4104]; %from flight 23
+% RPM_Mulitplier = 4870./[4456 4326 4196 4104]; %from flight 23
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
-% Body_Rates_criteria = 0.19;
-% Body_Rates_criteria = 0.38;
+% Vel_criteria = 1;
+% Body_Rates_criteria = 1;
 cond = false;
 cond_missed = []; % Condition that causes reset
 count_iter_num = 0;
@@ -113,7 +114,16 @@ for i = begin:int:fin
     tic
     [OUTP(j), PERF, ~, ~, ~, STATE_OUT(j)] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
     toc
-    
+    % Looking at different reference frames
+    R = fcnEUL2R(STATE.EULER,4,0);  
+    Flighttest_body_rates_i(i+1,:) = (R\BODY_RATE_From_Euler(i+1,:)')';
+    R = [1 0 0]'/OUTP(j).VEL_NEW;
+    options.epsilon = 1e-20;
+    r = vrrotvec2mat(vrrotvec(OUTP(j).VEL_NEW./norm(OUTP(j).VEL_NEW),[1 0 0]',options),options);
+    Flightpath_Body_rates(i+1,:)  = (r*Flighttest_body_rates_i(i+1,:)')';
+    Flightpath_Body_rates_predicted(i+1,:) = (r*OUTP(j).OMEGA_NEW)';
+
+    % Comparing conditions
     idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).VEL_NEW))>Vel_criteria;
     idxBODY_COND(j,:) = (abs(BODY_RATE_From_Euler(i+1,:)'-OUTP(j).OMEGA_NEW_B))>Body_Rates_criteria;
     if any(idxVEL_COND(j,:)) || any(idxBODY_COND(j,:))
@@ -198,6 +208,8 @@ hold off
 
 
 tempRATES = [OUTP.OMEGA_NEW_B];
+
+% tempRATES = [OUTP.OMEGA_NEW];
 figure(4)
 clf(4)
 hold on
@@ -265,5 +277,26 @@ zlabel('Z-Position')
 grid on
 grid minor
 box on
+hold off
+
+figure(8)
+clf(8)
+hold on
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,1),'k*-','linewidth',2)
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates_predicted(begin+int:int:fin+int,1),'k--o','linewidth',2)
+
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,2),'rs-','linewidth',2,'markerfacecolor','r')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates_predicted(begin+int:int:fin+int,2),'r--s','linewidth',2)
+
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,3),'bd-','linewidth',2,'markerfacecolor','b')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates_predicted(begin+int:int:fin+int,3),'b--d','linewidth',2)
+legend('Experiment $\dot{\phi}$','Predicted $\dot{\phi}$','Experiment $\dot{\theta}$','Predicted $\dot{\theta}$','Experiment $\dot{\psi}$','Predicted $\dot{\psi}$', 'Interpreter','latex')
+ylabel('Rate (rad/s)')
+xlabel('Time')
+title('Body Rates')
+xlim([begin/datafeq fin/datafeq])
+box on
+grid on
+grid minor
 hold off
 
