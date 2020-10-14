@@ -41,11 +41,13 @@ idxBROKENCOND = NaN(len,6);
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
+% RPM_Multiplier = [0.813097271522412,0.818112598889547,1.06100086809830,0.969162900305093];
 
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
-OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
+% OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
+% OVERWRITE.GEOM.VEH.vecCG = [-0.01 0.012  (47.397)*0.001];
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
@@ -60,7 +62,8 @@ for i = begin:int:fin
     d = i+k;
     
 %     STATE.RPM = [RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
-    STATE.RPM = [RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM
+%     STATE.RPM = [RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM.
+	STATE.RPM = RPM_Multiplier.*[RPM(i+1,1) RPM(i+1,2) RPM(i+1,3) RPM(i+1,4)]; 
 
     STATE.EULER = Euler(d,:);
     if k == 0
@@ -108,11 +111,13 @@ end
 
 save('DATA')
 %% Plotting
+
 figure(1)
 clf(1)
 hold on
 histogram(iter_num)
 text(0.8,0.95,strcat('Avg: ',num2str(nanmean(iter_num))),'Units','normalized')
+
 xlabel('Number of Successful Iterations')
 ylabel('Number of Occurrence')
 title('Successful iterations before conditions were passed')
@@ -259,7 +264,30 @@ ylabel('Average Successful Iterations')
 % xlabel('Mean Body Rate (Over Successful Data Points)')
 xlabel('Mean Acceleration Rate (Over Successful Data Points)')
 title('Flight 23')
-grid on 
+grid on
+grid minor
+box on
+axis tight
+hold off
+
+% Only works on MATLAB 2019a or newer
+[counts,num] = groupcounts(iter_num);
+
+moment = counts.*(num+1);
+d = [];
+for j = 1:length(counts)
+    d = [d;repmat(num(j),moment(j),1)];
+end
+avg_mom = mean(d);
+figure(9)
+clf(9)
+hold on
+bar(num,moment,1)
+text(0.8,0.95,strcat('Avg: ',num2str(avg_mom)),'Units','normalized')
+xlabel('Number of Timesteps')
+ylabel('Moment of Successful Occurences')
+% title('Successful iterations before conditions were passed')
+grid on
 grid minor
 box on
 axis tight
