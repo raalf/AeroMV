@@ -4,8 +4,8 @@ set(0,'DefaultFigureWindowStyle','docked')
 % The original "Baseline" cg is [7.119 -10.172 47.397]*0.001
 clear,clc
 
-cg_x = (-20:1:0)*0.001;
-cg_y = (5:1:25)*0.001;
+cg_x = (-30:2.5:30)*0.001;
+cg_y = (-30:2.5:30)*0.001;
 idxCGFACT = fullfact([length(cg_x),length(cg_y)]);
 
 % Ixx = 0.17525014*[0.5 0.75 0.9 0.95 1 1.05 1.1 1.25 1.5 2 3 5];
@@ -62,8 +62,8 @@ idxBROKENCOND = NaN(len,6);
 idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
-RPM_Multiplier = [0.8462,0.8508,0.9785,0.8942];
-
+% RPM_Multiplier = [0.8462,0.8508,0.9785,0.8942];
+RPM_Multiplier = 0.8879;
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
@@ -79,6 +79,8 @@ parfor q = 1:size(idxCGFACT,1)
 % OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
 %                 0.00411034, Iyy(idxCGFACT(q,2)), 0.01333274;
 %                 -0.00173288, 0.01333274, Izz(idxCGFACT(q,3))];
+    RPM_Hover = [4845.58578567463,4819.17379233759,4190.41476957246,4585.03387007218];
+    [RPM_Multiplier] = fcnRPMMULTIPLIER(filename,4000,RPM_Hover',OVERWRITE);
     OVERWRITE.AIR.density = density;
     j = 0;
     k = 0;
@@ -89,6 +91,7 @@ parfor q = 1:size(idxCGFACT,1)
     idxVEL_COND = NaN(len,3);
     idxBODY_COND = NaN(len,3);
     OUTP = struct([]);
+    
     
     for i = begin:int:fin
         j = j+1;
@@ -101,7 +104,7 @@ parfor q = 1:size(idxCGFACT,1)
         while cond
             d = i+k;
             
-            STATE.RPM = RPM_Multiplier.*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
+            STATE.RPM = RPM_Multiplier'.*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
             
             STATE.EULER = Euler(d,:);
             if k == 0
