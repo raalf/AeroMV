@@ -9,8 +9,8 @@ function [RPM_Multiplier] = fcnRPMMULTIPLIER(filename,RPM_CT,RPM_Hover,OVERWRITE
 % mat*[T1 T2 T3 T4]' = [W 0 0 0]'
 
 % T1+T2+T3+T4 = W   --> Thrust = W
-% T4*r4 + T2*r2 = T1*r1 + T3*r3  --> No roll
-% T4*r4 + T1*r1 = T2*r2 + T3*r3  --> No pitch
+% T2*r2 + T3*r3 = T1*r1 + T4*r4  --> No roll
+% T1*r1 + T2*r2 = T3*r3 + T4*r4  --> No pitch
 % Q1+Q2+Q3+Q4 = 0   --> No yaw
 
 % Where Q is:
@@ -63,8 +63,8 @@ Q = Q.*GEOM.ROTOR.matROT';
 
 %% Solve for thrust values
 mat = [1 1 1 1;
-    r(1) -r(2) r(3) -r(4);
-    r(1) -r(2) -r(3) r(4);
+    -r(1) r(2) r(3) -r(4);
+    r(1) r(2) -r(3) -r(4);
     Q(1) Q(2) Q(3) Q(4)];
 
 rhs = [GEOM.VEH.valMASS*9.81 0 0 0]';
