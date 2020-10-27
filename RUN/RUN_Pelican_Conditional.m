@@ -21,8 +21,8 @@ POS = flights{1,flight_num}.Pos;
 BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
-begin = 1000;
-fin = 1050;
+begin = 5000;
+fin = 5050;
 datafeq = 100;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -34,8 +34,8 @@ RPM_Mulitplier = 4767./[4456 4326 4196 4104]; %from flight 23
 % RPM_Mulitplier = 4870./[4456 4326 4196 4104]; %from flight 23
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
-% Vel_criteria = 1;
-% Body_Rates_criteria = 1;
+Vel_criteria = 1;
+Body_Rates_criteria = 1;
 cond = false;
 cond_missed = []; % Condition that causes reset
 count_iter_num = 0;
@@ -122,7 +122,8 @@ for i = begin:int:fin
     r = vrrotvec2mat(vrrotvec(OUTP(j).VEL_NEW./norm(OUTP(j).VEL_NEW),[1 0 0]',options),options);
     Flightpath_Body_rates(i+1,:)  = (r*Flighttest_body_rates_i(i+1,:)')';
     Flightpath_Body_rates_predicted(i+1,:) = (r*OUTP(j).OMEGA_NEW)';
-
+    Flightpath_Vel_predicted(i+1,:) = (r*OUTP(j).VEL_NEW)';
+    
     % Comparing conditions
     idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).VEL_NEW))>Vel_criteria;
     idxBODY_COND(j,:) = (abs(BODY_RATE_From_Euler(i+1,:)'-OUTP(j).OMEGA_NEW_B))>Body_Rates_criteria;
@@ -281,6 +282,27 @@ hold off
 
 figure(8)
 clf(8)
+hold on
+% plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,1),'k*-','linewidth',2)
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Vel_predicted(begin+int:int:fin+int,1),'k--o','linewidth',2)
+
+% plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,2),'rs-','linewidth',2,'markerfacecolor','r')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Vel_predicted(begin+int:int:fin+int,2),'r--s','linewidth',2)
+
+% plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,3),'bd-','linewidth',2,'markerfacecolor','b')
+plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Vel_predicted(begin+int:int:fin+int,3),'b--d','linewidth',2)
+legend('Predicted x-dir','Predicted y-dir','Predicted z-dir', 'Interpreter','latex')
+ylabel('Velocity (m/s)')
+xlabel('Time')
+title('Velocity')
+xlim([begin/datafeq fin/datafeq])
+box on
+grid on
+grid minor
+hold off
+
+figure(9)
+clf(9)
 hold on
 plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates(begin+int:int:fin+int,1),'k*-','linewidth',2)
 plot(begin/datafeq:1/STATE.FREQ:fin/datafeq,Flightpath_Body_rates_predicted(begin+int:int:fin+int,1),'k--o','linewidth',2)
