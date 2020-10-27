@@ -74,6 +74,10 @@ HoverT = mat\rhs;
 %% Calculate hover rpm
 omega = (1./(GEOM.ROTOR.vecDIAM/2)).*sqrt(HoverT./(CT_hover(1).*AIR.density.*pi.*(GEOM.ROTOR.vecDIAM./2).^2));
 HoverRPM = omega.*60/(2*pi);
-
+if ~isreal(HoverRPM)  
+     RPM_Multiplier = [1 1 1 1]';
+else
+    RPM_Multiplier = HoverRPM./RPM_Hover;
+end
 %% Calculate rpm multiplier
-RPM_Multiplier = HoverRPM./RPM_Hover;
+% RPM_Multiplier = HoverRPM./RPM_Hover;
