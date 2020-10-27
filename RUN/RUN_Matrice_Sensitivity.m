@@ -42,6 +42,7 @@ BODY_RATES = diff(Euler)*50;
 j = 0;
 begin = 1000;
 fin = 4000;
+maxVal = 4200;
 datafeq = 50;
 int = 1;
 STATE.FREQ = datafeq/int;
@@ -63,7 +64,7 @@ idxVEL_COND = NaN(len,3);
 idxBODY_COND = NaN(len,3);
 avg_count = 5; % How many points to average for moving average of input variables
 % RPM_Multiplier = [0.8462,0.8508,0.9785,0.8942];
-RPM_Multiplier = 0.8879;
+% RPM_Multiplier = 0.8879;
 % Creating OVERWRITE function
 OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
@@ -80,7 +81,19 @@ parfor q = 1:size(idxCGFACT,1)
 %                 0.00411034, Iyy(idxCGFACT(q,2)), 0.01333274;
 %                 -0.00173288, 0.01333274, Izz(idxCGFACT(q,3))];
     RPM_Hover = [4845.58578567463,4819.17379233759,4190.41476957246,4585.03387007218];
-    [RPM_Multiplier] = fcnRPMMULTIPLIER(filename,4000,RPM_Hover',OVERWRITE);
+    try
+        [RPM_Multiplier] = fcnRPMMULTIPLIER(filename,4000,RPM_Hover',OVERWRITE);
+        flagIMAG(q) = 0;
+    catch
+        RPM_Multiplier = [1 1 1 1]';
+        flagIMAG(q) = 1;
+    end
+%     if ~isreal(RPM_Multiplier)
+%         RPM_Multiplier = [1 1 1 1]';
+%         flagIMAG(q) = 1;
+%     else
+%         flagIMAG(q) = 0;
+%     end
     OVERWRITE.AIR.density = density;
     j = 0;
     k = 0;
@@ -140,7 +153,7 @@ parfor q = 1:size(idxCGFACT,1)
             
             idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).OUTP.VEL_NEW))>Vel_criteria;
             idxBODY_COND(k,:) = (abs(BODY_RATES(d+1,:)'-OUTP(k).OUTP.OMEGA_NEW_B))>Body_Rates_criteria;
-            if any(idxVEL_COND(k,:)) || any(idxBODY_COND(k,:))
+            if any(idxVEL_COND(k,:)) || any(idxBODY_COND(k,:)) || d >= maxVal
                 cond = false;
                 iter_num(j) = count_iter_num;
 %                 idxBROKENCOND(j,:) = [idxVEL_COND(k,:) idxBODY_COND(k,:)];
