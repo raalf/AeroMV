@@ -66,10 +66,8 @@ avg_count = 5; % How many points to average for moving average of input variable
 % RPM_Multiplier = [0.8462,0.8508,0.9785,0.8942];
 % RPM_Multiplier = 0.8879;
 % Creating OVERWRITE function
-OVERWRITE.AIR.density = density;
+% OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
-FOLDER_ADDRESS = pwd;
-addpath(genpath(FOLDER_ADDRESS))
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
@@ -77,6 +75,7 @@ parfor q = 1:size(idxCGFACT,1)
     tic
     OVERWRITE = [];
     OVERWRITE.GEOM.VEH.vecCG = [cg_x(idxCGFACT(q,1)) cg_y(idxCGFACT(q,2))  (47.397)*0.001];
+    OVERWRITE.AIR.density = density;
 % OVERWRITE.GEOM.VEH.I =  [Ixx(idxCGFACT(q,1)), 0.00411034, -0.00173288;
 %                 0.00411034, Iyy(idxCGFACT(q,2)), 0.01333274;
 %                 -0.00173288, 0.01333274, Izz(idxCGFACT(q,3))];
@@ -94,7 +93,7 @@ parfor q = 1:size(idxCGFACT,1)
 %     else
 %         flagIMAG(q) = 0;
 %     end
-    OVERWRITE.AIR.density = density;
+    
     j = 0;
     k = 0;
     cond = false;
@@ -194,7 +193,7 @@ ylabel('Y-Location of CG (cm)')
 xlabel('X-Location of CG (cm)')
 zlabel('Average Successful Iterations')
 % [7.119 -10.172 47.397]*0.001
-scatter3(7.119*0.1, -10.172*.1,5.12,'pk','markerfacecolor','k')
+% scatter3(7.119*0.1, -10.172*.1,5.12,'pk','markerfacecolor','k')
 axis square
 axis tight
 grid on

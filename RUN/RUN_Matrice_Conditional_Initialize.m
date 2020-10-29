@@ -17,6 +17,7 @@ RPM = [Flight_Data(1,flight_num).RPM1,Flight_Data(1,flight_num).RPM2,Flight_Data
 Height = Flight_Data(1,flight_num).Height_Above_Takeoff;
 POS = [zeros(length(Height),2), Height];
 BODY_RATES = Flight_Data(1,flight_num).Body_Rates;
+BODY_RATES = diff(Euler)*50;
 
 j = 0;
 begin = 1000;
@@ -48,9 +49,18 @@ OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
 % OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
 % OVERWRITE.GEOM.VEH.vecCG = [-0.01 0.012  (47.397)*0.001];
+OVERWRITE.GEOM.VEH.vecCG = [-0.0090 0.0120 (47.397)*0.001];
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
+
+RPM_Hover = [4845.58578567463,4819.17379233759,4190.41476957246,4585.03387007218];
+try
+    [RPM_Multiplier] = fcnRPMMULTIPLIER(filename,4000,RPM_Hover',OVERWRITE);
+catch
+    RPM_Multiplier = [1 1 1 1]';
+end
+RPM_Multiplier = [1 1 1 1]';
 
 for i = begin:int:fin
     j = j+1;
@@ -60,10 +70,13 @@ for i = begin:int:fin
     count_iter_num = 0;
     while cond
     d = i+k;
+
     
 %     STATE.RPM = [RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; % RPM
 %     STATE.RPM = [RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM.
-	STATE.RPM = RPM_Multiplier.*[RPM(i+1,1) RPM(i+1,2) RPM(i+1,3) RPM(i+1,4)]; 
+% 	STATE.RPM = RPM_Multiplier'.*[RPM(i+1,1) RPM(i+1,2) RPM(i+1,3) RPM(i+1,4)]; 
+	STATE.RPM = RPM_Multiplier'.*[RPM(d,1) RPM(d,2) RPM(d,3) RPM(d,4)]; 
+
 
     STATE.EULER = Euler(d,:);
     if k == 0
