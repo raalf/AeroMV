@@ -18,7 +18,7 @@ oper.toggle_vi = 'on';
 oper.toggle_visc = 'on';
 oper.alpha_zero = -0.03;
 oper.a_0 = 2*pi;
-oper.toggle_WIM = 'off'; 
+oper.toggle_WIM = 'off';
 oper.gurney = 0;
 
 % Crate rotor structure
@@ -80,24 +80,52 @@ for i = 1:length(STATE.RPM)
     R = blade.geometry.Radius(stations);
     mid_span = (r(1:end-1).*R+r(2:end).*R)/2;
     mid_span_y = [-1*mid_span,zeros(stations-1,1)];
-% 	figure(5)
-%     clf(5)
+%     	figure(5)
+%         clf(5)
     for j = 1:oper.azimuth_num
-        R = [cos(azimuth(j)) -sin(azimuth(j)); sin(azimuth(j)) cos(azimuth(j))];
-        points = (R*mid_span_y')';
-        points(:,3) = zeros(stations-1,1);
-        local_vel = cross(repmat(STATE.BODY_RATES(end,:),stations-1,1),(GEOM.ROTOR.matLOCATION(i,:)+points));
-        flow.vel_perp(:,j) = local_vel(:,2)*sin(azimuth(j))+ local_vel(:,1)*cos(azimuth(j));
-        flow.vel_z(:,j) = local_vel(:,3);
-%         hold on
-%         plot(points(:,1),points(:,2),'*')
+        if GEOM.ROTOR.matROT(i) == 1
+            % For CW rotor, must mirror the local velocities about the
+            % y-axis because BEMT assumes CCW with a freestream velocity in 
+            % the -ve x-direction
+            R = [cos(azimuth(j)) -sin(azimuth(j)); sin(azimuth(j)) cos(azimuth(j)+pi)];
+            points = (R*mid_span_y')';
+            points(:,2) = -1*points(:,2); % Take velocities at points mirror about y-axis
+            points(:,3) = zeros(stations-1,1);
+            local_vel = cross(repmat(STATE.BODY_RATES(end,:),stations-1,1),(GEOM.ROTOR.matLOCATION(i,:)+points));
+
+            local_vel(:,2) = -1*local_vel(:,2); % Mirror the measures local y-velocity
+            flow.vel_perp(:,j) = local_vel(:,2)*sin(azimuth(j))+ local_vel(:,1)*cos(azimuth(j));
+            flow.vel_z(:,j) = local_vel(:,3);
+            
+            % Assign these velocities to the correct ordered points. 
+            % These are just here for reference plotting
+            R = [cos(azimuth(j)) -sin(azimuth(j)); sin(azimuth(j)) cos(azimuth(j))];
+            points = (R*mid_span_y')';
+            points(:,3) = zeros(stations-1,1);
+            
+        else
+            % If CCW can directly calculate the new velocities
+            R = [cos(azimuth(j)) -sin(azimuth(j)); sin(azimuth(j)) cos(azimuth(j))];
+            points = (R*mid_span_y')';
+            points(:,3) = zeros(stations-1,1);
+            local_vel = cross(repmat(STATE.BODY_RATES(end,:),stations-1,1),(GEOM.ROTOR.matLOCATION(i,:)+points));
+            
+            flow.vel_perp(:,j) = local_vel(:,2)*sin(azimuth(j))+ local_vel(:,1)*cos(azimuth(j));
+            flow.vel_z(:,j) = local_vel(:,3);
+        end
+%                 hold on
+%                 plot(points(:,1),points(:,2),'*')
+%                 quiver3(points(:,1),points(:,2),points(:,3),local_vel(:,1),local_vel(:,2),local_vel(:,3),'k')
     end
-%     axis equal
-%     grid on
-%     box on
-%     hold off
-
-
+%         axis equal
+%         grid on
+%         box on
+%         xlabel('x-dir')
+%         ylabel('y-dir')
+%         hold off
+    
+    
+    
     oper.rpm = STATE.RPM(i);
     flow.V = STATE.VEL_ROTOR_MAG(i); % Freestream velocity [m/s]
     flow.inflow_angle = STATE.AOA_R(i);  % Rotor AoA [deg]. Angle between freestream and rotor plane (0 to +/- 90)
