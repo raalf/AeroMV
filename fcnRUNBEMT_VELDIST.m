@@ -46,9 +46,9 @@ options.save_workspace = 'off'; % on/off toggle to save workspace each time BEMT
 options.saved_workspace_identifier = 'Testing'; % identifier for saved workspace structure, string
 options.analysistype = 1;
 options.toggle_precompute = 'on';
-options.AoAresolution = 0.25; % Database resolution for angle of attack, [deg].
-options.REresolution = 50000; % Database resolution for Reynolds number.
-options.RErange_max = 1000000; % Max Reynolds number range. Min is set @ zero. Keep @ ~ 10^6
+options.AoAresolution = 0.5; % Database resolution for angle of attack, [deg].
+options.REresolution = 10000; % Database resolution for Reynolds number.
+options.RErange_max = 300000; % Max Reynolds number range. Min is set @ zero. Keep @ ~ 10^6
 options.toggle_coeff_plot = 'off'; % Toggle to generate 3D plots for Re vs AoA vs coeff for newly generated dataset
 
 

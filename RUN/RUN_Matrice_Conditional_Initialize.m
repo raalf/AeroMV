@@ -49,7 +49,7 @@ OVERWRITE.AIR.density = density;
 % OVERWRITE = [];
 % OVERWRITE.GEOM.VEH.vecCG = [0.014 0.002  (47.397)*0.001];
 % OVERWRITE.GEOM.VEH.vecCG = [-0.01 0.012  (47.397)*0.001];
-OVERWRITE.GEOM.VEH.vecCG = [-0.0090 0.0120 (47.397)*0.001];
+OVERWRITE.GEOM.VEH.vecCG = [-0.01 0.0125 (47.397)*0.001];
 
 %% Retrieve Input Vehicle Geometry
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
@@ -60,7 +60,7 @@ try
 catch
     RPM_Multiplier = [1 1 1 1]';
 end
-RPM_Multiplier = [1 1 1 1]';
+% RPM_Multiplier = [1 1 1 1]';
 
 for i = begin:int:fin
     j = j+1;
@@ -105,7 +105,7 @@ for i = begin:int:fin
         k = k + 1;
     end
     
-    [OUTP(k), PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
+    [OUTP(k), PERF(k), ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
     
     idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
     idxBODY_COND(k,:) = (abs(BODY_RATES(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;

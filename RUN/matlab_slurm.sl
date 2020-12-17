@@ -12,4 +12,4 @@
 # Choose a version of MATLAB by loading a module:
 module load matlab/2019a
 # Remove -singleCompThread below if you are using parallel commands:
-srun matlab -nodisplay -r "RUN_Matrice_Sensitivity.m"
+srun matlab -nodisplay -r "RUN_Matrice_Sensitivity"

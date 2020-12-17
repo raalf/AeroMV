@@ -310,6 +310,8 @@ clear,clc
 
 cg_x = (-15:1.5:15)*0.001;
 cg_y = (-15:1.5:15)*0.001;
+% cg_x = (-1.5:1.5:1.5)*0.001;
+% cg_y = (-1.5:1.5:1.5)*0.001;
 idxCGFACT = fullfact([length(cg_x),length(cg_y)]);
 
 %% Moment of inertia
@@ -357,12 +359,21 @@ len = (fin-begin)/int + 1;
 % Initialize the variables used for sensitivity analysis
 AVERAGE_ITERATION_CG = NaN(size(idxCGFACT,1),1);
 ITERATION_CG = NaN(size(idxCGFACT,1),len);
+RPM_Hover = [4456 4326 4196 4104];
 
 parfor q = 1:size(idxCGFACT,1)
     tic
+
+    %% Retrieve Input Vehicle Geometry
+    [TABLE, GEOM, AIR] = fcnINPUT(filename);
+
     OVERWRITE = [];
     OVERWRITE.GEOM.VEH.vecCG = [cg_x(idxCGFACT(q,1)) cg_y(idxCGFACT(q,2))  (152.0153-118.7)*0.001];
-    
+    try
+        RPM_Multiplier = fcnRPMMULTIPLIER(filename,5000,RPM_Hover',OVERWRITE);
+    catch
+        RPM_Multiplier = 4767./[4456 4326 4196 4104];
+    end
     j = 0;
     k = 0;
     cond = false;
@@ -374,51 +385,120 @@ parfor q = 1:size(idxCGFACT,1)
     OUTP = struct([]);
  
     
+%     for i = begin:int:fin
+%         j = j+1;
+%         STATE = [];
+%         STATE.accuracy = 3;
+%         STATE.FREQ = datafeq/int;
+%         STATE.RPM = RPM_Mulitplier'.*[RPM(i+1,1) RPM(i+1,2) RPM(i+1,3) RPM(i+1,4)]; % RPM
+%         STATE.EULER = Euler(i,:);
+%         
+%         if ~cond
+%             STATE.VEL = VEL(i-2:i,:); % m/s
+%             STATE.POS = POS(i-2:i,:);
+%             STATE.EULER = Euler(i-2:i,:);
+%             STATE.BODY_RATES = BODY_RATES(i-2:i,:);
+%             k = 1;
+%         elseif k == 1 && cond
+%             STATE.VEL = [VEL(i-2:i-1,:);OUTP(j-1).OUTP.VEL_NEW']; % m/s
+%             STATE.POS = [POS(i-2:i-1,:);OUTP(j-1).OUTP.POS_NEW'];
+%             STATE.EULER = [Euler(i-2:i-1,:);OUTP(j-1).OUTP.EULER_NEW'];
+%             STATE.BODY_RATES = [BODY_RATES(i-2:i-1,:);OUTP(j-1).OUTP.OMEGA_NEW_B'];
+%             k = 2;
+%         elseif k == 2 && cond
+%             STATE.VEL = [VEL(i-2,:);[OUTP(j-2).OUTP.VEL_NEW]';[OUTP(j-1).OUTP.VEL_NEW]']; % m/s
+%             STATE.POS = [POS(i-2,:);[OUTP(j-2).OUTP.POS_NEW]';[OUTP(j-1).OUTP.POS_NEW]'];
+%             STATE.EULER = [Euler(i-2,:);[OUTP(j-2).OUTP.EULER_NEW]';[OUTP(j-1).OUTP.EULER_NEW]'];
+%             STATE.BODY_RATES = [BODY_RATES(i-2,:);[OUTP(j-2).OUTP.OMEGA_NEW_B]';[OUTP(j-1).OUTP.OMEGA_NEW_B]'];
+%             k = 3;
+%         else
+%             STATE.VEL = [[OUTP(j-3).OUTP.VEL_NEW,]';[OUTP(j-2).OUTP.VEL_NEW,]';[OUTP(j-1).OUTP.VEL_NEW,]'];
+%             STATE.POS = [[OUTP(j-3).OUTP.POS_NEW,]';[OUTP(j-2).OUTP.POS_NEW,]';[OUTP(j-1).OUTP.POS_NEW,]'];
+%             STATE.EULER = [[OUTP(j-3).OUTP.EULER_NEW,]';[OUTP(j-2).OUTP.EULER_NEW,]';[OUTP(j-1).OUTP.EULER_NEW,]'];
+%             STATE.BODY_RATES = [[OUTP(j-3).OUTP.OMEGA_NEW_B,]';[OUTP(j-2).OUTP.OMEGA_NEW_B,]';[OUTP(j-1).OUTP.OMEGA_NEW_B,]'];
+%         end
+%         
+% %         [OUTP(j).OUTP, ~, ~, ~, ~, ~] = fcnMAIN(filename, STATE, 1,OVERWRITE);
+%         [OUTP(j).OUTP, ~, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1 , OVERWRITE);
+%     
+%         idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).OUTP.VEL_NEW))>Vel_criteria;
+%         idxBODY_COND(j,:) = (abs(BODY_RATE_From_Euler(i+1,:)'-OUTP(j).OUTP.OMEGA_NEW_B))>Body_Rates_criteria;
+%         if any(idxVEL_COND(j,:)) || any(idxBODY_COND(j,:))
+%             cond = false;
+%             iter_num(j) = count_iter_num;
+%             count_iter_num = 0;
+%         else
+%             cond = true;
+%             count_iter_num = count_iter_num+1;
+%         end
+%     end
+%     
+    d_d = 0;
     for i = begin:int:fin
-        j = j+1;
-        STATE = [];
-        STATE.accuracy = 3;
-        STATE.FREQ = datafeq/int;
-        STATE.RPM = RPM_Mulitplier.*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM
-        STATE.EULER = Euler(i,:);
+
+%     STATE.RPM = 1.135*[mean(RPM((i-avg_count+1):i,1)) mean(RPM((i-avg_count+1):i,2)) mean(RPM((i-avg_count+1):i,3)) mean(RPM((i-avg_count+1):i,4)) ]; % RPM
+% 	STATE.RPM = 1.135*[RPM(i,1) RPM(i,2) RPM(i,3) RPM(i,4)]; % RPM.
+    STATE = [];
+    OUTP = [];
+    STATE.FREQ = datafeq/int;
+    STATE.accuracy = 3;
+    k = 0;
+    d_d = d_d+1;
+    cond = true;
+    count_iter_num = 0;
+    while cond
+    d = i+begin+k-1;
+    
+    STATE.RPM = RPM_Multiplier'.*[RPM(d+1,1) RPM(d+1,2) RPM(d+1,3) RPM(d+1,4)]; % RPM
+    
+    STATE.EULER = Euler(d,:);
+    if k == 0
+        STATE.VEL = VEL(d-2:d,:); % m/s
+        STATE.POS = POS(d-2:d,:);
+        STATE.EULER = Euler(d-2:d,:);
+        STATE.BODY_RATES = BODY_RATES(d-2:d,:);
+        k = 1;
+    elseif k == 1
+        STATE.VEL = [VEL(d-2:d-1,:);OUTP(k).VEL_NEW']; % m/s
+        STATE.POS = [POS(d-2:d-1,:);OUTP(k).POS_NEW'];
+        STATE.EULER = [Euler(d-2:d-1,:);OUTP(k).EULER_NEW'];
+        STATE.BODY_RATES = [BODY_RATES(d-2:d-1,:);OUTP(k).OMEGA_NEW_B'];
+        k = 2;
+    elseif k == 2
+        STATE.VEL = [VEL(d-2,:);[OUTP(k-1:k).VEL_NEW]']; % m/s
+        STATE.POS = [POS(d-2,:);[OUTP(k-1:k).POS_NEW]'];
+        STATE.EULER = [Euler(d-2,:);[OUTP(k-1:k).EULER_NEW]'];
+        STATE.BODY_RATES = [BODY_RATES(d-2,:);[OUTP(k-1:k).OMEGA_NEW_B]'];
+        k = 3;
+    else
+        STATE.VEL = [OUTP(k-2:k).VEL_NEW]';
+        STATE.POS = [OUTP(k-2:k).POS_NEW]';
+        STATE.EULER = [OUTP(k-2:k).EULER_NEW]';
+        STATE.BODY_RATES = [OUTP(k-2:k).OMEGA_NEW_B]';
+        k = k + 1;
+    end
+    
+    [OUTP_temp, ~, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1 , OVERWRITE);
+    
+    if k == 1
+        OUTP = OUTP_temp;
+    else
+        OUTP(k) = OUTP_temp;
+    end
+    idxVEL_COND = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
+    idxBODY_COND = (abs(BODY_RATE_From_Euler(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;
+    if any(idxVEL_COND) || any(idxBODY_COND)
+        cond = false;
         
-        if ~cond
-            STATE.VEL = VEL(i-2:i,:); % m/s
-            STATE.POS = POS(i-2:i,:);
-            STATE.EULER = Euler(i-2:i,:);
-            STATE.BODY_RATES = BODY_RATES(i-2:i,:);
-            k = 1;
-        elseif k == 1 && cond
-            STATE.VEL = [VEL(i-2:i-1,:);OUTP(j-1).OUTP.VEL_NEW']; % m/s
-            STATE.POS = [POS(i-2:i-1,:);OUTP(j-1).OUTP.POS_NEW'];
-            STATE.EULER = [Euler(i-2:i-1,:);OUTP(j-1).OUTP.EULER_NEW'];
-            STATE.BODY_RATES = [BODY_RATES(i-2:i-1,:);OUTP(j-1).OUTP.OMEGA_NEW_B'];
-            k = 2;
-        elseif k == 2 && cond
-            STATE.VEL = [VEL(i-2,:);[OUTP(j-2).OUTP.VEL_NEW]';[OUTP(j-1).OUTP.VEL_NEW]']; % m/s
-            STATE.POS = [POS(i-2,:);[OUTP(j-2).OUTP.POS_NEW]';[OUTP(j-1).OUTP.POS_NEW]'];
-            STATE.EULER = [Euler(i-2,:);[OUTP(j-2).OUTP.EULER_NEW]';[OUTP(j-1).OUTP.EULER_NEW]'];
-            STATE.BODY_RATES = [BODY_RATES(i-2,:);[OUTP(j-2).OUTP.OMEGA_NEW_B]';[OUTP(j-1).OUTP.OMEGA_NEW_B]'];
-            k = 3;
-        else
-            STATE.VEL = [[OUTP(j-3).OUTP.VEL_NEW,]';[OUTP(j-2).OUTP.VEL_NEW,]';[OUTP(j-1).OUTP.VEL_NEW,]'];
-            STATE.POS = [[OUTP(j-3).OUTP.POS_NEW,]';[OUTP(j-2).OUTP.POS_NEW,]';[OUTP(j-1).OUTP.POS_NEW,]'];
-            STATE.EULER = [[OUTP(j-3).OUTP.EULER_NEW,]';[OUTP(j-2).OUTP.EULER_NEW,]';[OUTP(j-1).OUTP.EULER_NEW,]'];
-            STATE.BODY_RATES = [[OUTP(j-3).OUTP.OMEGA_NEW_B,]';[OUTP(j-2).OUTP.OMEGA_NEW_B,]';[OUTP(j-1).OUTP.OMEGA_NEW_B,]'];
-        end
+        iter_num(d_d) = count_iter_num;
+%         idxBROKENCOND(i,:) = [idxVEL_COND' idxBODY_COND'];
         
-        [OUTP(j).OUTP, ~, ~, ~, ~, ~] = fcnMAIN(filename, STATE, 1,OVERWRITE);
-        
-        idxVEL_COND(j,:) = (abs(VEL(i+1,:)'-OUTP(j).OUTP.VEL_NEW))>Vel_criteria;
-        idxBODY_COND(j,:) = (abs(BODY_RATE_From_Euler(i+1,:)'-OUTP(j).OUTP.OMEGA_NEW_B))>Body_Rates_criteria;
-        if any(idxVEL_COND(j,:)) || any(idxBODY_COND(j,:))
-            cond = false;
-            iter_num(j) = count_iter_num;
-            count_iter_num = 0;
-        else
-            cond = true;
-            count_iter_num = count_iter_num+1;
-        end
+    else
+        cond = true;
+        count_iter_num = count_iter_num+1;
+    end
+    end
+%     fprintf(strcat(num2str(i),' Complete. Number of successful iterations:',num2str(iter_num(i)) ,'\n'))
     end
     ITERATION_CG(q,:) = iter_num;
     AVERAGE_ITERATION_CG(q) = nanmean(iter_num);
