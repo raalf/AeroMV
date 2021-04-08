@@ -122,14 +122,14 @@ Mx = Mx_R.*cos(STATE.BETA)-My_R.*sin(STATE.BETA);
 My = Mx_R.*sin(STATE.BETA)+My_R.*cos(STATE.BETA);
 
 % Save rotor moments to OUTP as a vector in rotor reference frame
-OUTP.M_r = [Mx, My, Q];
+OUTP.M_r_hub = [Mx, My, Q];
 %OUTP.M_r = [0*Mx, 0*My, Q];
 
 % Convert the rotor moments from rotor reference frame to body frame
-[OUTP.M_r] = fcnROTREF2BODY(GEOM, OUTP.M_r);
+[OUTP.M_r_hub] = fcnROTREF2BODY(GEOM, OUTP.M_r_hub);
 
 % Calculate total vehcile moments due to rotors. M_r + r x F_r
-M_rotor = OUTP.M_r + cross(GEOM.ROTOR.matLOCATION,OUTP.F_r);
+OUTP.M_r_total = OUTP.M_r_hub + cross(GEOM.ROTOR.matLOCATION,OUTP.F_r);
 
 % Calculate total moments in the body reference frame
-OUTP.M_B = sum(M_rotor) + sum(OUTP.M_comp);
+OUTP.M_B = sum(OUTP.M_r_total) + sum(OUTP.M_comp);
