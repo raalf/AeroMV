@@ -101,10 +101,12 @@ if isnan(e_V)
     e_V = [0 0 0];
 end
 
+OUTP.F_comp = sum(OUTP.COMP_DRAG_TOTAL.*e_V,1) + ...
+    sum(OUTP.COMP_LIFT_TOTAL.*e_L,1);
 % Calcuate total forces in body reference frame (as a vector)
 % rotor forces + component drag + component lift + mg
-OUTP.F_B = sum(OUTP.F_r,1) + sum(OUTP.COMP_DRAG_TOTAL.*e_V,1) + ...
-    sum(OUTP.COMP_LIFT_TOTAL.*e_L,1) + e_D*GEOM.VEH.valMASS*9.81;
+OUTP.F_B = sum(OUTP.F_r,1) + OUTP.F_comp + e_D*GEOM.VEH.valMASS*9.81;
+
 
 %% Sum the moments in the body frame
 % Calculate moments due to forces on vehicle components
