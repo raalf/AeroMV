@@ -55,7 +55,6 @@ OVERWRITE.GEOM.VEH.vecCG = [-0.01 0.012  (47.397)*0.001];
 [TABLE, GEOM, AIR] = fcnINPUT(filename);
 
 
-
 for i = begin:int:fin
     j = j+1;
     STATE.accuracy = 1;

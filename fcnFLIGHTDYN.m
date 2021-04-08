@@ -26,7 +26,7 @@ function [OUTP] = fcnFLIGHTDYN(GEOM, STATE, OUTP)
 % If not input in STATE structure, assume accuracy = 1
 if ~fcnCOMPCHECK(STATE, 'accuracy')
     STATE.accuracy = 3;
-end
+end  
 
 % Calculate the precession rate
 [OUTP] = fcnPRECESSION(GEOM, STATE, OUTP);

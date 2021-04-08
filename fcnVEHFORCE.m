@@ -71,7 +71,7 @@ elseif strcmpi(INFO.strTYPE,'Ellipsoid')
     % Random textbook says below Re 2e5 is 0.5 and above Re 2e6 is 0.2
 
 %% Calculate drag for an ellipsoid with in turbulent flow
-% Required information in the INFO structure:
+% Required information in the INFO structure
 %   valDIAM - cylinder diameter
 %   valLENGTH - cylinder length  
 %   valAOA - Angle of cylinder (optional)

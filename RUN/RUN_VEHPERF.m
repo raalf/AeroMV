@@ -21,8 +21,8 @@ clear,clc
 
 % INPUTS
 filename = 'DJI_Matrice_210_RTK'; % Filename input
-AoA = -90:90;         % Angle of attack sweep
-Beta = -90:90;        % Beta sweep
+AoA = -135:0.5:135;         % Angle of attack sweep
+Beta = 0;        % Beta sweep
 Velocity = 15;       % Velocity
 
 
@@ -45,6 +45,7 @@ for j = 1:length(AoA)
         % *** DOUBLE CHECK THIS LINE
         R = fcnEUL2R([0 AoA(j) Beta(i)],3,1);
         STATE.VEL_B = (R\[Velocity 0 0]')';
+        STATE.VEL_B(:,3) = -1*STATE.VEL_B(:,3);
 %         dir = [cosd(AoA(j)) 0 sind(AoA(j))]+[cosd(Beta(i)) sind(Beta(i)) 0];
 %         STATE.VEL_B = Velocity*(dir/norm(dir));
 %         STATE.VEL_B = Velocity*[(cosd(AoA(j))*cosd(Beta(i))) sind(Beta(i)) sind(AoA(j))];
@@ -65,42 +66,50 @@ for j = 1:length(AoA)
         if GEOM.VEH.idxBODY == 1
             COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.BODY.vecDRAG];
             COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.BODY.vecLIFT];
-            e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.BODY,STATE.VEL_B)]; % Get lift directions
+            PERF.BODY.e_L = fcnLIFTDIR(GEOM.VEH.BODY,STATE.VEL_B);
+            e_L = [e_L;  PERF.BODY.e_L]; % Get lift directions
             r = [r; fcnMOMARM(GEOM.VEH.BODY)]; % Get moment arm
+            
         end
         % Check and add arm information
         if GEOM.VEH.idxARM == 1
             COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.ARM.vecDRAG];
             COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.ARM.vecLIFT];
-            e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.ARM,STATE.VEL_B)];
+            PERF.ARM.e_L = fcnLIFTDIR(GEOM.VEH.ARM,STATE.VEL_B);
+            e_L = [e_L;  PERF.ARM.e_L]; % Get lift directions
+            
             r = [r; fcnMOMARM(GEOM.VEH.ARM)];
         end
         % Check and add leg information
         if GEOM.VEH.idxLEG == 1
             COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.LEG.vecDRAG];
             COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.LEG.vecLIFT];
-            e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.LEG,STATE.VEL_B)];
+            PERF.LEG.e_L = fcnLIFTDIR(GEOM.VEH.LEG,STATE.VEL_B);
+            e_L = [e_L;  PERF.LEG.e_L]; % Get lift directions
             r = [r; fcnMOMARM(GEOM.VEH.LEG)];
         end
         % Check and add payload information
         if GEOM.VEH.idxPAYLOAD == 1
             COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.PAYLOAD.vecDRAG];
             COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.PAYLOAD.vecLIFT];
-            e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.PAYLOAD,STATE.VEL_B)];
+            PERF.PAYLOAD.e_L = fcnLIFTDIR(GEOM.VEH.PAYLOAD,STATE.VEL_B);
+            e_L = [e_L;  PERF.PAYLOAD.e_L]; % Get lift directions
             r = [r; fcnMOMARM(GEOM.VEH.PAYLOAD)];
         end
         % Check and add motor information
         if GEOM.VEH.idxMOTOR == 1
             COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.MOTOR.vecDRAG];
             COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.MOTOR.vecLIFT];
-            e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.MOTOR,STATE.VEL_B)];
+            PERF.MOTOR.e_L = fcnLIFTDIR(GEOM.VEH.MOTOR,STATE.VEL_B);
+            e_L = [e_L;  PERF.MOTOR.e_L]; % Get lift directions
             r = [r; fcnMOMARM(GEOM.VEH.MOTOR)];
         end
         % Check and add other component information
         if GEOM.VEH.idxOTHER == 1
             COMP_DRAG_TOTAL = [COMP_DRAG_TOTAL; PERF.OTHER.vecDRAG];
             COMP_LIFT_TOTAL = [COMP_LIFT_TOTAL; PERF.OTHER.vecLIFT];
-            e_L = [e_L;  fcnLIFTDIR(GEOM.VEH.OTHER,STATE.VEL_B)];
+            PERF.OTHER.e_L = fcnLIFTDIR(GEOM.VEH.OTHER,STATE.VEL_B);
+            e_L = [e_L;  PERF.OTHER.e_L]; % Get lift directions
             r = [r; fcnMOMARM(GEOM.VEH.OTHER)];
         end
         
@@ -110,7 +119,7 @@ for j = 1:length(AoA)
         
         % Calculate down direction and velocity direction (unit vectors)
         e_V = ((STATE.VEL_B/STATE.VEL_MAG)')';
-        
+        PERF.e_V = e_V;
         %% Final vehicle force and moment vectors
         % Calcuate total forces in body reference frame (as a vector)
         F_comp(j,:,i) = sum(OUTP.COMP_DRAG_TOTAL.*e_V,1) + sum(OUTP.COMP_LIFT_TOTAL.*e_L,1);
@@ -118,6 +127,8 @@ for j = 1:length(AoA)
         M_comp(j,:,i) = sum(cross(r,(OUTP.COMP_LIFT_TOTAL.*e_L + OUTP.COMP_DRAG_TOTAL.*e_V)));
         AoA_grid(j,:,i) = [AoA(j) AoA(j) AoA(j)];
         Beta_grid(j,:,i) = [Beta(i) Beta(i) Beta(i)];
+        PERF_save(j,:,i) = PERF;
+
     end
 end
 
@@ -134,6 +145,7 @@ zlabel('Total force due to components (N)')
 box on
 grid on
 
+
 figure(2)
 clf(2)
 hold on
@@ -146,6 +158,20 @@ ylabel('Side slip angle (deg)')
 zlabel('Force (N)')
 box on
 grid on
+
+% q = 0.5*AIR.density*Velocity^2;
+% figure(2)
+% clf(2)
+% hold on
+% plot(reshape(AoA_grid(:,1,:),len,1,1), reshape(F_comp(:,1,:),len,1,1)/q,'ko','markerfacecolor','k')
+% plot(reshape(AoA_grid(:,1,:),len,1,1), reshape(F_comp(:,2,:),len,1,1)/q,'rd','markerfacecolor','r')
+% plot(reshape(AoA_grid(:,1,:),len,1,1), reshape(F_comp(:,3,:),len,1,1)/q,'bs','markerfacecolor','b')
+% legend('X-Dir (Drag)','Y-Dir (Side Force)','Z-Dir (Lift)')
+% xlabel('Angle of attack (deg)')
+% ylabel('Side slip angle (deg)')
+% zlabel('Force (N)')
+% box on
+% grid on
 
 
 figure(3)
