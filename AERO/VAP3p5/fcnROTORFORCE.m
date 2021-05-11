@@ -1,6 +1,6 @@
 function [OUTP] = fcnROTORFORCE(valTIMESTEP, matROTORDP, en, inddrag, vecDELNDIST, SURF, VEHI, INPU, COND, OUTP)
 % Computes the thrust and power coefficients of each rotor
-TESTING = false; % TESTING SIDE FORCES AND MOMENT. WHEN FALSE CALCS ARE SKIPPED
+TESTING = true; % TESTING SIDE FORCES AND MOMENT. WHEN FALSE CALCS ARE SKIPPED
 % Thrust direction in global reference frame
 et = zeros(size(SURF.vecDVEROTOR,1),3);
 tempROTORAXISDVE = zeros(size(SURF.vecDVEROTOR,1),3);

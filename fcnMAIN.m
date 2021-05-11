@@ -21,6 +21,9 @@ function [OUTP, PERF, TABLE, GEOM, AIR, STATE] = fcnMAIN(TABLE, GEOM, AIR, STATE
 %               = 1: Lookup tables
 %               = 2: Run BEMT
 %               = 3: Lookup tables with vortex ring model
+%               = 4: Simple K*Omega^2 approach
+%               = 5: Run BEMT with radial velocities from flight dynamics
+%               = 6: Runs VAP3.5 for each rotor individually
 
 %% Retrieve Input Vehicle Geometry (moved to outside of fcnMAIN for computational speed)
 % [TABLE, GEOM, AIR] = fcnINPUT(filename);
@@ -61,6 +64,8 @@ elseif (idxAERO==4)
 elseif (idxAERO==5)
     % BEMT Module with velocity distributions
     PERF = fcnRUNBEMT_VELDIST(GEOM, AIR, PERF, STATE);
+elseif (idxAERO==6)
+     PERF = fcnRUNVAPSINGLE(GEOM,AIR,PERF,STATE);
 end
 
 % Apply ground effect

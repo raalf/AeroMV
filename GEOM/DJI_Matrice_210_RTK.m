@@ -7,6 +7,7 @@
 % Rotor name found in 
 % GEOM.ROTOR.strNAME = 'Matrice_210_RTK';
 GEOM.ROTOR.strNAME = 'Matrice_210_RTK_BEMTDATA';
+GEOM.ROTOR.strNAME = 'Matrice_210_RTK_Rotor';
 % GEOM.ROTOR.strNAME = 'Matrice210RTK_Experiment';
 % Location center locations [x,y,z], (meters)
 % GEOM.ROTOR.matLOCATION = [mean([209.9119 210.8997]) mean([244.2242 245.6493])  mean([170.4645 158.0862]); % Rotor 1
