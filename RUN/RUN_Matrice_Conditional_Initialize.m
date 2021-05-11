@@ -105,7 +105,7 @@ for i = begin:int:fin
         k = k + 1;
     end
     
-    [OUTP(k), PERF(k), ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1, OVERWRITE);
+    [OUTP(k), PERF(k), ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 6, OVERWRITE);
     
     idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
     idxBODY_COND(k,:) = (abs(BODY_RATES(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;
@@ -119,7 +119,7 @@ for i = begin:int:fin
         count_iter_num = count_iter_num+1;
     end
     end
-    fprintf(strcat(num2str(i),' Complete. Number of successful iterations:',num2str(iter_num(j)) ,'\n'))
+    fprintf(strcat(num2str(i),' Complete. Number of successful iterations: ',num2str(iter_num(j)) ,'\n'))
 end
 
 save('DATA')

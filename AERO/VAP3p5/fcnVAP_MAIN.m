@@ -11,7 +11,8 @@ if nargin == 2
     [FLAG, COND, VISC, INPU, VEHI, SURF] = fcnXMLREAD(filename, VAP_IN);
     
     FLAG.PRINT = 1;
-    FLAG.PLOT = 1;
+    FLAG.OLDPRINT = 0;
+    FLAG.PLOT = 0;
     FLAG.VISCOUS = 1;
     FLAG.CIRCPLOT = 0;
     FLAG.GIF = 0;
@@ -27,7 +28,7 @@ if nargin == 2
     % Initializing parameters to null/zero/nan
     [WAKE, OUTP, INPU, SURF] = fcnINITIALIZE(COND, INPU, SURF);
     
-    if FLAG.PRINT == 1
+    if FLAG.OLDPRINT == 1
         disp('============================================================================');
         disp('                  /$$    /$$  /$$$$$$  /$$$$$$$         /$$$$$$     /$$$$$$$')
         disp('+---------------+| $$   | $$ /$$__  $$| $$__  $$       /$$__  $$   | $$____/') ;
@@ -167,8 +168,18 @@ for valTIMESTEP = 1:COND.valMAXTIME
     end
     
     %% Post-timestep outputs
+    if FLAG.OLDPRINT == 1
+        fcnPRINTOUT(FLAG.OLDPRINT, valTIMESTEP, INPU.valVEHICLES, OUTP.vecCL, OUTP.vecCDI, OUTP.vecCT, MISC.vecROTORJ, VEHI.vecROTORVEH, 1)
+    end
     if FLAG.PRINT == 1
-        fcnPRINTOUT(FLAG.PRINT, valTIMESTEP, INPU.valVEHICLES, OUTP.vecCL, OUTP.vecCDI, OUTP.vecCT, MISC.vecROTORJ, VEHI.vecROTORVEH, 1)
+        if isnan(OUTP.vecCT(valTIMESTEP))
+            fprintf('%d, ',valTIMESTEP)
+        else
+            fprintf('%d: CT = %0.4f, ',valTIMESTEP,OUTP.vecCT(valTIMESTEP))
+            if (valTIMESTEP/5) == floor(valTIMESTEP/5)
+                fprintf('\n')
+            end
+        end
     end
     
     if FLAG.GIF == 1 % Creating GIF (output to GIF/ folder by default)
@@ -178,7 +189,7 @@ end
 
 [OUTP] = fcnOUTPUT(COND, FLAG, INPU, SURF, OUTP, valTIMESTEP);
 
-if FLAG.PRINT == 1 && FLAG.PREVIEW == 0
+if FLAG.OLDPRINT == 1 && FLAG.PREVIEW == 0
     fprintf('VISCOUS CORRECTIONS => CLv = %0.4f \tCD = %0.4f \n', OUTP.vecCLv(end,:), OUTP.vecCD(end,:))
     fprintf('\n');
 end

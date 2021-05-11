@@ -25,7 +25,7 @@ if FLAG.VISCOUS == 1
             [OUTP.vecCLv(valTIMESTEP,i), OUTP.vecCD(valTIMESTEP,i), OUTP.vecPREQ(valTIMESTEP,i), OUTP.vecLD(valTIMESTEP,i), OUTP.vecVINF(valTIMESTEP,i), OUTP.vecCMDIST, OUTP.vecCNDIST, OUTP.vecCDPDIST] = fcnVISCOUS_WING(OUTP.vecCL(valTIMESTEP), OUTP.vecCDI(valTIMESTEP), ...
                 INPU.vecAREA, COND.valDENSITY, VISC.valKINV, SURF.vecDVENFREE, SURF.vecDVENIND, ...
                 SURF.vecDVELFREE, SURF.vecDVELIND, SURF.vecDVESFREE, SURF.vecDVESIND, SURF.vecDVEPANEL, SURF.vecDVELE, SURF.vecDVEWING.*uint8(idxvehwing), INPU.vecN, INPU.vecM, SURF.vecDVEAREA, ...
-                SURF.matCENTER, SURF.vecDVEHVCRD, VISC.cellAIRFOIL, FLAG.PRINT, INPU.vecSYM, VISC.vecINTERF, SURF.vecDVEROLL, SURF.matUINF, matWUINF, SURF.matDVE, SURF.matVLST, COND.vecVEHVINF(i), fixed_lift, COND.vecVEHWEIGHT(i));
+                SURF.matCENTER, SURF.vecDVEHVCRD, VISC.cellAIRFOIL, FLAG.OLDPRINT, INPU.vecSYM, VISC.vecINTERF, SURF.vecDVEROLL, SURF.matUINF, matWUINF, SURF.matDVE, SURF.matVLST, COND.vecVEHVINF(i), fixed_lift, COND.vecVEHWEIGHT(i));
                  
         if FLAG.NACELLE == 1 && any(idxvehrotor) && any(idxvehwing)
             [OUTP] = fcnVISCOUS_NACELLE(valTIMESTEP, COND, SURF, WAKE, INPU, FLAG, VISC, OUTP);
@@ -42,7 +42,7 @@ if FLAG.VISCOUS == 1
                 [matWUINF] = fcnINDVEL(SURF.matCENTER(idxvehrotor==1,:), valTIMESTEP, SURF, WAKE, INPU, FLAG);
                 
                 [matROTORDP(idxvehrotor,:), vecDELNDIST(idxvehrotor)] = fcnVISCOUS_ROTOR(VISC.valKINV,...
-                    SURF.vecDVEHVCRD(idxvehrotor==1), INPU.vecN, INPU.vecM, SURF.vecDVELE(idxvehrotor==1), SURF.vecDVEPANEL(idxvehrotor==1), VISC.cellAIRFOIL, SURF.vecDVENFREE(idxvehrotor==1)+SURF.vecDVENIND(idxvehrotor==1), SURF.vecDVEAREA(idxvehrotor==1),SURF.matUINF(idxvehrotor==1,:), SURF.matVLST, SURF.matDVE(idxvehrotor==1,:), matWUINF, FLAG.PRINT);
+                    SURF.vecDVEHVCRD(idxvehrotor==1), INPU.vecN, INPU.vecM, SURF.vecDVELE(idxvehrotor==1), SURF.vecDVEPANEL(idxvehrotor==1), VISC.cellAIRFOIL, SURF.vecDVENFREE(idxvehrotor==1)+SURF.vecDVENIND(idxvehrotor==1), SURF.vecDVEAREA(idxvehrotor==1),SURF.matUINF(idxvehrotor==1,:), SURF.matVLST, SURF.matDVE(idxvehrotor==1,:), matWUINF, FLAG.OLDPRINT);
             end
         end
            

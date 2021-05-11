@@ -18,7 +18,7 @@ for i = 1:length(STATE.RPM)
     VAP_IN.vecROTORRPM = STATE.RPM(i);
     VAP_IN.vecVEHALPHA = -1*STATE.AOA_R(i);
     VAP_IN.valDELTIME = 1/((STATE.RPM(i)/60)*timestepsperrev);
-    
+    fprintf('Running Rotor #%d in VAP3.5\n',i);
     OUTP = fcnVAP_MAIN(strcat('inputs\',GEOM.ROTOR.strNAME,'.vap'), VAP_IN);
     PERF.ROTOR(i).T = OUTP.vecCT_AVG*((STATE.RPM(i)/60).^2).*((GEOM.ROTOR.vecDIAM(i)).^4)*AIR.density;
     PERF.ROTOR(i).Nx = OUTP.vecCFx_AVG*((STATE.RPM(i)/60).^2).*((GEOM.ROTOR.vecDIAM(i)).^4)*AIR.density;
@@ -28,6 +28,6 @@ for i = 1:length(STATE.RPM)
     PERF.ROTOR(i).Mx = OUTP.vecCMx_AVG.*((STATE.RPM(i)/60).^2).*((GEOM.ROTOR.vecDIAM(i)).^5)*AIR.density;
     PERF.ROTOR(i).My = OUTP.vecCMy_AVG.*((STATE.RPM(i)/60).^2).*((GEOM.ROTOR.vecDIAM(i)).^5)*AIR.density;
 end
-
+fprintf('------ Done Running VAP3.5 Cases ------\n\n')
 
 cd(FOLDER_ADDRESS)
