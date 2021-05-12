@@ -105,7 +105,7 @@ for i = begin:int:fin
         k = k + 1;
     end
     
-    [OUTP(k), PERF(k), ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 6, OVERWRITE);
+    [OUTP(k), PERF(k), ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 7, OVERWRITE);
     
     idxVEL_COND(k,:) = (abs(VEL(d+1,:)'-OUTP(k).VEL_NEW))>Vel_criteria;
     idxBODY_COND(k,:) = (abs(BODY_RATES(d+1,:)'-OUTP(k).OMEGA_NEW_B))>Body_Rates_criteria;

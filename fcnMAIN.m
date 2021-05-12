@@ -65,7 +65,11 @@ elseif (idxAERO==5)
     % BEMT Module with velocity distributions
     PERF = fcnRUNBEMT_VELDIST(GEOM, AIR, PERF, STATE);
 elseif (idxAERO==6)
-     PERF = fcnRUNVAPSINGLE(GEOM,AIR,PERF,STATE);
+    % VAP 3.5, single rotor
+    PERF = fcnRUNVAPSINGLE(GEOM,AIR,PERF,STATE);
+elseif (idxAERO==7)
+    % VAP 3.5, multirotor
+    PERF = fcnRUNVAPMULTI(GEOM,AIR,PERF,STATE);
 end
 
 % Apply ground effect

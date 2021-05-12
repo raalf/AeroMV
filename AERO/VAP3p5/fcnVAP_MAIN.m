@@ -12,14 +12,14 @@ if nargin == 2
     
     FLAG.PRINT = 1;
     FLAG.OLDPRINT = 0;
-    FLAG.PLOT = 0;
+    FLAG.PLOT = 1;
     FLAG.VISCOUS = 1;
     FLAG.CIRCPLOT = 0;
     FLAG.GIF = 0;
-    FLAG.PREVIEW = 0;
+    FLAG.PREVIEW = 1;
     FLAG.PLOTWAKEVEL = 0;
     FLAG.PLOTUINF = 0;
-    FLAG.VERBOSE = 0;
+    FLAG.VERBOSE = 1;
     FLAG.SAVETIMESTEP = 0;
     FLAG.HOVERWAKE = 0;
     FLAG.NACELLE = 0;

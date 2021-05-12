@@ -10,7 +10,7 @@ end
 
 [hFig2] = fcnPLOTBODY(FLAG.VERBOSE, SURF.valNELE, SURF.matDVE, SURF.matVLST, SURF.matCENTER, sym);
 if ~isempty(valTIMESTEP)
-    [hFig2] = fcnPLOTWAKE(FLAG.VERBOSE, hFig2, WAKE.valWNELE, WAKE.matWDVE, WAKE.matWVLST, WAKE.matWCENTER, WAKE.vecWDVESURFACE, sym);
+    [hFig2] = fcnPLOTWAKE(0, hFig2, WAKE.valWNELE, WAKE.matWDVE, WAKE.matWVLST, WAKE.matWCENTER, WAKE.vecWDVESURFACE, sym);
 end
 % [hLogo] = fcnPLOTLOGO(0.97,0.03,14,'k','none');
 

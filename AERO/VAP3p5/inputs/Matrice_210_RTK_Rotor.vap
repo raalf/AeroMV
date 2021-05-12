@@ -44,6 +44,7 @@
 			<symmetry>FALSE</symmetry>
 			<rpm>4500</rpm>
 			<collective>3.15</collective>
+			<rotation_direction>CCW</rotation_direction>
 			
 			<ref_diam>0.4572</ref_diam>
 
