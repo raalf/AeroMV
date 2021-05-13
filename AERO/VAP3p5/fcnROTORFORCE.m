@@ -11,8 +11,8 @@ end
 % Torque direction
 eq = SURF.matUINFROT./(sqrt(SURF.matUINFROT(:,1).^2+SURF.matUINFROT(:,2).^2+SURF.matUINFROT(:,3).^2));
 if TESTING % This is under testing
-    vecTHETA = (2*pi*COND.valDELTIME*COND.vecROTORRPM/60)*valTIMESTEP ...
-        + (SURF.vecDVEROTORBLADE-1)*2*pi/(INPU.vecROTORBLADES);
+    vecTHETA = (2.*pi.*COND.valDELTIME.*COND.vecROTORRPM(SURF.vecDVEROTOR)./60).*valTIMESTEP ...
+        + (SURF.vecDVEROTORBLADE-1).*2.*pi./(INPU.vecROTORBLADES(SURF.vecDVEROTOR));
     
     es = [-sin(vecTHETA) cos(vecTHETA) zeros(size(vecTHETA,1),1)];
     ea = [cos(vecTHETA) sin(vecTHETA) zeros(size(vecTHETA,1),1)];

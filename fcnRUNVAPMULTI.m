@@ -5,7 +5,7 @@ function PERF = fcnRUNVAPMULTI(GEOM,AIR,PERF,STATE)
 
 % Hardcoded inputs. Maybe change to input file in the future
 timestepsperrev = 20; % Number of timesteps per revolution
-maxtime = 100; % Max time
+maxtime = 160; % Max time
 relax = false; % relaxation on or off (true/false)
 
 
@@ -77,13 +77,13 @@ VAP_IN.valDELTIME = 1/((min(STATE.RPM)/60)*timestepsperrev); %Calculate deltime
 OUTP = fcnVAP_MAIN(tempFILENAME, VAP_IN);
 
 % Convert outputs to variables used in AeroMV
-PERF.ROTOR.T = OUTP.vecCT_AVG*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM).^4)*AIR.density;
-PERF.ROTOR.Nx = OUTP.vecCFx_AVG*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM).^4)*AIR.density;
-PERF.ROTOR.Ny = OUTP.vecCFy_AVG*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM).^4)*AIR.density;
-PERF.ROTOR.Q =  (OUTP.vecCP_AVG/(2*pi*STATE.RPM/60)).*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM).^5)*AIR.density;
-PERF.ROTOR.P = OUTP.vecCP_AVG.*((STATE.RPM/60).^3).*((GEOM.ROTOR.vecDIAM).^5)*AIR.density;
-PERF.ROTOR.Mx = OUTP.vecCMx_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM).^5)*AIR.density;
-PERF.ROTOR.My = OUTP.vecCMy_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM).^5)*AIR.density;
+PERF.ROTOR.T = OUTP.vecCT_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM').^4)*AIR.density;
+PERF.ROTOR.Nx = OUTP.vecCFx_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM').^4)*AIR.density;
+PERF.ROTOR.Ny = OUTP.vecCFy_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM').^4)*AIR.density;
+PERF.ROTOR.Q =  (OUTP.vecCP_AVG./(2*pi*STATE.RPM/60)).*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM').^5)*AIR.density;
+PERF.ROTOR.P = OUTP.vecCP_AVG.*((STATE.RPM/60).^3).*((GEOM.ROTOR.vecDIAM').^5)*AIR.density;
+PERF.ROTOR.Mx = OUTP.vecCMx_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM').^5)*AIR.density;
+PERF.ROTOR.My = OUTP.vecCMy_AVG.*((STATE.RPM/60).^2).*((GEOM.ROTOR.vecDIAM').^5)*AIR.density;
 
 fprintf('------ Done Running VAP3.5 Cases ------\n\n')
 
