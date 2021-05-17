@@ -32,7 +32,7 @@ for i = 1:size(matLOCATION_sweep,1)
     for j = 1:length(AOA_R_sweep)
         STATE.AOA_R = AOA_R_sweep(j);
         for k = 1:length(mu)
-            STATE.VEL_ROTOR_MAG = mu(i)*(STATE.RPM/60*2*pi)*rotor_radius;
+            STATE.VEL_ROTOR_MAG = mu(k)*(STATE.RPM/60*2*pi)*rotor_radius;
             
             for m = 1:length(roll_rate)
                 STATE.BODY_RATES = [roll_rate(m) 0 0];
