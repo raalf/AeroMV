@@ -118,9 +118,9 @@ C(idx2 ==0) = (SURF.matCOEFF(idx2==0,3)-SURF.matCOEFF(idxf,3));
 nfree = ((A .*2 .* SURF.vecDVEHVSPN'+  C./3.*2.*SURF.vecDVEHVSPN'.*SURF.vecDVEHVSPN'.*SURF.vecDVEHVSPN') .*uxs')';
 
 % Unsteady lift term with apparent mass
-lambda = 0.5; % Relaxation factor for dGammadt term
+lambda = 1; % Relaxation factor for dGammadt term
 
-GammaInt = ((A .*2 .* SURF.vecDVEHVSPN'+  C./3.*2.*SURF.vecDVEHVSPN'.*SURF.vecDVEHVSPN'.*SURF.vecDVEHVSPN'))'; % Integrated circulation across DVE
+GammaInt = ((SURF.matCOEFF(:,1) .*2 .* SURF.vecDVEHVSPN +  SURF.matCOEFF(:,3)./3.*2.*SURF.vecDVEHVSPN.*SURF.vecDVEHVSPN.*SURF.vecDVEHVSPN));
 
 if valTIMESTEP > 2 && FLAG.STEADY == 0
     
