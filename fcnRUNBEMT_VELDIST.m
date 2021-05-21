@@ -65,7 +65,7 @@ for i = 1:length(STATE.RPM)
     
     if strcmpi(options.toggle_precompute,'on')
         airfoil_database(blade,options)
-        load('airfoil_coeff_database');
+        load(strcat(FOLDER_ADDRESS,'\AERO\BEMT_Code_VelocityDist\BEMT Module\Airfoil Databases\airfoil_coeff_database'));
         options.airfoil_coeff_database = airfoil_coeff_database;
     end
     

@@ -24,6 +24,8 @@ if nargin == 2
     FLAG.HOVERWAKE = 0;
     FLAG.NACELLE = 0;
     FLAG.GPU = 0;
+    FLAG.TRUNCATE = 1;
+    INPU.valTIMETRUNC = 20;
     
     % Initializing parameters to null/zero/nan
     [WAKE, OUTP, INPU, SURF] = fcnINITIALIZE(COND, INPU, SURF);
@@ -132,8 +134,13 @@ for valTIMESTEP = 1:COND.valMAXTIME
     
     %% Generating new wake elements
     [INPU, COND, MISC, VISC, WAKE, VEHI, SURF] = fcnCREATEWAKEROW(FLAG, INPU, COND, MISC, VISC, WAKE, VEHI, SURF);
-    
+
     if FLAG.PREVIEW ~= 1
+        if FLAG.TRUNCATE && INPU.valTIMETRUNC <= valTIMESTEP
+            tempD = 5;
+            % Delete oldest row of wake elements
+            
+        end
         %% Creating and solving WD-Matrix for latest row of wake elements
         % We need to grab from WAKE.matWADJE only the values we need for this latest row of wake DVEs
         idx = sparse(sum(ismember(WAKE.matWADJE,[((WAKE.valWNELE - WAKE.valWSIZE) + 1):WAKE.valWNELE]'),2)>0 & (WAKE.matWADJE(:,2) == 4 | WAKE.matWADJE(:,2) == 2));

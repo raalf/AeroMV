@@ -4,7 +4,7 @@
 	<settings>
 		<relax>FALSE</relax>
 		<steady>TRUE</steady>
-		<maxtime>10</maxtime>
+		<maxtime>30</maxtime>
 		<delta_time>0.001</delta_time>
 		<start_forces>0</start_forces>
 		<stiff_wing>1</stiff_wing>

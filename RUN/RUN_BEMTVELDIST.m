@@ -13,7 +13,7 @@ matLOCATION_sweep = [0 0 0; 0 0.24 0];
 rotor_radius = 0.2286;
 
 % % Creat GEOM structure
-GEOM.ROTOR.strNAME = 'Tmotor';
+GEOM.ROTOR.strNAME = 'Tmotor_inv';
 % GEOM.ROTOR.strNAME = 'APC_10x_4_7_Updated';
 
 GEOM.ROTOR.matROT = -1;
