@@ -10,8 +10,8 @@ filename = 'inputs/TMotor.vap';
 % for i = 1:length(alpha_seq)
     
     VAP_IN = [];
-    VAP_IN.valMAXTIME = 50;
-    VAP_IN.valSTARTFORCES = 50;
+    VAP_IN.valMAXTIME = 160;
+    VAP_IN.valSTARTFORCES = 140;
     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN(filename, VAP_IN);
 %     CL(i) = OUTP.vecCL(end);
 %     CDi(i) = OUTP.vecCDI(end);

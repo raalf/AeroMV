@@ -24,8 +24,8 @@ if nargin == 2
     FLAG.HOVERWAKE = 0;
     FLAG.NACELLE = 0;
     FLAG.GPU = 0;
-    FLAG.TRUNCATE = 1;
-    INPU.valTIMETRUNC = 20;
+    FLAG.TRUNCATE = 0;
+    INPU.valTIMETRUNC = 100;
     
     % Initializing parameters to null/zero/nan
     [WAKE, OUTP, INPU, SURF] = fcnINITIALIZE(COND, INPU, SURF);
@@ -136,11 +136,18 @@ for valTIMESTEP = 1:COND.valMAXTIME
     [INPU, COND, MISC, VISC, WAKE, VEHI, SURF] = fcnCREATEWAKEROW(FLAG, INPU, COND, MISC, VISC, WAKE, VEHI, SURF);
 
     if FLAG.PREVIEW ~= 1
-        if FLAG.TRUNCATE && INPU.valTIMETRUNC <= valTIMESTEP
-            tempD = 5;
-            % Delete oldest row of wake elements
-            
+        
+        WAKE.idxTRUNC = ones(WAKE.valWSIZE*valTIMESTEP,1) == 1;
+        WAKE.idxTRUNKADJE = ones(size(WAKE.matWADJE,1),1) == 1;
+        if FLAG.TRUNCATE && INPU.valTIMETRUNC < valTIMESTEP
+
+            WAKE.idxTRUNC(1:(valTIMESTEP-INPU.valTIMETRUNC)*WAKE.valWSIZE) = 0;
+            WAKE.idxTRUNKADJE = (sum(ismember(WAKE.matWADJE,find(WAKE.idxTRUNC)),2)>0 & (WAKE.matWADJE(:,2) == 4 | WAKE.matWADJE(:,2) == 2));
+            WAKE.idxTRUNKADJE = [WAKE.matWADJE(WAKE.idxTRUNKADJE,1)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNKADJE,2),WAKE.matWADJE(WAKE.idxTRUNKADJE,3)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNKADJE,4)];
+        else 
+            WAKE.idxTRUNKADJE = WAKE.matWADJE;
         end
+
         %% Creating and solving WD-Matrix for latest row of wake elements
         % We need to grab from WAKE.matWADJE only the values we need for this latest row of wake DVEs
         idx = sparse(sum(ismember(WAKE.matWADJE,[((WAKE.valWNELE - WAKE.valWSIZE) + 1):WAKE.valWNELE]'),2)>0 & (WAKE.matWADJE(:,2) == 4 | WAKE.matWADJE(:,2) == 2));
@@ -148,14 +155,17 @@ for valTIMESTEP = 1:COND.valMAXTIME
         
         [matWD, WAKE.vecWR] = fcnWDWAKE([1:WAKE.valWSIZE]', temp_WADJE, WAKE.vecWDVEHVSPN(end-WAKE.valWSIZE+1:end), WAKE.vecWDVESYM(end-WAKE.valWSIZE+1:end), WAKE.vecWDVETIP(end-WAKE.valWSIZE+1:end), WAKE.vecWKGAM(end-WAKE.valWSIZE+1:end), INPU.vecN);
         [WAKE.matWCOEFF(end-WAKE.valWSIZE+1:end,:)] = fcnSOLVEWD(matWD, WAKE.vecWR, WAKE.valWSIZE, WAKE.vecWKGAM(end-WAKE.valWSIZE+1:end), WAKE.vecWDVEHVSPN(end-WAKE.valWSIZE+1:end));
-        
+      
         %% Rebuilding and solving wing resultant
         [vecR] = fcnRWING(valTIMESTEP, SURF, WAKE, FLAG);
         [SURF.matCOEFF] = fcnSOLVED(matD, vecR, SURF.valNELE);
-        
+         
+
         %% Creating and solving WD-Matrix
-        [matWD, WAKE.vecWR] = fcnWDWAKE([1:WAKE.valWNELE]', WAKE.matWADJE, WAKE.vecWDVEHVSPN, WAKE.vecWDVESYM, WAKE.vecWDVETIP, WAKE.vecWKGAM, INPU.vecN);
-        [WAKE.matWCOEFF] = fcnSOLVEWD(matWD, WAKE.vecWR, WAKE.valWNELE, WAKE.vecWKGAM, WAKE.vecWDVEHVSPN);
+%         [1:WAKE.valWNELE]'
+%         [1:WAKE.valWNELE-sum(WAKE.idxTRUNC==0)]'
+        [matWD, WAKE.vecWR] = fcnWDWAKE([1:WAKE.valWNELE-sum(WAKE.idxTRUNC==0)]', WAKE.idxTRUNKADJE, WAKE.vecWDVEHVSPN(WAKE.idxTRUNC), WAKE.vecWDVESYM(WAKE.idxTRUNC), WAKE.vecWDVETIP(WAKE.idxTRUNC), WAKE.vecWKGAM(WAKE.idxTRUNC), INPU.vecN);
+        [WAKE.matWCOEFF(WAKE.idxTRUNC,:)] = fcnSOLVEWD(matWD, WAKE.vecWR, WAKE.valWNELE-sum(WAKE.idxTRUNC==0), WAKE.vecWKGAM(WAKE.idxTRUNC), WAKE.vecWDVEHVSPN(WAKE.idxTRUNC));
         
         %% Relaxing wake
         if valTIMESTEP > 2 && FLAG.RELAX == 1
