@@ -137,11 +137,16 @@ for valTIMESTEP = 1:COND.valMAXTIME
 
     if FLAG.PREVIEW ~= 1
         
+        %% Truncate wake
+        % Wake truncation will simply use the wake data 
+        % Intial assignment of wake variables specific to truncating
         WAKE.idxTRUNC = ones(WAKE.valWSIZE*valTIMESTEP,1) == 1;
         WAKE.idxTRUNKADJE = ones(size(WAKE.matWADJE,1),1) == 1;
+        
         if FLAG.TRUNCATE && INPU.valTIMETRUNC < valTIMESTEP
-
+            % Create idx for which wake elements must be included
             WAKE.idxTRUNC(1:(valTIMESTEP-INPU.valTIMETRUNC)*WAKE.valWSIZE) = 0;
+            % Create a new ADJE matrix with only the dves of interest
             WAKE.idxTRUNKADJE = (sum(ismember(WAKE.matWADJE,find(WAKE.idxTRUNC)),2)>0 & (WAKE.matWADJE(:,2) == 4 | WAKE.matWADJE(:,2) == 2));
             WAKE.idxTRUNKADJE = [WAKE.matWADJE(WAKE.idxTRUNKADJE,1)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNKADJE,2),WAKE.matWADJE(WAKE.idxTRUNKADJE,3)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNKADJE,4)];
         else 
