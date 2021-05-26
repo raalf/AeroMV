@@ -24,8 +24,8 @@ if nargin == 2
     FLAG.HOVERWAKE = 0;
     FLAG.NACELLE = 0;
     FLAG.GPU = 0;
-    FLAG.TRUNCATE = 0;
-    INPU.valTIMETRUNC = 100;
+    FLAG.TRUNCATE = 1;
+    INPU.valTIMETRUNC = 5;
     
     % Initializing parameters to null/zero/nan
     [WAKE, OUTP, INPU, SURF] = fcnINITIALIZE(COND, INPU, SURF);
@@ -136,22 +136,7 @@ for valTIMESTEP = 1:COND.valMAXTIME
     [INPU, COND, MISC, VISC, WAKE, VEHI, SURF] = fcnCREATEWAKEROW(FLAG, INPU, COND, MISC, VISC, WAKE, VEHI, SURF);
 
     if FLAG.PREVIEW ~= 1
-        
-        %% Truncate wake
-        % Wake truncation will simply use the wake data 
-        % Intial assignment of wake variables specific to truncating
-        WAKE.idxTRUNC = ones(WAKE.valWSIZE*valTIMESTEP,1) == 1;
-        WAKE.idxTRUNKADJE = ones(size(WAKE.matWADJE,1),1) == 1;
-        
-        if FLAG.TRUNCATE && INPU.valTIMETRUNC < valTIMESTEP
-            % Create idx for which wake elements must be included
-            WAKE.idxTRUNC(1:(valTIMESTEP-INPU.valTIMETRUNC)*WAKE.valWSIZE) = 0;
-            % Create a new ADJE matrix with only the dves of interest
-            WAKE.idxTRUNKADJE = (sum(ismember(WAKE.matWADJE,find(WAKE.idxTRUNC)),2)>0 & (WAKE.matWADJE(:,2) == 4 | WAKE.matWADJE(:,2) == 2));
-            WAKE.idxTRUNKADJE = [WAKE.matWADJE(WAKE.idxTRUNKADJE,1)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNKADJE,2),WAKE.matWADJE(WAKE.idxTRUNKADJE,3)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNKADJE,4)];
-        else 
-            WAKE.idxTRUNKADJE = WAKE.matWADJE;
-        end
+       
 
         %% Creating and solving WD-Matrix for latest row of wake elements
         % We need to grab from WAKE.matWADJE only the values we need for this latest row of wake DVEs
@@ -160,16 +145,32 @@ for valTIMESTEP = 1:COND.valMAXTIME
         
         [matWD, WAKE.vecWR] = fcnWDWAKE([1:WAKE.valWSIZE]', temp_WADJE, WAKE.vecWDVEHVSPN(end-WAKE.valWSIZE+1:end), WAKE.vecWDVESYM(end-WAKE.valWSIZE+1:end), WAKE.vecWDVETIP(end-WAKE.valWSIZE+1:end), WAKE.vecWKGAM(end-WAKE.valWSIZE+1:end), INPU.vecN);
         [WAKE.matWCOEFF(end-WAKE.valWSIZE+1:end,:)] = fcnSOLVEWD(matWD, WAKE.vecWR, WAKE.valWSIZE, WAKE.vecWKGAM(end-WAKE.valWSIZE+1:end), WAKE.vecWDVEHVSPN(end-WAKE.valWSIZE+1:end));
-      
+
+        %% Truncate wake
+        % Wake truncation will simply use the wake data 
+        % Intial assignment of wake variables specific to truncating
+        WAKE.idxTRUNC = ones(WAKE.valWSIZE*valTIMESTEP,1) == 1;
+        WAKE.idxTRUNCADJE = ones(size(WAKE.matWADJE,1),1) == 1;
+        
+        if FLAG.TRUNCATE && INPU.valTIMETRUNC < valTIMESTEP
+            % Create idx for which wake elements must be included
+            WAKE.idxTRUNC(1:(valTIMESTEP-INPU.valTIMETRUNC)*WAKE.valWSIZE) = 0;
+            % Create a new ADJE matrix with only the dves of interest
+            WAKE.idxTRUNCADJE = ismember(WAKE.matWADJE(:,1),find(WAKE.idxTRUNC))>0 & ismember(WAKE.matWADJE(:,3),find(WAKE.idxTRUNC))>0; % & (WAKE.matWADJE(:,2) == 4 | WAKE.matWADJE(:,2) == 2));
+            WAKE.idxTRUNCADJE = [WAKE.matWADJE(WAKE.idxTRUNCADJE,1)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNCADJE,2),WAKE.matWADJE(WAKE.idxTRUNCADJE,3)-sum(~WAKE.idxTRUNC),WAKE.matWADJE(WAKE.idxTRUNCADJE,4)];
+        else 
+            WAKE.idxTRUNCADJE = WAKE.matWADJE;
+        end
+        
+              
         %% Rebuilding and solving wing resultant
         [vecR] = fcnRWING(valTIMESTEP, SURF, WAKE, FLAG);
         [SURF.matCOEFF] = fcnSOLVED(matD, vecR, SURF.valNELE);
          
-
         %% Creating and solving WD-Matrix
 %         [1:WAKE.valWNELE]'
 %         [1:WAKE.valWNELE-sum(WAKE.idxTRUNC==0)]'
-        [matWD, WAKE.vecWR] = fcnWDWAKE([1:WAKE.valWNELE-sum(WAKE.idxTRUNC==0)]', WAKE.idxTRUNKADJE, WAKE.vecWDVEHVSPN(WAKE.idxTRUNC), WAKE.vecWDVESYM(WAKE.idxTRUNC), WAKE.vecWDVETIP(WAKE.idxTRUNC), WAKE.vecWKGAM(WAKE.idxTRUNC), INPU.vecN);
+        [matWD, WAKE.vecWR] = fcnWDWAKE([1:WAKE.valWNELE-sum(WAKE.idxTRUNC==0)]', WAKE.idxTRUNCADJE, WAKE.vecWDVEHVSPN(WAKE.idxTRUNC), WAKE.vecWDVESYM(WAKE.idxTRUNC), WAKE.vecWDVETIP(WAKE.idxTRUNC), WAKE.vecWKGAM(WAKE.idxTRUNC), INPU.vecN);
         [WAKE.matWCOEFF(WAKE.idxTRUNC,:)] = fcnSOLVEWD(matWD, WAKE.vecWR, WAKE.valWNELE-sum(WAKE.idxTRUNC==0), WAKE.vecWKGAM(WAKE.idxTRUNC), WAKE.vecWDVEHVSPN(WAKE.idxTRUNC));
         
         %% Relaxing wake
