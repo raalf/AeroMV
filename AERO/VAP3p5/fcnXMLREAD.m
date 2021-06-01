@@ -48,6 +48,13 @@ end
 try if strcmpi(VAP.settings.fixed_lift.Text, 'true') FLAG.FIXEDLIFT = 1; end; catch FLAG.FIXEDLIFT = 0; end
 try FLAG.GUSTMODE = str2double(VAP.settings.gust_mode.Text); catch; FLAG.GUSTMODE = 0; end
 
+try if strcmpi(VAP.settings.truncate.Text, 'true') FLAG.TRUNCATE = 1; end; catch FLAG.TRUNCATE = 0; end
+
+try INPU.valTIMETRUNC = floor(str2double(VAP.settings.valTIMETRUNC.Text)); catch; INPU.valTIMETRUNC = 0; end
+
+
+INPU.valTIMETRUNC = [];
+
 COND.valMAXTIME = floor(str2double(VAP.settings.maxtime.Text));
 COND.valDELTIME = str2double(VAP.settings.delta_time.Text);
 try COND.valSTARTFORCES = floor(str2double(VAP.settings.start_forces.Text)); catch; COND.valSTARTFORCES = 0; end
@@ -61,6 +68,7 @@ try COND.valGUSTSTART = str2double(VAP.conditions.gust_start.Text); catch; COND.
 
 %% Vehicles
 INPU.valVEHICLES = max(size(VAP.vehicle));
+
 
 INPU.matVEHORIG = nan(INPU.valVEHICLES,3);
 COND.vecVEHVINF = nan(INPU.valVEHICLES,1);
