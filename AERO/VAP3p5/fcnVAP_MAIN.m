@@ -10,9 +10,9 @@ if nargin == 2
     %% Reading in geometry
     [FLAG, COND, VISC, INPU, VEHI, SURF] = fcnXMLREAD(filename, VAP_IN);
     
-    FLAG.PRINT = 1;
+    FLAG.PRINT = 0;
     FLAG.OLDPRINT = 0;
-    FLAG.PLOT = 1;
+    FLAG.PLOT = 0;
     FLAG.VISCOUS = 1;
     FLAG.CIRCPLOT = 0;
     FLAG.GIF = 0;
@@ -24,8 +24,8 @@ if nargin == 2
     FLAG.HOVERWAKE = 0;
     FLAG.NACELLE = 0;
     FLAG.GPU = 0;
-    FLAG.TRUNCATE = 1;
-    INPU.valTIMETRUNC = 5;
+%     FLAG.TRUNCATE = 1;
+%     INPU.valTIMETRUNC = 5;
     
     % Initializing parameters to null/zero/nan
     [WAKE, OUTP, INPU, SURF] = fcnINITIALIZE(COND, INPU, SURF);

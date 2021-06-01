@@ -3,7 +3,8 @@ clear
 warning off
 
 % filename = 'inputs/X57_Cruise.vap';
-filename = 'inputs/TMotor.vap';
+% filename = 'inputs/TMotor.vap';
+filename = 'inputs/Matrice_210_RTK_Rotor.vap';
 % filename = 'inputs/Goland_Wing.vap';
 % alpha_seq = -5:10;
 
@@ -13,7 +14,12 @@ filename = 'inputs/TMotor.vap';
     VAP_IN.valMAXTIME = 40;
     VAP_IN.valSTARTFORCES = 40;
     VAP_IN.RELAX = 1;
+    VAP_IN.valTIMETRUNC = 5;
+    VAP_IN.TRUNCATE = 1;
     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN(filename, VAP_IN);
+    
+    
+    
 %     CL(i) = OUTP.vecCL(end);
 %     CDi(i) = OUTP.vecCDI(end);
     

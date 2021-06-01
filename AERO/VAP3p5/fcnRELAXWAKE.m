@@ -40,6 +40,7 @@ if FLAG.TRUNCATE
     end
 end
 tempWDVE = WAKE.matWDVE(WAKE.idxTRUNC,:);
+
 for wakerow = 1:tempCOUNT
     if wakerow == 1 %|| wakerow == valTIMESTEP % freshest row of wake, closest to wing TE
         WAKE.matWDVELEMP(WAKE.matWDVELEMPIDX(wakerow,:),(1:3)) = permute(mean(reshape(WAKE.matWVLST(tempWDVE(WAKE.matWDVELEMPIDX(wakerow,:),[1,2]),:)',3,[],2),3),[3 2 1]);
