@@ -1,3 +1,4 @@
+clear,clc
 %% Sort out folder and paths
 folder = pwd;
 if strcmp(folder(end-4:end),'\Runs')
@@ -11,40 +12,47 @@ AOA = 10;
 rpm = 4000;
 vel = 5;
 
-maxtime = [80 100 120 140 160 180 200 240 280 340 400];
-dif_trunc = [-60 -40 -20 0];
+vecmaxtime = [80 100 120 140 160 180 200 240 280 340 400];
+vecdif_trunc = [-60 -40 -20 0];
+vecrelax = [0 1];
 
-for i = 1:length(dif_trunc) % There must be a better way to preallocate
-    for k = 1:2
-        for j = 1:length(maxtime)
-            DATA(j,i,k).CT= [];
-            DATA(j,i,k).CP = [];
-            DATA(j,i,k).CQ = [];
-            DATA(j,i,k).CMx = [];
-            DATA(j,i,k).CMy = [];
-            DATA(j,i,k).CNx = [];
-            DATA(j,i,k).CNy = [];
-            DATA(j,i,k).OUTP = [];
-        end
-    end
+% vecmaxtime = [20 21];
+% vecdif_trunc = [-19 -18];
+% vecrelax = [0 1];
+
+[x,y,z] = meshgrid(vecmaxtime,vecdif_trunc,vecrelax);
+maxtime = reshape(x,numel(x),1,1);
+dif_trunc = reshape(y,numel(y),1,1);
+relax = reshape(z,numel(z),1,1);
+
+for i = 1:length(maxtime) % There must be a better way to preallocate
+            DATA(i).CT= [];
+            DATA(i).CP = [];
+            DATA(i).CQ = [];
+            DATA(i).CMx = [];
+            DATA(i).CMy = [];
+            DATA(i).CNx = [];
+            DATA(i).CNy = [];
+            DATA(i).OUTP = [];
+            DATA(i).MAXTIME = [];
+            DATA(i).RELAX = [];
+            DATA(i).TRUNCATE = [];
 end
 
-for i = 1:length(dif_trunc)
-    temp_dif_trunce = dif_trunc(i);
-    for k = 1:2
-        flag_relax = k-1;
-        parfor j = 1:length(maxtime)
-            VAP_IN = [];
-            VAP_IN.RELAX = flag_relax;
+
+parfor i = 1:length(maxtime)
             
-            VAP_IN.valMAXTIME = maxtime(j);
+            VAP_IN = [];
+            VAP_IN.RELAX = relax(i);
+            
+            VAP_IN.valMAXTIME = maxtime(i);
             VAP_IN.valSTARTFORCES = VAP_IN.valMAXTIME-20;
             
-            if temp_dif_trunce == 0
+            if dif_trunc(i) == 0
                 VAP_IN.TRUNCATE = 0;
             else
                 VAP_IN.TRUNCATE = 1;
-                VAP_IN.valTIMETRUNC = maxtime(j)-temp_dif_trunce;
+                VAP_IN.valTIMETRUNC = maxtime(i)-dif_trunc(i);
             end
             
             
@@ -56,16 +64,20 @@ for i = 1:length(dif_trunc)
             
             OUTP = fcnVAP_MAIN(filename, VAP_IN);
             
-            DATA(j,i,k).CT= OUTP.vecCT_AVG;
-            DATA(j,i,k).CP = OUTP.vecCP_AVG;
-            DATA(j,i,k).CQ = OUTP.vecCP_AVG/(2*pi*rpm/60);
-            DATA(j,i,k).CMx = OUTP.vecCMx_AVG;
-            DATA(j,i,k).CMy = OUTP.vecCMy_AVG;
-            DATA(j,i,k).CNx = OUTP.vecCFx_AVG;
-            DATA(j,i,k).CNy = OUTP.vecCFy_AVG;
-            DATA(j,i,k).OUTP = OUTP;
+            DATA(i).CT= OUTP.vecCT_AVG;
+            DATA(i).CP = OUTP.vecCP_AVG;
+            DATA(i).CQ = OUTP.vecCP_AVG/(2*pi*rpm/60);
+            DATA(i).CMx = OUTP.vecCMx_AVG;
+            DATA(i).CMy = OUTP.vecCMy_AVG;
+            DATA(i).CNx = OUTP.vecCFx_AVG;
+            DATA(i).CNy = OUTP.vecCFy_AVG;
+            DATA(i).OUTP = OUTP;
+            DATA(i).MAXTIME = maxtime(i);
+            DATA(i).RELAX = relax(i);
+            DATA(i).TRUNCATE = dif_trunc(i);
+
+            fprintf('Done Case: Maxtime: %d, Relax = %d, Dif Trunc = %d \n',maxtime(i),relax(i),dif_trunc(i))
             
-        end
-        fprintf('Done Parfor iteration: Relax = %d, Dif Trunc %d \n',k,dif_trunc(i))
-    end
+    
 end
+save('TruncateConvergenceStudy')
