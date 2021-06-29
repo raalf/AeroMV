@@ -49,8 +49,10 @@ GEOM.ROTOR.valNUMB = 2;
 GEOM.ROTOR.vecRMASS = 0.011; % Kg
 
 % K constants when using K-omega^2 relationship
-GEOM.KT = 0.0169;
+GEOM.KT = 0.0160;
 GEOM.KQ = 0.00202;
+
+
 
 %% Vehicle information
 GEOM.VEH.valMASS = 1.867; % Kg

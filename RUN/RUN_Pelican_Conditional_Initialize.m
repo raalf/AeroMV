@@ -33,7 +33,7 @@ BODY_RATE_From_Euler = (Euler(2:end,:)-Euler(1:end-1,:))/(1/datafeq);
 
 RPM_Multiplier = 4767./[4456 4326 4196 4104]; %from flight 23
 % RPM_Mulitplier = 4870./[4456 4326 4196 4104]; %from flight 23
-RPM_Hover = [4456 4326 4196 4104];
+RPM_Hover = [4456 4326 4196 4104]; 
 
 Vel_criteria = 0.09;
 Body_Rates_criteria = 0.12;
@@ -116,9 +116,9 @@ for i = begin:int:fin
         STATE.BODY_RATES = [OUTP(k-2:k).OMEGA_NEW_B]';
         k = k + 1;
     end
-    
-    [OUTP_temp, PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE, 1 , OVERWRITE);
-    
+%     tic
+    [OUTP_temp, PERF, ~, ~, ~, ~] = fcnMAIN(TABLE, GEOM, AIR, STATE,4, OVERWRITE);
+%     toc
     if k == 1
         OUTP = OUTP_temp;
     else
@@ -163,7 +163,7 @@ hold on
 X = categorical({'Vel X-Dir','Vel Y-Dir','Vel Z-Dir','Roll Rate','Pitch Rate','Yaw Rate'});
 X = reordercats(X,{'Vel X-Dir','Vel Y-Dir','Vel Z-Dir','Roll Rate','Pitch Rate','Yaw Rate'});
 % sum_cond_missed = cat(2,sum(idxVEL_COND),sum(idxBODY_COND));
-bar(X,sum(idxBROKENCOND),'FaceColor',[0.5 0.5 0.5])
+bar(X,sum(idxBROKENCOND,'omitnan'),'FaceColor',[0.5 0.5 0.5])
 xlabel('Condition Missed')
 ylabel('Number of Occurrence')
 title('Number of times each condition was missed')
