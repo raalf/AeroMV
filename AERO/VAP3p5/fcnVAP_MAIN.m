@@ -16,11 +16,11 @@ end
 
 % Read input, initialize variables, set hardcoded flags, viscous check and
 % begin command window display
-[FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP] = fcnVAPBEGIN(filename, VAP_IN);
+[FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC] = fcnVAPBEGIN(filename, VAP_IN);
 
 % Disritize geometry, calculate D-matrix, initial resultant vector and
 % surface coefficients
-[COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC, matD]= fcnVAPINIT(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP);
+[COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC] = fcnVAPINIT(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC);
 
 % Run timestepping procedure follow by output and plotting functions
-[OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP,MISC, matD);
+[OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP,MISC);

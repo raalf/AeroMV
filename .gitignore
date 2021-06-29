@@ -25,3 +25,6 @@ DATA/Matrice_210_RTK_Dataset/July3_2020_Flight_1.mat
 
 #Default save file
 DATA.mat
+
+#Timestep files
+AERO/VAP3p5/timesteps

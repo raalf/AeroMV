@@ -1,4 +1,4 @@
-function [COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC, matD] = fcnVAPINIT(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP)
+function [COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC] = fcnVAPINIT(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC)
 %fcnVAPINIT Run the initialization of the VAP run including discritizing
 %geometry into DVEs, calculating D-matrix, inital resulting vector and wing
 %coefficients
@@ -10,25 +10,24 @@ function [COND, VISC, INPU, VEHI, WAKE, SURF, OUTP, MISC, matD] = fcnVAPINIT(FLA
 if ~isempty(COND.vecCOLLECTIVE)
     INPU.matGEOM(:,5,INPU.vecPANELROTOR > 0) = INPU.matGEOM(:,5,INPU.vecPANELROTOR > 0) + repmat(reshape(COND.vecCOLLECTIVE(INPU.vecPANELROTOR(INPU.vecPANELROTOR > 0), 1),1,1,[]),2,1,1);
 end
-[INPU, COND, MISC, VISC, WAKE, VEHI, SURF, OUTP] = fcnGEOM2DVE(INPU, COND, VISC, VEHI, WAKE, OUTP, SURF);
+[INPU, COND, MISC, VISC, WAKE, VEHI, SURF, OUTP] = fcnGEOM2DVE(INPU, COND, VISC, VEHI, WAKE, OUTP, SURF, MISC);
 
 %% Advance Ratio
-MISC.vecROTORJ = [];
 for jj = 1:length(COND.vecROTORRPM)
     MISC.vecROTORJ(jj) = (COND.vecVEHVINF(VEHI.vecROTORVEH(jj))*60)./(abs(COND.vecROTORRPM(jj)).*INPU.vecROTDIAM(jj));
 end
 
 %% Add boundary conditions to D-Matrix
-[matD] = fcnDWING(SURF, INPU);
+[SURF.matD] = fcnDWING(SURF, INPU);
 
 %% Add kinematic conditions to D-Matrix
 [SURF.vecK] = fcnSINGFCT(SURF.valNELE, SURF.vecDVESURFACE, SURF.vecDVETIP, SURF.vecDVEHVSPN);
-[matD] = fcnKINCON(matD, SURF, INPU, FLAG);
+[SURF.matD] = fcnKINCON(SURF.matD, SURF, INPU, FLAG);
 
 %% Preparing to timestep
 % Building wing resultant
 [vecR] = fcnRWING(0, SURF, WAKE, FLAG);
 
 % Solving for wing coefficients
-[SURF.matCOEFF] = fcnSOLVED(matD, vecR, SURF.valNELE);
+[SURF.matCOEFF] = fcnSOLVED(SURF.matD, vecR, SURF.valNELE);
 SURF.matNPDVE = SURF.matDVE;

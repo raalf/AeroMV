@@ -1,4 +1,4 @@
-function [WAKE, OUTP, INPU, SURF] = fcnINITIALIZE(COND, INPU, SURF)
+function [WAKE, OUTP, INPU, SURF, MISC] = fcnINITIALIZE(COND, INPU, SURF)
 
 % Preallocating for a turbo-boost in performance
 OUTP.vecCL = nan(COND.valMAXTIME,INPU.valVEHICLES);
@@ -68,5 +68,12 @@ try OUTP.matTWIST = zeros(COND.valSTIFFSTEPS,INPU.valNSELE+4); catch; end
 SURF.dGammadt = [];
 SURF.gamma_old = [];
 
+
+MISC.timestep_folder = [];
+MISC.vecROTORJ = [];
+% MISC.matSURFACETYPE = uint8(zeros(size(unique(SURF.vecDVESURFACE),1),2));
+MISC.matCIRORIG = [];
+MISC.matNEWWAKE = [];
+MISC.matNPNEWWAKE = [];
 end
 

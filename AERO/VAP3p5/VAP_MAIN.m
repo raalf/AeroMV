@@ -18,7 +18,12 @@ filename = 'inputs/Matrice_210_RTK_Rotor.vap';
     VAP_IN.TRUNCATE = 1;    
     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN(filename, VAP_IN);
 
+    load(strcat(MISC.timestep_folder, 'timestep_', num2str(VAP_IN.valMAXTIME ), '.mat'))
+    valBEGINTIME = COND.valMAXTIME+1;
+    COND.valMAXTIME = VAP_IN.valMAXTIME +5;
+    [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC,INPU,VEHI,WAKE,SURF,OUTP,MISC,valBEGINTIME);
     %Comparing new fcnVAP_MAIN setup to old
+    VAP_IN.valMAXTIME = 25;
     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN_OG(filename, VAP_IN);
 
     

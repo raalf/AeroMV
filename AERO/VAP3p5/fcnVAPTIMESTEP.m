@@ -1,10 +1,15 @@
-function  [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP,MISC, matD)
-
+function  [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC, INPU, VEHI, WAKE, SURF, OUTP,MISC, valBEGINTIME)
 %fcnVAPTIMESTEP This run the time stepping procedure for a case that has
 %already been initizlized
 
+if ~exist("valBEGINTIME","var")
+    valBEGINTIME = 1;
+end
+if ~(COND.valMAXTIME==size(OUTP.vecCL,1))
+    [OUTP] = fcnREINIT(OUTP,COND.valMAXTIME,INPU.valVEHICLES);
+end
 
-for valTIMESTEP = 1:COND.valMAXTIME
+for valTIMESTEP = valBEGINTIME:COND.valMAXTIME
     %% Timestep to solution
     %   Move wing
     %   Generate new wake elements
@@ -23,11 +28,8 @@ for valTIMESTEP = 1:COND.valMAXTIME
     % Bend wing if applicable, else move wing normally
     [SURF, INPU, MISC, VISC] = fcnMOVESURFACE(INPU, VEHI, MISC, COND, SURF, VISC);
 
-    % Add in gust velocity if applicable
-
-
     if max(SURF.vecDVEROTOR) > 0
-        matD = fcnKINCON(matD(1:(size(matD,1)*(2/3)),:), SURF, INPU, FLAG);
+        SURF.matD = fcnKINCON(SURF.matD(1:(size(SURF.matD,1)*(2/3)),:), SURF, INPU, FLAG);
     end
 
     %% Generating new wake elements
@@ -61,7 +63,7 @@ for valTIMESTEP = 1:COND.valMAXTIME
 
         %% Rebuilding and solving wing resultant
         [vecR] = fcnRWING(valTIMESTEP, SURF, WAKE, FLAG);
-        [SURF.matCOEFF] = fcnSOLVED(matD, vecR, SURF.valNELE);
+        [SURF.matCOEFF] = fcnSOLVED(SURF.matD, vecR, SURF.valNELE);
 
         %% Creating and solving WD-Matrix
         %         [1:WAKE.valWNELE]'
@@ -82,7 +84,7 @@ for valTIMESTEP = 1:COND.valMAXTIME
         end
 
         if FLAG.SAVETIMESTEP == 1
-            save([timestep_folder, 'timestep_', num2str(valTIMESTEP), '.mat'], 'filename','valTIMESTEP','INPU','COND','MISC','WAKE','VEHI','SURF','OUTP');
+            save([MISC.timestep_folder, 'timestep_', num2str(valTIMESTEP), '.mat'], 'valTIMESTEP','INPU','COND','MISC','WAKE','VEHI','SURF','OUTP','FLAG','VISC');
         end
     end
 
