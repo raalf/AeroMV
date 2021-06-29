@@ -11,13 +11,16 @@ filename = 'inputs/Matrice_210_RTK_Rotor.vap';
 % for i = 1:length(alpha_seq)
     
     VAP_IN = [];
-    VAP_IN.valMAXTIME = 40;
-    VAP_IN.valSTARTFORCES = 40;
+    VAP_IN.valMAXTIME = 20;
+    VAP_IN.valSTARTFORCES = 20;
     VAP_IN.RELAX = 1;
     VAP_IN.valTIMETRUNC = 5;
-    VAP_IN.TRUNCATE = 1;
+    VAP_IN.TRUNCATE = 1;    
     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN(filename, VAP_IN);
-    
+
+    %Comparing new fcnVAP_MAIN setup to old
+    [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN_OG(filename, VAP_IN);
+
     
     
 %     CL(i) = OUTP.vecCL(end);
