@@ -9,27 +9,29 @@ filename = 'inputs/Matrice_210_RTK_Rotor.vap';
 % alpha_seq = -5:10;
 
 % for i = 1:length(alpha_seq)
-    
-    VAP_IN = [];
-    VAP_IN.valMAXTIME = 20;
-    VAP_IN.valSTARTFORCES = 20;
-    VAP_IN.RELAX = 1;
-    VAP_IN.valTIMETRUNC = 5;
-    VAP_IN.TRUNCATE = 1;    
-    [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN(filename, VAP_IN);
+AOA = 10;
+rpm = 4000;
+vel = 5;
 
-    load(strcat(MISC.timestep_folder, 'timestep_', num2str(VAP_IN.valMAXTIME ), '.mat'))
-    valBEGINTIME = COND.valMAXTIME+1;
-    COND.valMAXTIME = VAP_IN.valMAXTIME +5;
-    [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC,INPU,VEHI,WAKE,SURF,OUTP,MISC,valBEGINTIME);
-    %Comparing new fcnVAP_MAIN setup to old
-    VAP_IN.valMAXTIME = 25;
-    [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN_OG(filename, VAP_IN);
 
-    
-    
-%     CL(i) = OUTP.vecCL(end);
-%     CDi(i) = OUTP.vecCDI(end);
-    
-% end
-% save('Sharp_Edge.mat')
+VAP_IN = [];
+VAP_IN.valMAXTIME = 80;
+VAP_IN.valSTARTFORCES = 60;
+VAP_IN.RELAX = 0;
+VAP_IN.TRUNCATE = 1;
+VAP_IN.valTIMETRUNC = 80-60;
+VAP_IN.vecVEHALPHA = -AOA;
+VAP_IN.vecROTORRPM = rpm;
+VAP_IN.vecVEHVINF = vel;
+VAP_IN.valDELTIME = 1/((rpm/60)*20); %20 timesteps per rev
+
+[OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN(filename, VAP_IN);
+
+
+%     load(strcat(MISC.timestep_folder, 'timestep_', num2str(VAP_IN.valMAXTIME ), '.mat'))
+%     valBEGINTIME = COND.valMAXTIME+1;
+%     COND.valMAXTIME = VAP_IN.valMAXTIME +5;
+%     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAPTIMESTEP(FLAG, COND, VISC,INPU,VEHI,WAKE,SURF,OUTP,MISC,valBEGINTIME);
+%Comparing new fcnVAP_MAIN setup to old
+%     VAP_IN.valMAXTIME = 25;
+%     [OUTP, COND, INPU, FLAG, MISC, SURF, VEHI, VISC, WAKE] = fcnVAP_MAIN_OG(filename, VAP_IN);

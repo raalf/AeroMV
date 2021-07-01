@@ -17,8 +17,8 @@ end
 %% Reading in geometry
 [FLAG, COND, VISC, INPU, VEHI, SURF] = fcnXMLREAD(filename, VAP_IN);
 
-FLAG.PRINT = 1;
-FLAG.OLDPRINT = 0;
+FLAG.PRINT = 0;
+FLAG.OLDPRINT = 1;
 FLAG.PLOT = 1;
 FLAG.VISCOUS = 1;
 FLAG.CIRCPLOT = 0;
