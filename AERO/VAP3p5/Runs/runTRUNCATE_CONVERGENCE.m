@@ -12,7 +12,7 @@ AOA = 10;
 rpm = 4000;
 vel = 5;
 
-vecmaxtime = [80 100 120 140 160 180 200 240 280 340 400];
+vecmaxtime = fliplr([80 100 120 140 160 180 200 240 280 340 400]);
 vecdif_trunc = [-60 -40 -20 0];
 vecrelax = [0 1];
 
@@ -52,7 +52,7 @@ parfor i = 1:length(maxtime)
                 VAP_IN.TRUNCATE = 0;
             else
                 VAP_IN.TRUNCATE = 1;
-                VAP_IN.valTIMETRUNC = maxtime(i)-dif_trunc(i);
+                VAP_IN.valTIMETRUNC = maxtime(i)+dif_trunc(i);
             end
             
             
@@ -76,6 +76,7 @@ parfor i = 1:length(maxtime)
             DATA(i).RELAX = relax(i);
             DATA(i).TRUNCATE = dif_trunc(i);
 
+            fcnSAVE(DATA(i),strcat('SaveFiles',num2str(relax(i)),'_Truncate',num2str(dif_trunc(i)),'Maxtime',num2str(maxtime(i))))
             fprintf('Done Case: Maxtime: %d, Relax = %d, Dif Trunc = %d \n',maxtime(i),relax(i),dif_trunc(i))
             
     
