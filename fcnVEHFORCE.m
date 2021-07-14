@@ -22,7 +22,7 @@ if strcmpi(INFO.strTYPE,'Sphere')
     
     % Get Sphere Data Table
     if ~fcnCOMPCHECK(TABLE.VEH, 'matSPHERE')
-        temp = load('TABLES\Sphere.mat');
+        temp = load('TABLES/Sphere.mat');
         temp = struct2cell(temp);
         TABLE.VEH.matSPHERE = temp{1,1};
     end
@@ -88,7 +88,7 @@ elseif strcmpi(INFO.strTYPE,'Cylinder')
     valAOA(idx) = pi - valAOA(idx);
 
     if ~fcnCOMPCHECK(TABLE.VEH, 'matCYLINDER')
-        temp = load(strcat('TABLES\Cylinder'));
+        temp = load(strcat('TABLES/Cylinder'));
         temp = struct2cell(temp);
         TABLE.VEH.matCYLINDER = temp{1,1};
     end

@@ -8,7 +8,7 @@ function [TABLE, GEOM, AIR] = fcnINPUT(filename) %#ok<STOUT>
 
 %%
 % Run the input file in the GEOM folder
-temp = strcat('GEOM\',filename);
+temp = strcat('GEOM/',filename);
 run(temp)
 
 % Check if table exist, else set it to NaNs

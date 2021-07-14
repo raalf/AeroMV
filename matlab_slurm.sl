@@ -12,4 +12,4 @@
 # Choose a version of MATLAB by loading a module:
 module load matlab/2019a
 # Remove -singleCompThread below if you are using parallel commands:
-srun matlab -nodisplay -singleCompThread -r "RUN_Pelican_Divergence_Horizon_Study"
+srun matlab -nodisplay -singleCompThread -r "RUN_CODE_CC"

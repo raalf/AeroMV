@@ -53,12 +53,12 @@ if FOLDER_ADDRESS(end-10:end) == 'BEMT Module'
     addpath(genpath(FOLDER_ADDRESS(1:end-11)))
 else
     addpath(genpath(FOLDER_ADDRESS))
-    cd(strcat(FOLDER_ADDRESS,'\AERO\BEMT_Code\BEMT Module'))
+    cd(strcat(FOLDER_ADDRESS,'/AERO/BEMT_Code/BEMT Module'))
 end
 
 if strcmpi(options.toggle_precompute,'on')
     airfoil_database(blade,options)
-    load(load(strcat(FOLDER_ADDRESS,'\AERO\BEMT_Code\BEMT Module\Airfoil Databases\airfoil_coeff_database')););
+    load(load(strcat(FOLDER_ADDRESS,'/AERO/BEMT_Code/BEMT Module/Airfoil Databases/airfoil_coeff_database')););
     options.airfoil_coeff_database = airfoil_coeff_database;
 end
     oper.rpm = STATE.RPM(i);

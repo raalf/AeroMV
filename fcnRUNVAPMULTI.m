@@ -11,12 +11,12 @@ relax = false; % relaxation on or off (true/false)
 
 % Change directory to VAP3p5 AERO folder
 FOLDER_ADDRESS = pwd;
-cd(strcat(FOLDER_ADDRESS,'\AERO\VAP3p5'))
+cd(strcat(FOLDER_ADDRESS,'/AERO/VAP3p5'))
 
 
 
 % Read xml input file
-INPUT_STRUCT = fcnXML2STRUCT(strcat('inputs\',GEOM.ROTOR.strNAME,'.vap'));
+INPUT_STRUCT = fcnXML2STRUCT(strcat('inputs/',GEOM.ROTOR.strNAME,'.vap'));
 
 % Check if input is only 1 rotor or if the full vehicle is already modded
 if length(INPUT_STRUCT.VAP.vehicle.rotor) == 1
@@ -50,7 +50,7 @@ end
 MultirotorXML = fcnSTRUCT2XML(INPUT_STRUCT);
 
 % Write new xml to a tempMULTI input file
-tempFILENAME = strcat('inputs\',GEOM.ROTOR.strNAME,'_tempMULTI','.vap');
+tempFILENAME = strcat('inputs/',GEOM.ROTOR.strNAME,'_tempMULTI','.vap');
 fid = fopen(tempFILENAME,'w'); % Overwrite if neccessary
 fprintf(fid,'%s',MultirotorXML); % Write xml generated above to the file
 fclose(fid); % Close file

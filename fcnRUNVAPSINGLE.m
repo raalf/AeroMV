@@ -10,7 +10,7 @@ relax = false; % relaxation on or off (true/false)
 
 % Change directory to VAP3p5 AERO folder
 FOLDER_ADDRESS = pwd;
-cd(strcat(FOLDER_ADDRESS,'\AERO\VAP3p5'))
+cd(strcat(FOLDER_ADDRESS,'/AERO/VAP3p5'))
 
 % Iterate through each rotor
 for i = 1:length(STATE.RPM)
@@ -32,7 +32,7 @@ for i = 1:length(STATE.RPM)
     
     % Run VAP3.5
     % This is a modified version of the github: https://github.com/raalf/VAP3
-    OUTP = fcnVAP_MAIN(strcat('inputs\',GEOM.ROTOR.strNAME,'.vap'), VAP_IN);
+    OUTP = fcnVAP_MAIN(strcat('inputs/',GEOM.ROTOR.strNAME,'.vap'), VAP_IN);
     
     % Convert outputs to variables used in AeroMV
     PERF.ROTOR(i).T = OUTP.vecCT_AVG*((STATE.RPM(i)/60).^2).*((GEOM.ROTOR.vecDIAM(i)).^4)*AIR.density;
