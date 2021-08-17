@@ -20,7 +20,7 @@ BODY_RATES = flights{1,flight_num}.pqr;
 
 j = 0;
 begin = 1000;
-fin = 20000;
+fin = 1100;
 % fin = 1005;
 datafeq = 100;
 int = 1;
@@ -98,10 +98,12 @@ for i = begin:int:fin
     end
     
     if count_iter_num == max_iter
-        OUTP_COMPILED(i-begin+1,:) = OUTP;
+        feildss =["COMP_DRAG_TOTAL","COMP_LIFT_TOTAL","F_r","F_comp","F_B","M_comp","M_r_hub","M_r_total","M_B","PREC_RATE_ROTOR","PREC_VEH_RATE","xi_ddot","OMEGA_NEW","EULER_NEW","POS_NEW","OMEGA_DOT_B"];
+%         OUTP = rmfield(OUTP, feildss);
+        OUTP_COMPILED(i-begin+1,:) = rmfield(OUTP, feildss);
     end
     end
     fprintf(strcat(num2str(i),' Complete.' ,'\n'))
 end
 toc
-save('DATA')
+save('DATA','OUTP_COMPILED')

@@ -6,7 +6,7 @@ dir = pwd;
 
 % If running from the RUN folder, switch to the main folder (which will
 % later add the RUN folder to the path)
-if strcmp(dir(end-3:end),'/RUN')
+if strcmp(dir(end-3:end),'\RUN')
     cd(dir(1:end-4))
 end
 
